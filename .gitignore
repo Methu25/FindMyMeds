@@ -31,3 +31,14 @@ build/
 
 ### VS Code ###
 .vscode/
+# Ignore compiled Java code and IDE settings
+
+*.class
+.idea/
+
+# Ignore sensitive secrets
+.env
+
+# Ignore OS files
+.DS_Store
+Thumbs.db
