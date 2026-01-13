@@ -14,9 +14,9 @@ import java.util.List;
 
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
-    List<Notification> findByTargetRoleOrderByCreatedAtDesc(Role role);
+    List<Notification> findByTargetRoleOrderByCreatedAtDesc(Role targetRole);
 
-    List<Notification> findByTargetRoleAndNotificationType(Role role, NotificationType type);
+    List<Notification> findByTargetRoleAndNotificationType(Role targetRole, NotificationType notificationType);
 
     @Modifying
     @Query("DELETE FROM Notification n WHERE n.read = true AND n.readAt < :cutoff")

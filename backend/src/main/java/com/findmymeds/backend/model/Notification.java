@@ -37,10 +37,6 @@ public class Notification {
     private LocalDateTime createdAt = LocalDateTime.now();
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "related_entity_type")
-    private com.findmymeds.backend.model.enums.RelatedEntityType relatedEntityType;
-
-    @Enumerated(EnumType.STRING)
     @Column(name = "target_role")
     private com.findmymeds.backend.model.enums.Role targetRole;
 
@@ -50,4 +46,3 @@ public class Notification {
     @Column(name = "read_at")
     private LocalDateTime readAt;
 }
-// Force re-parse
