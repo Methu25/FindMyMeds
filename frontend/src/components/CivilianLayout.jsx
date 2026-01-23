@@ -6,9 +6,9 @@ const CivilianLayout = () => {
     return (
         <div className="flex h-screen bg-gray-50 font-sans">
             <Sidebar />
-            <div className="flex-1 flex flex-col overflow-hidden">
+            <main className="flex-1 flex flex-col overflow-hidden ml-0 md:ml-[250px] transition-all duration-300">
                 <Outlet />
-            </div>
+            </main>
         </div>
     );
 };
