@@ -1,15 +1,15 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import AdminLayout from './components/AdminLayout';
+import AdminLayout from './components/admin/AdminLayout';
 import CivilianLayout from './components/CivilianLayout';
 import PharmacyLayout from './components/PharmacyLayout';
 
-import MedicineRegistry from './pages/MedicineRegistry';
-import AddMedicine from './pages/AddMedicine';
-import MedicineDetails from './pages/MedicineDetails';
-import NotificationCenter from './pages/NotificationCenter';
-import NotificationDetails from './pages/NotificationDetails';
-import ProfilePage from './pages/ProfilePage';
+import MedicineRegistry from './pages/admin/MedicineRegistry';
+import AddMedicine from './pages/admin/AddMedicine';
+import MedicineDetails from './pages/admin/MedicineDetails';
+import NotificationCenter from './pages/admin/NotificationCenter';
+import NotificationDetails from './pages/admin/NotificationDetails';
+import ProfilePage from './pages/admin/ProfilePage';
 import FindPharmacy from './pages/FindPharmacy';
 
 function App() {

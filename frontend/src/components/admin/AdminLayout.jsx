@@ -1,7 +1,7 @@
 import React from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { LayoutDashboard, Users, Pill, ShieldAlert, Bell, User } from 'lucide-react';
-import logo from '../assets/logo.jpg';
+import logo from '../../assets/logo.jpg';
 
 const AdminSidebar = () => {
   const location = useLocation();
