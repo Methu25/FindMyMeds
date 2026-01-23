@@ -8,7 +8,8 @@ import {
     LogOut,
     Menu,
     X,
-    Pill
+    Pill,
+    MapPin
 } from 'lucide-react';
 import '../styles/Sidebar.css';
 
@@ -17,6 +18,7 @@ const navItems = [
     { path: '/civilian/inquiries', label: 'Inquiries', icon: MessageSquare },
     { path: '/civilian/reservation', label: 'Reservations', icon: Calendar },
     { path: '/civilian/activity', label: 'Your Activity', icon: Calendar },
+    { path: '/civilian/find-pharmacy', label: 'Find Pharmacy', icon: MapPin },
     { path: '/civilian/feedback', label: 'Feedback', icon: MessageCircle },
 ];
 
