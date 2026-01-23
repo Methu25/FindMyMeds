@@ -1,12 +1,13 @@
 package com.findmymeds.backend.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -16,9 +17,43 @@ public class Medicine {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
+
+    private String medicineName;
+    private String genericName;
+
+    @Enumerated(EnumType.STRING)
+    private MedicineType type;
+
+    private String manufacturer;
+    private String countryOfManufacture;
+    private String registrationNumber;
+    private String imageUrl;
+    private String dosageForm;
+    private String strength;
+    private String storageInstructions;
+    private String notes;
     private String description;
+
+    // Keeping existing field just in case, though logically price is common
     private Double price;
     private boolean requiresPrescription;
-    private String type; // Tablet, Capsule, Syrup, etc.
+
+    @Enumerated(EnumType.STRING)
+    private MedicineStatus status;
+
+    private boolean removed = false;
+
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    private LocalDateTime lastUpdated;
+
+    public enum MedicineType {
+        TABLET, CAPSULE, SYRUP, INJECTION, OINTMENT, CREAM, DROPS, INHALER, OTHER
+    }
+
+    public enum MedicineStatus {
+        ACTIVE, INACTIVE, OUT_OF_STOCK, DISCONTINUED
+    }
 }
