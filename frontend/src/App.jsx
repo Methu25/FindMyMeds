@@ -1,26 +1,44 @@
+import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import Sidebar from './components/Sidebar';
-import ReservationPage from './pages/civilian/ReservationPage';
-import ActivityPage from './pages/civilian/ActivityPage';
-import './styles/global.css';
-import './App.css';
+import AdminLayout from './components/AdminLayout';
+
+
+
+import MedicineRegistry from './pages/MedicineRegistry';
+import AddMedicine from './pages/AddMedicine';
+import MedicineDetails from './pages/MedicineDetails';
+import NotificationCenter from './pages/NotificationCenter';
+import NotificationDetails from './pages/NotificationDetails';
+import ProfilePage from './pages/ProfilePage';
 
 function App() {
   return (
     <BrowserRouter>
-      <div className="app-layout">
-        <Sidebar />
-        <main className="main-content">
-          <Routes>
-            <Route path="/" element={<Navigate to="/civilian/reservation" replace />} />
-            <Route path="/civilian/home" element={<div className="card"><h2>Home</h2><p>Coming soon...</p></div>} />
-            <Route path="/civilian/reservation" element={<ReservationPage />} />
-            <Route path="/civilian/activity" element={<ActivityPage />} />
-            <Route path="/civilian/inquiries" element={<div className="card"><h2>Inquiries</h2><p>Coming soon...</p></div>} />
-            <Route path="/civilian/feedback" element={<div className="card"><h2>Feedback</h2><p>Coming soon...</p></div>} />
-          </Routes>
-        </main>
-      </div>
+      <Routes>
+        <Route path="/" element={<Navigate to="/admin" replace />} />
+
+        {/* Admin Routes */}
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<div className="p-4">Dashboard Placeholder</div>} />
+
+
+
+          {/* Placeholders for other sections */}
+          {/* Medicine Registry */}
+          <Route path="medicines" element={<MedicineRegistry />} />
+          <Route path="medicines/add" element={<AddMedicine />} />
+          <Route path="medicines/:id" element={<MedicineDetails />} />
+          <Route path="pharmacies" element={<div className="p-4">Pharmacy Management Placeholder</div>} />
+          <Route path="civilians" element={<div className="p-4">Civilian Management Placeholder</div>} />
+
+          {/* Notification Center */}
+          <Route path="notifications" element={<NotificationCenter />} />
+          <Route path="notifications/:id" element={<NotificationDetails />} />
+
+          {/* Profile */}
+          <Route path="profile" element={<ProfilePage />} />
+        </Route>
+      </Routes>
     </BrowserRouter>
   );
 }
