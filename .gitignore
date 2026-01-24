@@ -46,3 +46,10 @@ Thumbs.db
 *.zip
 *.tar.gz
 *.rar
+# Build output
+target/
+
+# IntelliJ files
+.idea/
+*.iml
+
