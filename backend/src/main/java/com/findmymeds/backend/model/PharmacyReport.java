@@ -12,37 +12,53 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "pharmacy_reports_inquiries")
 public class PharmacyReport {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "pharmacy_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "pharmacy_id", nullable = false)
     private Pharmacy pharmacy;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private ReportType type;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "issue_category")
+    @Column(name = "issue_category", nullable = false)
     private IssueCategory issueCategory;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Priority priority;
 
+    @Column(nullable = false)
     private String title;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String description;
 
     private String attachment;
 
     @Enumerated(EnumType.STRING)
-    private ReportStatus status;
+    @Column(nullable = false)
+    private ReportStatus status = ReportStatus.PENDING;
 
-    @Column(name = "created_at")
-    private LocalDateTime createdAt = LocalDateTime.now();
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
 
     @Column(name = "status_changed_at")
     private LocalDateTime statusChangedAt;
+
+    @PrePersist
+    public void onCreate() {
+        this.createdAt = LocalDateTime.now();
+        this.statusChangedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    public void onUpdate() {
+        this.statusChangedAt = LocalDateTime.now();
+    }
 }
