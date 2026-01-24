@@ -1,74 +1,123 @@
 package com.findmymeds.backend.service;
 
-import com.findmymeds.backend.model.Admin;
-import com.findmymeds.backend.model.enums.AdminStatus;
+import com.findmymeds.backend.model.*;
+import com.findmymeds.backend.model.enums.Role;
+import com.findmymeds.backend.repository.AdminActionLogRepository;
 import com.findmymeds.backend.repository.AdminRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class AdminService {
 
-    @Autowired
-    private AdminRepository adminRepository;
+    private final AdminRepository adminRepository;
+    private final AdminActionLogRepository actionLogRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    public List<Admin> getAllAdmins() {
-        return adminRepository.findAll();
+    public List getAllAdmins() {
+        return adminRepository.findAll().stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
     }
 
-    public Optional<Admin> getAdminById(Long id) {
-        if (id == null) {
-            throw new IllegalArgumentException("ID must not be null");
-        }
-        return adminRepository.findById(id);
-    }
-
-    public Admin createAdmin(Admin admin) {
-        if (adminRepository.existsByEmail(admin.getEmail())) {
-            throw new RuntimeException("Email already exists");
-        }
-        admin.setPasswordHash(passwordEncoder.encode(admin.getPasswordHash()));
-        return adminRepository.save(admin);
-    }
-
-    public Admin updateAdmin(Long id, Admin adminDetails) {
-        if (id == null) {
-            throw new IllegalArgumentException("ID must not be null");
-        }
+    public AdminResponse getAdminById(Long id) {
         Admin admin = adminRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Admin not found"));
-
-        admin.setFullName(adminDetails.getFullName());
-        admin.setEmail(adminDetails.getEmail());
-        admin.setRole(adminDetails.getRole());
-
-        return adminRepository.save(admin);
+                .orElseThrow(() -> new AdminNotFoundException("Admin not found with id: " + id));
+        return mapToResponse(admin);
     }
 
-    public Admin updateStatus(Long id, AdminStatus status) {
-        if (id == null) {
-            throw new IllegalArgumentException("ID must not be null");
-        }
-        Admin admin = adminRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Admin not found"));
-        admin.setStatus(status);
-        return adminRepository.save(admin);
+    public AdminMetricsResponse getMetrics() {
+        long total = adminRepository.count();
+        long superAdmins = adminRepository.countByRole(Role.SUPER_ADMIN);
+        long regularAdmins = adminRepository.countByRole(Role.ADMIN);
+
+        return new AdminMetricsResponse(total, superAdmins, regularAdmins);
     }
 
-    public void removeAdmin(Long id) {
-        if (id == null) {
-            throw new IllegalArgumentException("ID must not be null");
+    @Transactional
+    public AdminResponse createAdmin(CreateAdminRequest request, Long currentAdminId) {
+        if (adminRepository.existsByEmail(request.getEmail())) {
+            throw new DuplicateEmailException("Email already exists: " + request.getEmail());
         }
-        // Soft delete or Hard delete? Spec says 'Removed' status or 'Permanently
-        // delete'.
-        // Spec: "Permanently delete admin account".
-        adminRepository.deleteById(id);
+
+        Admin admin = new Admin();
+        admin.setFullName(request.getFullName());
+        admin.setEmail(request.getEmail());
+        admin.setRole(request.getRole());
+        admin.setPasswordHash(passwordEncoder.encode(request.getPassword()));
+
+        Admin savedAdmin = adminRepository.save(admin);
+
+        logAction(currentAdminId, "CREATE_ADMIN", "admins", savedAdmin.getId(),
+                "Created new admin: " + savedAdmin.getFullName());
+
+        return mapToResponse(savedAdmin);
+    }
+
+    @Transactional
+    public AdminResponse updateAdminEmail(Long adminId, UpdateAdminEmailRequest request,
+                                          Long currentAdminId) {
+        Admin admin = adminRepository.findById(adminId)
+                .orElseThrow(() -> new AdminNotFoundException("Admin not found with id: " + adminId));
+
+        if (!admin.getEmail().equals(request.getEmail()) &&
+                adminRepository.existsByEmail(request.getEmail())) {
+            throw new DuplicateEmailException("Email already exists: " + request.getEmail());
+        }
+
+        String oldEmail = admin.getEmail();
+        admin.setEmail(request.getEmail());
+        Admin updatedAdmin = adminRepository.save(admin);
+
+        logAction(currentAdminId, "UPDATE_ADMIN_EMAIL", "admins", adminId,
+                "Updated email from " + oldEmail + " to " + request.getEmail());
+
+        return mapToResponse(updatedAdmin);
+    }
+
+    @Transactional
+    public void deleteAdmin(Long adminId, Long currentAdminId) {
+        Admin admin = adminRepository.findById(adminId)
+                .orElseThrow(() -> new AdminNotFoundException("Admin not found with id: " + adminId));
+
+        if (adminId.equals(currentAdminId)) {
+            throw new IllegalArgumentException("Cannot delete your own account");
+        }
+
+        String adminName = admin.getFullName();
+        adminRepository.delete(admin);
+
+        logAction(currentAdminId, "DELETE_ADMIN", "admins", adminId,
+                "Deleted admin: " + adminName);
+    }
+
+    private void logAction(Long adminId, String actionType, String targetTable,
+                           Long targetId, String description) {
+        AdminActionLog log = new AdminActionLog();
+
+        Admin admin = adminRepository.getReferenceById(adminId);
+        log.setAdmin(admin);
+
+        log.setActionType(actionType);
+        log.setTargetTable(targetTable);
+        log.setTargetId(targetId);
+        log.setDescription(description);
+        actionLogRepository.save(log);
+    }
+
+    private AdminResponse mapToResponse(Admin admin) {
+        return new AdminResponse(
+                admin.getId(),
+                admin.getFullName(),
+                admin.getEmail(),
+                admin.getRole(),
+                admin.getCreatedAt()
+        );
     }
 }
