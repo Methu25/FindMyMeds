@@ -1,7 +1,7 @@
 package com.findmymeds.backend.controller;
 
 import com.findmymeds.backend.model.Reservation;
-import com.findmymeds.backend.service.ReservationService;
+import com.findmymeds.backend.service.CivilianReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,10 +10,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/reservations")
 @CrossOrigin(origins = "http://localhost:5173")
-public class ReservationController {
+public class CivilianReservationController {
 
     @Autowired
-    private ReservationService reservationService;
+    private CivilianReservationService reservationService;
 
     @PostMapping
     public Reservation createReservation(@RequestBody Reservation reservation) {

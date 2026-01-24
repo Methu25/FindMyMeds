@@ -20,6 +20,9 @@ public class Reservation {
     @ManyToOne
     private Pharmacy pharmacy;
 
+    @ManyToOne
+    private Civilian civilian;
+
     private Double totalAmount;
     private LocalDateTime reservationDate;
     private String timeframe; // e.g. "10:00 AM - 6:00 PM"

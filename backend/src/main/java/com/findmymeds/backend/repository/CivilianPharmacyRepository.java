@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface PharmacyRepository extends JpaRepository<Pharmacy, Long> {
+public interface CivilianPharmacyRepository extends JpaRepository<Pharmacy, Long> {
     List<Pharmacy> findByNameContainingIgnoreCase(String name);
 
     // Haversine formula to find pharmacies within radius (in km)

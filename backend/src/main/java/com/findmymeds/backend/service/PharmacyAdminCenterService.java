@@ -20,6 +20,9 @@ public class PharmacyAdminCenterService {
     private final PharmacyReportRepository pharmacyReportRepository;
 
     public PharmacyProfileDto getProfile(Long pharmacyId) {
+        if (pharmacyId == null) {
+            throw new IllegalArgumentException("Pharmacy ID cannot be null");
+        }
         Pharmacy pharmacy = pharmacyRepository.findById(pharmacyId)
                 .orElseThrow(() -> new RuntimeException("Pharmacy not found"));
 
@@ -44,6 +47,9 @@ public class PharmacyAdminCenterService {
     }
 
     public void submitReport(Long pharmacyId, ReportRequestDto request) {
+        if (pharmacyId == null) {
+            throw new IllegalArgumentException("Pharmacy ID cannot be null");
+        }
         Pharmacy pharmacy = pharmacyRepository.getReferenceById(pharmacyId);
         PharmacyReport report = new PharmacyReport();
         report.setPharmacy(pharmacy);
@@ -54,8 +60,15 @@ public class PharmacyAdminCenterService {
         // Ideally should have checked PharmacyReport entity content, but will proceed.
         // If fields are missing compilation will fail, but user can fix or I fix in
         // iterations.
-        report.setReport(request.getDescription());
-        // report.setTitle(request.getTitle()); // Assuming title exists
+        report.setDescription(request.getDescription());
+        report.setTitle(request.getTitle());
+        try {
+            report.setType(com.findmymeds.backend.model.enums.ReportType.valueOf(request.getType()));
+        } catch (Exception e) {
+            // Default or handle error, for now let's default to REPORT if invalid
+            report.setType(com.findmymeds.backend.model.enums.ReportType.REPORT);
+        }
+        report.setStatus(com.findmymeds.backend.model.enums.ReportStatus.PENDING);
 
         pharmacyReportRepository.save(report);
     }
