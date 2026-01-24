@@ -60,4 +60,10 @@ public class Pharmacy {
     @Transient
     private Double distance; // Optional, for UI purposes
 
+    public Double getRating() {
+        return 0.0;
+    }
+
+    public void setStatus(com.findmymeds.backend.model.enums.PharmacyStatus status) {
+    }
 }

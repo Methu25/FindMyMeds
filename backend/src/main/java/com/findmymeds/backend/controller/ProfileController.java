@@ -1,6 +1,6 @@
 package com.findmymeds.backend.controller;
 
-import com.findmymeds.backend.model.Admin;
+import com.findmymeds.backend.model.AdminResponse;
 import com.findmymeds.backend.service.AdminService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,14 +14,25 @@ public class ProfileController {
 
     private final AdminService adminService;
 
-    // Simulate getting the "current" logged-in user (hardcoded ID 1 for now)
     @GetMapping
-    public ResponseEntity<Admin> getProfile() {
-        // Mock: Try to find ID 1, otherwise return the first available admin for demo
-        // purposes
-        return adminService.getAdminById(1L)
-                .or(() -> adminService.getAllAdmins().stream().findFirst())
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<AdminResponse> getProfile() {
+        AdminResponse admin = null;
+
+        try {
+            admin = adminService.getAdminById(1L); // may throw exception
+        } catch (RuntimeException e) {
+            // fallback to first admin
+        }
+
+        if (admin == null) {
+            admin = (AdminResponse) adminService.getAllAdmins().stream().findFirst().orElse(null);
+        }
+
+        if (admin != null) {
+            return ResponseEntity.ok(admin);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
+
 }

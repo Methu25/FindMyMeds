@@ -29,4 +29,8 @@ public class PharmacyProfile {
 
     @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
+
+    public Boolean getVerified() {
+        return null;
+    }
 }
