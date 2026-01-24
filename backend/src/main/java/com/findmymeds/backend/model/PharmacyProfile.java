@@ -8,12 +8,17 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "pharmacy_profiles")
 public class PharmacyProfile {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "pharmacy_id", referencedColumnName = "id")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "pharmacy_id",
+            referencedColumnName = "id",
+            nullable = false
+    )
     private Pharmacy pharmacy;
 
     @Column(name = "logo_path")
@@ -21,8 +26,6 @@ public class PharmacyProfile {
 
     @Column(name = "license_document")
     private String licenseDocument;
-
-    private Boolean verified;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();

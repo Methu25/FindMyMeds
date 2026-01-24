@@ -28,7 +28,7 @@ public class NotificationService {
         n.setTitle(title);
         n.setMessage(message);
         n.setRelatedEntityId(entityId);
-        n.setRelatedEntityType(entityType);
+        n.setNotificationType(entityType);
         return repository.save(n);
     }
 
