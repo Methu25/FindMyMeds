@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Findmymeds - Activity Dashboard</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- RESET & BASIC STYLES --- */
+        :root {
+            --theme-color: #2FA4A9;
+            --sidebar-width: 250px;
+            --bg-light: #f4f7f9;
+            --text-dark: #333;
+            --text-gray: #666;
+            --border-radius: 12px;
+            --card-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            
+            /* Status Colors */
+            --status-green-bg: #dcfce7;
+            --status-green-text: #166534;
+            --status-red-bg: #fee2e2;
+            --status-red-text: #991b1b;
+            --status-yellow-bg: #fef9c3;
+            --status-yellow-text: #854d0e;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        a { text-decoration: none; }
+        ul { list-style: none; }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: #ffffff;
+            height: 100%;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid #e0e0e0;
+            flex-shrink: 0;
+        }
+
+        .brand {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--theme-color);
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .menu-list { flex-grow: 1; display: flex; flex-direction: column; gap: 10px; }
+
+        .menu-item {
+            display: flex; align-items: center; gap: 15px; padding: 12px 15px; border-radius: 10px;
+            color: var(--text-gray); font-weight: 600; font-size: 14px; transition: all 0.3s;
+        }
+
+        .menu-item i { font-size: 18px; width: 20px; text-align: center; }
+
+        .menu-item:hover, .menu-item.active { background-color: #eefaf9; color: var(--theme-color); }
+
+        .logout-btn { margin-top: auto; color: #d9534f; }
+        .logout-btn:hover { background-color: #fff0f0; color: #c9302c; }
+
+        /* --- MAIN CONTENT --- */
+        .main-content {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 30px 40px;
+        }
+
+        /* HEADER & ACTIONS */
+        .page-header {
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;
+        }
+
+        .page-title { font-size: 1.8rem; font-weight: 700; color: var(--text-dark); }
+
+        .header-actions { display: flex; gap: 15px; }
+
+        .action-btn {
+            padding: 10px 20px; border-radius: 6px; font-weight: 600; font-size: 14px; cursor: pointer; transition: all 0.2s;
+        }
+
+        .btn-outline { background: transparent; border: 1px solid #d1d5db; color: var(--text-gray); }
+        .btn-outline:hover { background: #f9fafb; border-color: #9ca3af; }
+
+        .btn-filled { background: var(--theme-color); color: white; border: 1px solid var(--theme-color); }
+        .btn-filled:hover { background: #258e93; }
+
+        /* --- GRID LAYOUT --- */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1.6fr 1fr; /* Left column wider */
+            gap: 30px;
+            max-width: 1400px;
+        }
+
+        /* --- CARDS --- */
+        .card {
+            background: #ffffff;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid #f0f0f0;
+            display: flex; flex-direction: column;
+        }
+
+        .card-title {
+            font-size: 1.1rem; font-weight: 700; margin-bottom: 20px; color: var(--text-dark);
+        }
+
+        /* --- LEFT COLUMN: Current Reservations --- */
+        .reservation-list { display: flex; flex-direction: column; gap: 15px; }
+
+        .res-item {
+            display: flex; align-items: center; padding: 20px; border: 1px solid #f1f5f9;
+            border-radius: 10px; transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .res-item:hover {
+            border-color: #e2e8f0; box-shadow: 0 4px 12px rgba(0,0,0,0.03); transform: translateY(-2px);
+        }
+
+        /* Icon Circle */
+        .status-icon {
+            width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            margin-right: 20px; font-size: 16px; flex-shrink: 0;
+        }
+        .status-icon.green { background: #d1fae5; color: #059669; }
+        .status-icon.blue { background: #dbeafe; color: #2563eb; }
+        .status-icon.yellow { background: #fef3c7; color: #d97706; }
+        .status-icon.gray { background: #f3f4f6; color: #6b7280; }
+
+        .res-details { flex-grow: 1; }
+        .res-title { font-weight: 700; font-size: 15px; color: var(--text-dark); margin-bottom: 4px; }
+        .res-subtitle { font-size: 13px; color: var(--text-gray); }
+        .res-price { font-size: 14px; font-weight: 600; color: var(--text-gray); margin-right: 20px; }
+
+        .btn-view {
+            padding: 8px 16px; border: 1px solid var(--theme-color); color: var(--theme-color); background: white;
+            border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s;
+        }
+        .btn-view:hover { background: var(--theme-color); color: white; }
+
+        /* --- RIGHT COLUMN --- */
+        .right-col { display: flex; flex-direction: column; gap: 30px; }
+
+        /* History List (Compact) */
+        .history-list { display: flex; flex-direction: column; gap: 0; }
+
+        .history-item {
+            display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #f1f5f9;
+        }
+        .history-item:last-child { border-bottom: none; }
+
+        .hist-left { display: flex; align-items: center; gap: 12px; }
+        .hist-icon {
+            width: 32px; height: 32px; border-radius: 50%; background: #f1f5f9; color: var(--text-gray);
+            display: flex; align-items: center; justify-content: center; font-size: 12px;
+        }
+        .hist-info h4 { font-size: 14px; font-weight: 600; }
+        .hist-info p { font-size: 12px; color: var(--text-gray); }
+
+        /* Badges */
+        .badge { font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px; text-transform: uppercase; }
+        .badge.completed { background: var(--status-green-bg); color: var(--status-green-text); }
+        .badge.canceled { background: var(--status-red-bg); color: var(--status-red-text); }
+        .badge.pending { background: var(--status-yellow-bg); color: var(--status-yellow-text); }
+
+        /* Responsive */
+        @media (max-width: 1100px) { .dashboard-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 900px) {
+            .sidebar { width: 80px; padding: 20px 10px; }
+            .brand span, .menu-item span { display: none; }
+            .menu-item { justify-content: center; }
+        }
+        @media (max-width: 600px) {
+            .res-item { flex-direction: column; text-align: center; gap: 15px; }
+            .status-icon { margin-right: 0; }
+            .res-price { margin-right: 0; margin-bottom: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="brand">
+            <img src="logo2.jpeg" alt="Logo" style="width: 30px; height: 30px;">
+            <span>Findmymeds</span>
+        </div>
+        <ul class="menu-list">
+            <li><a href="civilian-dashboard.html" class="menu-item"><i class="fa-solid fa-house"></i><span>Home</span></a></li>
+            <li><a href="civilian-inquiries.html" class="menu-item"><i class="fa-solid fa-clipboard-question"></i><span>Inquiries</span></a></li>
+            <li><a href="reservation.html" class="menu-item active"><i class="fa-regular fa-calendar-check"></i><span>Reservations</span></a></li>
+            <li><a href="civilian-feedback.html" class="menu-item"><i class="fa-regular fa-comment-dots"></i><span>Feedback</span></a></li>
+            <li><a href="#" class="menu-item logout-btn"><i class="fa-solid fa-arrow-right-from-bracket"></i><span>Logout</span></a></li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        
+        <div class="page-header">
+            <h1 class="page-title">Your Activity</h1>
+            <div class="header-actions">
+                <button class="action-btn btn-outline">Reservation History</button>
+                <button class="action-btn btn-filled">Profile Settings</button>
+            </div>
+        </div>
+
+        <div class="dashboard-grid">
+            
+            <div class="card">
+                <h2 class="card-title">Current Reservations</h2>
+                
+                <div class="reservation-list">
+                    
+                    <div class="res-item">
+                        <div class="status-icon green"><i class="fa-solid fa-check"></i></div>
+                        <div class="res-details">
+                            <div class="res-title">Ready for Pickup</div>
+                            <div class="res-subtitle">Citywide Pharmacy</div>
+                        </div>
+                        <div class="res-price">$03.00</div>
+                    </div>
+
+                    <div class="res-item">
+                        <div class="status-icon blue"><i class="fa-solid fa-box"></i></div>
+                        <div class="res-details">
+                            <div class="res-title">Order #2324-007</div>
+                            <div class="res-subtitle">Citywide Pharmacy</div>
+                        </div>
+                        <button class="btn-view">View Details</button>
+                    </div>
+
+                    <div class="res-item">
+                        <div class="status-icon yellow"><i class="fa-solid fa-clock"></i></div>
+                        <div class="res-details">
+                            <div class="res-title">Pending Confirmation</div>
+                            <div class="res-subtitle">10/05/2026 20:30</div>
+                        </div>
+                        <button class="btn-view">View Details</button>
+                    </div>
+
+                    <div class="res-item">
+                        <div class="status-icon gray"><i class="fa-solid fa-location-dot"></i></div>
+                        <div class="res-details">
+                            <div class="res-title">HealthPoint Dispensary</div>
+                            <div class="res-subtitle">13009004 203032</div>
+                        </div>
+                        <button class="btn-view">View Details</button>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="right-col">
+                
+                <div class="card">
+                    <h2 class="card-title">Reservation History</h2>
+                    <div class="history-list">
+                        <div class="history-item">
+                            <div class="hist-left">
+                                <div class="hist-icon"><i class="fa-solid fa-bag-shopping"></i></div>
+                                <div class="hist-info">
+                                    <h4>Order #2022-115</h4>
+                                    <p>Local Pharmacy</p>
+                                </div>
+                            </div>
+                            <span class="badge completed">Completed</span>
+                        </div>
+
+                        <div class="history-item">
+                            <div class="hist-left">
+                                <div class="hist-icon"><i class="fa-solid fa-xmark"></i></div>
+                                <div class="hist-info">
+                                    <h4>Order 092</h4>
+                                    <p>Citywide</p>
+                                </div>
+                            </div>
+                            <span class="badge canceled">Canceled</span>
+                        </div>
+
+                        <div class="history-item">
+                            <div class="hist-left">
+                                <div class="hist-icon"><i class="fa-solid fa-bag-shopping"></i></div>
+                                <div class="hist-info">
+                                    <h4>Order #2524-650</h4>
+                                    <p>Osu Sala</p>
+                                </div>
+                            </div>
+                            <span class="badge completed">Completed</span>
+                        </div>
+                    </div>
+                </div>
+
+                </div>
+        </div>
+
+    </main>
+
+</body>
+</html>
