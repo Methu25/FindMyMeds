@@ -1,20 +1,78 @@
 // src/pages/pharmacy/NotificationCenter.jsx
+import { useState, useEffect } from 'react'
 import Layout from '../../components/pharmacy/Layout'
 
 export default function NotificationCenter() {
-    const categories = [
-        { name: 'Reservations', count: 18, color: 'bg-blue-600' },
-        { name: 'Inventory', count: 12, color: 'bg-orange-600' },
-        { name: 'Expiry & Stock', count: 25, color: 'bg-red-600' },
-        { name: 'Admin & System', count: 5, color: 'bg-purple-600' },
-    ]
+    const [categories, setCategories] = useState([
+        { name: 'Reservations', count: 0, color: 'bg-blue-600' },
+        { name: 'Inventory', count: 0, color: 'bg-orange-600' },
+        { name: 'Expiry & Stock', count: 0, color: 'bg-red-600' },
+        { name: 'Admin & System', count: 0, color: 'bg-purple-600' },
+    ])
+    const [notifications, setNotifications] = useState([])
+    const [loading, setLoading] = useState(true)
 
-    const notifications = [
-        { title: 'New Reservation Received', message: 'RES-2026-089 from Nimal Perera', time: '5 minutes ago', priority: 'High', color: 'bg-red-600' },
-        { title: 'Low Stock Alert', message: 'Paracetamol 500mg - Only 8 left', time: '1 hour ago', priority: 'High', color: 'bg-red-600' },
-        { title: 'Medicine Expiring Soon', message: 'Amoxicillin - Expires in 15 days', time: '3 hours ago', priority: 'Medium', color: 'bg-orange-600' },
-        { title: 'System Update Available', message: 'New features for inventory management', time: '1 day ago', priority: 'Low', color: 'bg-green-600' },
-    ]
+    // Fetch Categories (Counts)
+    useEffect(() => {
+        fetch('http://localhost:8080/api/pharmacy/notifications/categories')
+            .then(res => res.json())
+            .then(data => {
+                // Map the dynamic counts to our static visual structure
+                const updatedCats = categories.map(cat => {
+                    const found = data.find(d => d.category === cat.name)
+                    return found ? { ...cat, count: found.unreadCount } : cat
+                })
+                setCategories(updatedCats)
+            })
+            .catch(err => console.error("Error fetching notification counts:", err))
+    }, [])
+
+    // Fetch Notifications List
+    const fetchNotifications = () => {
+        setLoading(true)
+        fetch('http://localhost:8080/api/pharmacy/notifications?page=0&size=20')
+            .then(res => res.json())
+            .then(data => {
+                if (data.content) {
+                    setNotifications(data.content)
+                }
+                setLoading(false)
+            })
+            .catch(err => {
+                console.error("Error fetching notifications:", err)
+                setLoading(false)
+            })
+    }
+
+    useEffect(() => {
+        fetchNotifications()
+    }, [])
+
+    const handleViewDetails = (id) => {
+        // Mark as read in backend
+        fetch(`http://localhost:8080/api/pharmacy/notifications/${id}/read`, { method: 'PUT' })
+            .then(res => {
+                if (res.ok) {
+                    // Refresh list or update local state
+                    fetchNotifications()
+                    // Also refresh counts ideally, but simplest is page refresh or manual decrement.
+                    // For now just re-fetching list.
+                }
+            })
+            .catch(err => console.error("Error marking as read:", err))
+    }
+
+    // Heper for Color/Priority based on Type
+    const getTypeInfo = (type) => {
+        switch (type) {
+            case 'RESERVATION': return { priority: 'High', color: 'bg-blue-600' };
+            case 'MEDICINE': return { priority: 'Medium', color: 'bg-orange-600' };
+            case 'PHARMACY': return { priority: 'High', color: 'bg-red-600' };
+            case 'ADMIN':
+            case 'SYSTEM': return { priority: 'Low', color: 'bg-green-600' };
+            default: return { priority: 'Medium', color: 'bg-gray-600' };
+        }
+    }
 
     return (
         <Layout title="Notification & Alert Center">
@@ -42,23 +100,34 @@ export default function NotificationCenter() {
                     </div>
 
                     <div className="divide-y divide-gray-200">
-                        {notifications.map((notif, i) => (
-                            <div key={i} className="p-12 hover:bg-primary/5 transition-all duration-300 flex justify-between items-center group">
-                                <div>
-                                    <h4 className="text-2xl font-bold text-gray-800 group-hover:text-primary transition">{notif.title}</h4>
-                                    <p className="text-xl text-gray-600 mt-3">{notif.message}</p>
-                                    <p className="text-lg text-gray-500 mt-4">{notif.time}</p>
-                                </div>
-                                <div className="flex items-center gap-8">
-                                    <span className={`px-8 py-4 rounded-full text-white font-bold text-xl ${notif.color} shadow-lg`}>
-                                        {notif.priority} Priority
-                                    </span>
-                                    <button className="bg-primary hover:bg-primary-dark text-white font-bold text-xl px-10 py-5 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 transform group-hover:-translate-y-1">
-                                        View Details
-                                    </button>
-                                </div>
-                            </div>
-                        ))}
+                        {loading ? (
+                            <div className="p-12 text-center text-xl">Loading notifications...</div>
+                        ) : notifications.length === 0 ? (
+                            <div className="p-12 text-center text-xl">No notifications found.</div>
+                        ) : (
+                            notifications.map((notif) => {
+                                const info = getTypeInfo(notif.type)
+                                return (
+                                    <div key={notif.id} className={`p-12 hover:bg-primary/5 transition-all duration-300 flex justify-between items-center group ${notif.read ? 'opacity-50' : ''}`}>
+                                        <div>
+                                            <h4 className="text-2xl font-bold text-gray-800 group-hover:text-primary transition">{notif.title}</h4>
+                                            <p className="text-xl text-gray-600 mt-3">{notif.message}</p>
+                                            <p className="text-lg text-gray-500 mt-4">{new Date(notif.createdAt).toLocaleString()}</p>
+                                        </div>
+                                        <div className="flex items-center gap-8">
+                                            <span className={`px-8 py-4 rounded-full text-white font-bold text-xl ${info.color} shadow-lg`}>
+                                                {info.priority} Priority
+                                            </span>
+                                            <button
+                                                onClick={() => handleViewDetails(notif.id)}
+                                                className="bg-primary hover:bg-primary-dark text-white font-bold text-xl px-10 py-5 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 transform group-hover:-translate-y-1">
+                                                {notif.read ? 'Read' : 'Mark as Read'}
+                                            </button>
+                                        </div>
+                                    </div>
+                                )
+                            })
+                        )}
                     </div>
                 </div>
             </div>
