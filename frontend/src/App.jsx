@@ -1,35 +1,78 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import AdminLayout from './components/admin/AdminLayout';
+
+// Admin Pages
+import Dashboard from './pages/pharmacy/Dashboard.jsx'
+import AdminCenter from './pages/pharmacy/AdminCenter.jsx'
+import SystemSettings from './pages/pharmacy/SystemSettings.jsx'
+import MedicineRegistry from './pages/admin/MedicineRegistry';
+import AddMedicine from './pages/admin/AddMedicine';
+import MedicineDetails from './pages/admin/MedicineDetails';
+import NotificationCenter from './pages/admin/NotificationCenter';
+import NotificationDetails from './pages/admin/NotificationDetails';
+import ProfilePage from './pages/admin/ProfilePage';
+import CivilianManagement from './pages/admin/CivilianManagement';
+
+// Pharmacy Pages (HEAD)
+import MedicineInventory from './pages/pharmacy/MedicineInventory';
+import PharmacyNotificationCenter from './pages/pharmacy/NotificationCenter';
+
+// Civilian Pages (Master)
+import CivilianLayout from './components/civilian/CivilianLayout';
+import ActivityPage from './pages/civilian/ActivityPage';
+import FindPharmacy from './pages/civilian/FindPharmacy';
+import ReservationPage from './pages/civilian/ReservationPage';
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Navigate to="/admin" replace />} />
+
+        {/* Admin Routes */}
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<div className="p-4">Dashboard Placeholder</div>} />
+
+          {/* Placeholders for other sections */}
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="admin-center" element={<AdminCenter />} />
+          <Route path="settings" element={<SystemSettings />} />
+          <Route path="medicines" element={<MedicineRegistry />} />
+          <Route path="medicines/add" element={<AddMedicine />} />
+          <Route path="medicines/:id" element={<MedicineDetails />} />
+          <Route path="pharmacies" element={<div className="p-4">Pharmacy Management Placeholder</div>} />
+          <Route path="civilians" element={<CivilianManagement />} />
+
+          {/* Notification Center */}
+          <Route path="notifications" element={<NotificationCenter />} />
+          <Route path="notifications/:id" element={<NotificationDetails />} />
+
+          {/* Profile */}
+          <Route path="profile" element={<ProfilePage />} />
+        </Route>
+
+        {/* Pharmacy Routes (HEAD) */}
+        <Route path="/pharmacy">
+          <Route index element={<Dashboard />} />
+          <Route path="inventory" element={<MedicineInventory />} />
+          <Route path="notifications" element={<PharmacyNotificationCenter />} />
+          <Route path="admin-center" element={<AdminCenter />} />
+          <Route path="settings" element={<SystemSettings />} />
+          <Route path="current-reservations" element={<div className="p-8">Current Reservations Placeholder</div>} />
+          <Route path="reservation-history" element={<div className="p-8">Reservation History Placeholder</div>} />
+        </Route>
+
+        {/* Civilian Routes (Master) */}
+        <Route path="/civilian" element={<CivilianLayout />}>
+          <Route index element={<Navigate to="activity" replace />} />
+          <Route path="activity" element={<ActivityPage />} />
+          <Route path="find-pharmacy" element={<FindPharmacy />} />
+          <Route path="reservation" element={<ReservationPage />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
