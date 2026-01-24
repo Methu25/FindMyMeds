@@ -39,6 +39,7 @@ function App() {
 
           {/* Placeholders for other sections */}
           {/* Medicine Registry */}
+          {/* Medicine Registry */}
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="admin-center" element={<AdminCenter />} />
           <Route path="settings" element={<SystemSettings />} />

@@ -18,7 +18,6 @@ public class PharmacyMedicineInventoryService {
     @Autowired
     private PharmacyInventoryRepository inventoryRepository;
 
-    // TODO: Integrate with Spring Security
     private Long getCurrentPharmacyId() {
         return 1L; // Hardcoded for development
     }
@@ -31,8 +30,8 @@ public class PharmacyMedicineInventoryService {
                 .inStock(inventoryRepository.countInStock(pharmacyId))
                 .lowStock(inventoryRepository.countLowStock(pharmacyId))
                 .outOfStock(inventoryRepository.countOutOfStock(pharmacyId))
-                .expired(0) // TODO: Implement when expiry date is available
-                .expiringSoon(0) // TODO: Implement when expiry date is available
+                .expired(0)
+                .expiringSoon(0)
                 .deactivated(inventoryRepository.countDeactivated(pharmacyId))
                 .build();
     }

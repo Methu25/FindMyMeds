@@ -23,7 +23,6 @@ public class PharmacyNotificationService {
     @Autowired
     private NotificationRepository notificationRepository;
 
-    // TODO: Integrate with Spring Security to get the actual logged-in pharmacy ID
     private Long getCurrentPharmacyId() {
         return 1L; // Hardcoded for development
     }
