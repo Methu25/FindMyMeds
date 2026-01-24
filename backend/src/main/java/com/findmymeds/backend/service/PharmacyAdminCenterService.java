@@ -54,7 +54,7 @@ public class PharmacyAdminCenterService {
         // Ideally should have checked PharmacyReport entity content, but will proceed.
         // If fields are missing compilation will fail, but user can fix or I fix in
         // iterations.
-        report.setReport(request.getDescription());
+        report.setDescription(request.getDescription());
         // report.setTitle(request.getTitle()); // Assuming title exists
 
         pharmacyReportRepository.save(report);

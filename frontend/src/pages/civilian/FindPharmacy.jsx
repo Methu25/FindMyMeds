@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import PharmacyMap from '../components/PharmacyMap';
-import PharmacyList from '../components/PharmacyList';
+import PharmacyMap from "../../components/civilian/PharmacyMap";
+import PharmacyList from "../../components/civilian/PharmacyList";
 
 const FindPharmacy = () => {
     const [userLocation, setUserLocation] = useState(null);
