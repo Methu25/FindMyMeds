@@ -23,6 +23,11 @@ public class PharmacyNotificationController {
         return ResponseEntity.ok(notificationService.getCategoryCounts());
     }
 
+    @GetMapping("/unread-count")
+    public ResponseEntity<Long> getUnreadCount() {
+        return ResponseEntity.ok(notificationService.getTotalUnreadCount());
+    }
+
     @GetMapping
     public ResponseEntity<Page<NotificationDTO>> getNotifications(
             @RequestParam(defaultValue = "0") int page,

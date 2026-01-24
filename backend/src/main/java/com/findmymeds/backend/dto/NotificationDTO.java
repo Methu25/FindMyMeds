@@ -1,6 +1,7 @@
 package com.findmymeds.backend.dto;
 
 import com.findmymeds.backend.model.enums.NotificationType;
+import com.findmymeds.backend.model.enums.Priority;
 import lombok.Data;
 import java.time.LocalDateTime;
 
@@ -8,6 +9,7 @@ import java.time.LocalDateTime;
 public class NotificationDTO {
     private Long id;
     private NotificationType type;
+    private Priority priority;
     private String title;
     private String message;
     private boolean read;

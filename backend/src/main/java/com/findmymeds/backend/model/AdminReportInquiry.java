@@ -28,7 +28,7 @@ public class AdminReportInquiry {
     private ReportStatus status = ReportStatus.PENDING;
 
     @Enumerated(EnumType.STRING)
-    private Priority priority = Priority.MEDIUM;
+    private Priority priority = Priority.WARNING;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
