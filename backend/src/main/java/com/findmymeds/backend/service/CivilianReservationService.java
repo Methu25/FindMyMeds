@@ -1,7 +1,7 @@
 package com.findmymeds.backend.service;
 
 import com.findmymeds.backend.model.Reservation;
-import com.findmymeds.backend.repository.ReservationRepository;
+import com.findmymeds.backend.repository.CivilianReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +13,7 @@ import java.util.UUID;
 public class CivilianReservationService {
 
     @Autowired
-    private ReservationRepository reservationRepository;
+    private CivilianReservationRepository reservationRepository;
 
     public Reservation createReservation(Reservation reservation) {
         if (reservation.getId() == null) {

@@ -1,7 +1,7 @@
 package com.findmymeds.backend.service;
 
 import com.findmymeds.backend.model.Pharmacy;
-import com.findmymeds.backend.repository.PharmacyRepository;
+import com.findmymeds.backend.repository.CivilianPharmacyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +11,7 @@ import java.util.List;
 public class CivilianPharmacyService {
 
     @Autowired
-    private PharmacyRepository pharmacyRepository;
+    private CivilianPharmacyRepository pharmacyRepository;
 
     public List<Pharmacy> getAllPharmacies() {
         return pharmacyRepository.findAll();

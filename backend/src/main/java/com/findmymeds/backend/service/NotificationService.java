@@ -21,14 +21,13 @@ public class NotificationService {
     private final NotificationRepository repository;
 
     public Notification createNotification(Role role, NotificationType type, String title, String message,
-            Long entityId, NotificationType entityType) {
+            Long entityId) {
         Notification n = new Notification();
         n.setTargetRole(role);
         n.setNotificationType(type);
         n.setTitle(title);
         n.setMessage(message);
         n.setRelatedEntityId(entityId);
-        n.setRelatedEntityType(entityType);
         return repository.save(n);
     }
 
