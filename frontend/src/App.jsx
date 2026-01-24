@@ -10,6 +10,8 @@ import MedicineDetails from './pages/admin/MedicineDetails';
 import NotificationCenter from './pages/admin/NotificationCenter';
 import NotificationDetails from './pages/admin/NotificationDetails';
 import ProfilePage from './pages/admin/ProfilePage';
+import MedicineInventory from './pages/pharmacy/MedicineInventory';
+import PharmacyNotificationCenter from './pages/pharmacy/NotificationCenter';
 
 function App() {
   return (
@@ -21,10 +23,7 @@ function App() {
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<div className="p-4">Dashboard Placeholder</div>} />
 
-
-
           {/* Placeholders for other sections */}
-          {/* Medicine Registry */}
           {/* Medicine Registry */}
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="admin-center" element={<AdminCenter />} />
@@ -41,6 +40,18 @@ function App() {
 
           {/* Profile */}
           <Route path="profile" element={<ProfilePage />} />
+        </Route>
+
+        {/* Pharmacy Routes */}
+        <Route path="/pharmacy">
+          <Route index element={<Dashboard />} />
+          <Route path="inventory" element={<MedicineInventory />} />
+          <Route path="notifications" element={<PharmacyNotificationCenter />} />
+          <Route path="admin-center" element={<AdminCenter />} />
+          <Route path="settings" element={<SystemSettings />} />
+          {/* Placeholders for missing pages */}
+          <Route path="current-reservations" element={<div className="p-8">Current Reservations Placeholder</div>} />
+          <Route path="reservation-history" element={<div className="p-8">Reservation History Placeholder</div>} />
         </Route>
       </Routes>
     </BrowserRouter>
