@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3a4622d0-a127-45f0-9b84-4c83fda704d4" name="Changes" comment="">
+    <list default="true" id="3a4622d0-a127-45f0-9b84-4c83fda704d4" name="Changes" comment="Repositories for Admin Pharmacy Management">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -26,12 +26,22 @@
     &quot;assignee&quot;: &quot;coder-chetto&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/Methu25/FindMyMeds.git&quot;,
-    &quot;accountId&quot;: &quot;f01dc3f1-e700-4d4f-bd40-bcbaa1f7577b&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/Methu25/FindMyMeds.git",
+    "accountId": "f01dc3f1-e700-4d4f-bd40-bcbaa1f7577b"
+  },
+  "recentNewPullRequestHead": {
+    "server": {
+      "useHttp": false,
+      "host": "github.com",
+      "port": null,
+      "suffix": null
+    },
+    "owner": "Methu25",
+    "repository": "FindMyMeds"
   }
-}</component>
+}]]></component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
       <MavenGeneralSettings>
@@ -53,7 +63,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "Thisari",
+    "git-widget-placeholder": "#20 on Thisari",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/USER/Desktop/g1/FindMyMeds"
@@ -67,6 +77,19 @@
       <option name="presentableId" value="Default" />
       <updated>1768031455886</updated>
     </task>
+    <task id="LOCAL-00001" summary="Repositories for Admin Pharmacy Management">
+      <option name="closed" value="true" />
+      <created>1769279255720</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1769279255720</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Repositories for Admin Pharmacy Management" />
+    <option name="LAST_COMMIT_MESSAGE" value="Repositories for Admin Pharmacy Management" />
   </component>
 </project>
