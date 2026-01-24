@@ -20,6 +20,12 @@ public class Admin {
     @Column(unique = true)
     private String email;
 
+    @Column(name = "contact_number")
+    private String contactNumber;
+
+    @Column(name = "profile_picture_url")
+    private String profilePictureUrl;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 

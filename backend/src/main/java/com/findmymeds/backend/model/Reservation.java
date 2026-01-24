@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import com.findmymeds.backend.model.enums.ReservationStatus;
 
 @Entity
 @Data

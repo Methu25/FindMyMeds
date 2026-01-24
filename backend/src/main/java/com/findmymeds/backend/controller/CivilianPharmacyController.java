@@ -1,7 +1,7 @@
 package com.findmymeds.backend.controller;
 
 import com.findmymeds.backend.model.Pharmacy;
-import com.findmymeds.backend.service.PharmacyService;
+import com.findmymeds.backend.service.CivilianPharmacyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +14,7 @@ import java.util.List;
 public class CivilianPharmacyController {
 
     @Autowired
-    private PharmacyService pharmacyService;
+    private CivilianPharmacyService pharmacyService;
 
     @GetMapping
     public List<Pharmacy> searchPharmacies(@RequestParam(required = false) String query) {
