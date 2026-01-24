@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class PharmacyService {
+public class CivilianPharmacyService {
 
     @Autowired
     private PharmacyRepository pharmacyRepository;
