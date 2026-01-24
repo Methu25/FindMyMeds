@@ -17,12 +17,15 @@ import CivilianManagement from './pages/admin/CivilianManagement';
 // Pharmacy Pages (HEAD)
 import MedicineInventory from './pages/pharmacy/MedicineInventory';
 import PharmacyNotificationCenter from './pages/pharmacy/NotificationCenter';
+import PharmacyNotificationDetails from './pages/pharmacy/NotificationDetails';
 
 // Civilian Pages (Master)
 import CivilianLayout from './components/civilian/CivilianLayout';
 import ActivityPage from './pages/civilian/ActivityPage';
 import FindPharmacy from './pages/civilian/FindPharmacy';
 import ReservationPage from './pages/civilian/ReservationPage';
+
+import { NotificationProvider } from './context/NotificationContext';
 
 function App() {
   return (
@@ -53,15 +56,20 @@ function App() {
         </Route>
 
         {/* Pharmacy Routes (HEAD) */}
-        <Route path="/pharmacy">
-          <Route index element={<Dashboard />} />
-          <Route path="inventory" element={<MedicineInventory />} />
-          <Route path="notifications" element={<PharmacyNotificationCenter />} />
-          <Route path="admin-center" element={<AdminCenter />} />
-          <Route path="settings" element={<SystemSettings />} />
-          <Route path="current-reservations" element={<div className="p-8">Current Reservations Placeholder</div>} />
-          <Route path="reservation-history" element={<div className="p-8">Reservation History Placeholder</div>} />
-        </Route>
+        <Route path="/pharmacy/*" element={
+          <NotificationProvider>
+            <Routes>
+              <Route index element={<Dashboard />} />
+              <Route path="inventory" element={<MedicineInventory />} />
+              <Route path="notifications" element={<PharmacyNotificationCenter />} />
+              <Route path="notifications/:id" element={<PharmacyNotificationDetails />} />
+              <Route path="admin-center" element={<AdminCenter />} />
+              <Route path="settings" element={<SystemSettings />} />
+              <Route path="current-reservations" element={<div className="p-8">Current Reservations Placeholder</div>} />
+              <Route path="reservation-history" element={<div className="p-8">Reservation History Placeholder</div>} />
+            </Routes>
+          </NotificationProvider>
+        } />
 
         {/* Civilian Routes (Master) */}
         <Route path="/civilian" element={<CivilianLayout />}>

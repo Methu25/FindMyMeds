@@ -22,6 +22,9 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
     @Query("SELECT COUNT(n) FROM Notification n WHERE n.userId = :userId AND n.userType = 'PHARMACY' AND n.read = false AND n.notificationType IN :types")
     long countUnreadByTypes(@Param("userId") Long userId, @Param("types") List<NotificationType> types);
 
+    @Query("SELECT COUNT(n) FROM Notification n WHERE n.userId = :userId AND n.userType = 'PHARMACY' AND n.read = false")
+    long countUnreadByPharmacy(@Param("userId") Long userId);
+
     // Existing methods from master
     List<Notification> findByTargetRoleOrderByCreatedAtDesc(Role role);
 
