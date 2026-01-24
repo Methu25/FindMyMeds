@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import AdminLayout from './components/admin/AdminLayout';
 
-
+// Admin Pages
 import Dashboard from './pages/pharmacy/Dashboard.jsx'
 import AdminCenter from './pages/pharmacy/AdminCenter.jsx'
 import SystemSettings from './pages/pharmacy/SystemSettings.jsx'
@@ -14,16 +14,15 @@ import NotificationDetails from './pages/admin/NotificationDetails';
 import ProfilePage from './pages/admin/ProfilePage';
 import CivilianManagement from './pages/admin/CivilianManagement';
 
-// User Portal Imports
+// Pharmacy Pages (HEAD)
+import MedicineInventory from './pages/pharmacy/MedicineInventory';
+import PharmacyNotificationCenter from './pages/pharmacy/NotificationCenter';
+
+// Civilian Pages (Master)
 import CivilianLayout from './components/civilian/CivilianLayout';
 import ActivityPage from './pages/civilian/ActivityPage';
 import FindPharmacy from './pages/civilian/FindPharmacy';
 import ReservationPage from './pages/civilian/ReservationPage';
-
-import PharmacyLayout from './components/civilian/PharmacyLayout';
-import PharmacyDashboard from './pages/pharmacy/Dashboard'; // Reusing dashboard or should be separate?
-// Assuming PharmacyDashboard is intended for Pharmacy User Portal based on context
-
 
 function App() {
   return (
@@ -35,11 +34,7 @@ function App() {
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<div className="p-4">Dashboard Placeholder</div>} />
 
-
-
           {/* Placeholders for other sections */}
-          {/* Medicine Registry */}
-          {/* Medicine Registry */}
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="admin-center" element={<AdminCenter />} />
           <Route path="settings" element={<SystemSettings />} />
@@ -57,27 +52,26 @@ function App() {
           <Route path="profile" element={<ProfilePage />} />
         </Route>
 
-        {/* Civilian Routes */}
+        {/* Pharmacy Routes (HEAD) */}
+        <Route path="/pharmacy">
+          <Route index element={<Dashboard />} />
+          <Route path="inventory" element={<MedicineInventory />} />
+          <Route path="notifications" element={<PharmacyNotificationCenter />} />
+          <Route path="admin-center" element={<AdminCenter />} />
+          <Route path="settings" element={<SystemSettings />} />
+          <Route path="current-reservations" element={<div className="p-8">Current Reservations Placeholder</div>} />
+          <Route path="reservation-history" element={<div className="p-8">Reservation History Placeholder</div>} />
+        </Route>
+
+        {/* Civilian Routes (Master) */}
         <Route path="/civilian" element={<CivilianLayout />}>
           <Route index element={<Navigate to="activity" replace />} />
           <Route path="activity" element={<ActivityPage />} />
           <Route path="find-pharmacy" element={<FindPharmacy />} />
           <Route path="reservation" element={<ReservationPage />} />
         </Route>
-
-        {/* Pharmacy Routes */}
-        <Route path="/pharmacy" element={<PharmacyLayout />}>
-          {/* Reusing Admin Dashboard for now as User Dashboard, or Placeholder */}
-          <Route index element={<PharmacyDashboard />} />
-          <Route path="current-reservations" element={<div className="p-4">Current Reservations Placeholder</div>} />
-          <Route path="reservation-history" element={<div className="p-4">History Placeholder</div>} />
-          <Route path="inventory" element={<div className="p-4">Inventory Placeholder</div>} />
-          <Route path="notifications" element={<div className="p-4">Notifications Placeholder</div>} />
-          <Route path="admin-center" element={<div className="p-4">Admin Center Placeholder</div>} />
-          <Route path="settings" element={<div className="p-4">Settings Placeholder</div>} />
-        </Route>
       </Routes>
-    </BrowserRouter >
+    </BrowserRouter>
   );
 }
 
