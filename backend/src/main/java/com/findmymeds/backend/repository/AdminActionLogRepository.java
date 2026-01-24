@@ -7,10 +7,10 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface AdminActionLogRepository extends JpaRepository {
+public interface AdminActionLogRepository extends JpaRepository<AdminActionLog, Long> {
 
-    List findByAdminIdOrderByCreatedAtDesc(Long adminId);
+    List<AdminActionLog> findByAdminIdOrderByCreatedAtDesc(Long adminId);
 
-    List findByTargetIdAndTargetTableOrderByCreatedAtDesc(
+    List<AdminActionLog> findByTargetIdAndTargetTableOrderByCreatedAtDesc(
             Long targetId, String targetTable);
 }
