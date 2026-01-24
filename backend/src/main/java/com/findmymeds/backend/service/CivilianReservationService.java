@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-public class ReservationService {
+public class CivilianReservationService {
 
     @Autowired
     private ReservationRepository reservationRepository;

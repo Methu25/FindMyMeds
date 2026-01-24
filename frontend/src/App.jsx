@@ -1,17 +1,15 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import AdminLayout from './components/AdminLayout';
-
-
+import AdminLayout from './components/admin/AdminLayout';
 import Dashboard from './pages/pharmacy/Dashboard.jsx'
 import AdminCenter from './pages/pharmacy/AdminCenter.jsx'
 import SystemSettings from './pages/pharmacy/SystemSettings.jsx'
-import MedicineRegistry from './pages/MedicineRegistry';
-import AddMedicine from './pages/AddMedicine';
-import MedicineDetails from './pages/MedicineDetails';
-import NotificationCenter from './pages/NotificationCenter';
-import NotificationDetails from './pages/NotificationDetails';
-import ProfilePage from './pages/ProfilePage';
+import MedicineRegistry from './pages/admin/MedicineRegistry';
+import AddMedicine from './pages/admin/AddMedicine';
+import MedicineDetails from './pages/admin/MedicineDetails';
+import NotificationCenter from './pages/admin/NotificationCenter';
+import NotificationDetails from './pages/admin/NotificationDetails';
+import ProfilePage from './pages/admin/ProfilePage';
 
 function App() {
   return (
@@ -27,9 +25,10 @@ function App() {
 
           {/* Placeholders for other sections */}
           {/* Medicine Registry */}
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/admin-center" element={<AdminCenter />} />
-          <Route path="/settings" element={<SystemSettings />} />
+          {/* Medicine Registry */}
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="admin-center" element={<AdminCenter />} />
+          <Route path="settings" element={<SystemSettings />} />
           <Route path="medicines" element={<MedicineRegistry />} />
           <Route path="medicines/add" element={<AddMedicine />} />
           <Route path="medicines/:id" element={<MedicineDetails />} />
