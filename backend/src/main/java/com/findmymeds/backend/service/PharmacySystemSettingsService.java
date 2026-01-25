@@ -1,6 +1,6 @@
 package com.findmymeds.backend.service;
 
-import com.findmymeds.backend.dto.SystemSettingsDto;
+import com.findmymeds.backend.dto.SystemSettingsDTO;
 import com.findmymeds.backend.model.PharmacySystemSettings;
 import com.findmymeds.backend.repository.PharmacyRepository;
 import com.findmymeds.backend.repository.PharmacySystemSettingsRepository;
@@ -14,14 +14,14 @@ public class PharmacySystemSettingsService {
     private final PharmacySystemSettingsRepository settingsRepository;
     private final PharmacyRepository pharmacyRepository;
 
-    public SystemSettingsDto getSettings(Long pharmacyId) {
+    public SystemSettingsDTO getSettings(Long pharmacyId) {
         PharmacySystemSettings settings = settingsRepository.findByPharmacyId(pharmacyId)
                 .orElseGet(() -> createDefaultSettings(pharmacyId));
 
         return mapToDto(settings);
     }
 
-    public void saveSettings(Long pharmacyId, SystemSettingsDto dto) {
+    public void saveSettings(Long pharmacyId, SystemSettingsDTO dto) {
         PharmacySystemSettings settings = settingsRepository.findByPharmacyId(pharmacyId)
                 .orElseGet(() -> {
                     PharmacySystemSettings s = new PharmacySystemSettings();
@@ -39,8 +39,8 @@ public class PharmacySystemSettingsService {
         return settingsRepository.save(settings);
     }
 
-    private SystemSettingsDto mapToDto(PharmacySystemSettings settings) {
-        return new SystemSettingsDto(
+    private SystemSettingsDTO mapToDto(PharmacySystemSettings settings) {
+        return new SystemSettingsDTO(
                 settings.isNotificationsEnabled(),
                 settings.getTheme(),
                 settings.getDefaultHomepage(),
@@ -48,7 +48,7 @@ public class PharmacySystemSettingsService {
                 settings.isExpiryAlerts());
     }
 
-    private void updateEntityFromDto(PharmacySystemSettings entity, SystemSettingsDto dto) {
+    private void updateEntityFromDto(PharmacySystemSettings entity, SystemSettingsDTO dto) {
         entity.setNotificationsEnabled(dto.isNotificationsEnabled());
         entity.setTheme(dto.getTheme());
         entity.setDefaultHomepage(dto.getDefaultHomepage());

@@ -20,7 +20,7 @@ public class AdminService {
     private final AdminActionLogRepository actionLogRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public List getAllAdmins() {
+    public List<AdminResponse> getAllAdmins() {
         return adminRepository.findAll().stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
@@ -62,7 +62,7 @@ public class AdminService {
 
     @Transactional
     public AdminResponse updateAdminEmail(Long adminId, UpdateAdminEmailRequest request,
-                                          Long currentAdminId) {
+            Long currentAdminId) {
         Admin admin = adminRepository.findById(adminId)
                 .orElseThrow(() -> new AdminNotFoundException("Admin not found with id: " + adminId));
 
@@ -98,7 +98,7 @@ public class AdminService {
     }
 
     private void logAction(Long adminId, String actionType, String targetTable,
-                           Long targetId, String description) {
+            Long targetId, String description) {
         AdminActionLog log = new AdminActionLog();
 
         Admin admin = adminRepository.getReferenceById(adminId);
@@ -117,7 +117,6 @@ public class AdminService {
                 admin.getFullName(),
                 admin.getEmail(),
                 admin.getRole(),
-                admin.getCreatedAt()
-        );
+                admin.getCreatedAt());
     }
 }

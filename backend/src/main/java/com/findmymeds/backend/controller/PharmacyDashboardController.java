@@ -1,6 +1,6 @@
 package com.findmymeds.backend.controller;
 
-import com.findmymeds.backend.dto.DashboardMetricsDto;
+import com.findmymeds.backend.dto.DashboardMetricsDTO;
 import com.findmymeds.backend.service.PharmacyDashboardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +16,7 @@ public class PharmacyDashboardController {
     private final PharmacyDashboardService pharmacyDashboardService;
 
     @GetMapping("/metrics")
-    public ResponseEntity<DashboardMetricsDto> getMetrics() {
+    public ResponseEntity<DashboardMetricsDTO> getMetrics() {
         // In a real secure app, we extract pharmacyId from JWT token.
         // For now, hardcoding ID 1 or assuming Auth util usage (mocked).
         // Long pharmacyId = getAuthenticatedPharmacyId();

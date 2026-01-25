@@ -1,6 +1,6 @@
 package com.findmymeds.backend.service;
 
-import com.findmymeds.backend.dto.DashboardMetricsDto;
+import com.findmymeds.backend.dto.DashboardMetricsDTO;
 import com.findmymeds.backend.repository.InventoryRepository;
 import com.findmymeds.backend.repository.ReservationRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,21 +14,23 @@ import java.time.LocalTime;
 @RequiredArgsConstructor
 public class PharmacyDashboardService {
 
-    private final ReservationRepository reservationRepository;
-    private final InventoryRepository inventoryRepository;
+        private final ReservationRepository reservationRepository;
+        private final InventoryRepository inventoryRepository;
 
-    public DashboardMetricsDto getMetrics(Long pharmacyId) {
-        LocalDateTime startOfDay = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
-        LocalDateTime endOfDay = LocalDateTime.of(LocalDate.now(), LocalTime.MAX);
+        public DashboardMetricsDTO getMetrics(Long pharmacyId) {
+                LocalDateTime startOfDay = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
+                LocalDateTime endOfDay = LocalDateTime.of(LocalDate.now(), LocalTime.MAX);
 
-        long todaysReservations = reservationRepository.countByPharmacyIdAndDateBetween(pharmacyId, startOfDay,
-                endOfDay);
-        long completedToday = reservationRepository.countByPharmacyIdAndStatusAndDateBetween(
-                pharmacyId, com.findmymeds.backend.model.enums.ReservationStatus.COLLECTED, startOfDay, endOfDay);
-        long rejectedToday = reservationRepository.countByPharmacyIdAndStatusAndDateBetween(
-                pharmacyId, com.findmymeds.backend.model.enums.ReservationStatus.CANCELLED, startOfDay, endOfDay);
-        long inStockMedicines = inventoryRepository.countInStock(pharmacyId);
+                long todaysReservations = reservationRepository.countByPharmacyIdAndDateBetween(pharmacyId, startOfDay,
+                                endOfDay);
+                long completedToday = reservationRepository.countByPharmacyIdAndStatusAndDateBetween(
+                                pharmacyId, com.findmymeds.backend.model.enums.ReservationStatus.COLLECTED, startOfDay,
+                                endOfDay);
+                long rejectedToday = reservationRepository.countByPharmacyIdAndStatusAndDateBetween(
+                                pharmacyId, com.findmymeds.backend.model.enums.ReservationStatus.CANCELLED, startOfDay,
+                                endOfDay);
+                long inStockMedicines = inventoryRepository.countInStock(pharmacyId);
 
-        return new DashboardMetricsDto(todaysReservations, completedToday, rejectedToday, inStockMedicines);
-    }
+                return new DashboardMetricsDTO(todaysReservations, completedToday, rejectedToday, inStockMedicines);
+        }
 }

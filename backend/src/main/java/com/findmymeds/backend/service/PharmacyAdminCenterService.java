@@ -1,7 +1,7 @@
 package com.findmymeds.backend.service;
 
-import com.findmymeds.backend.dto.PharmacyProfileDto;
-import com.findmymeds.backend.dto.ReportRequestDto;
+import com.findmymeds.backend.dto.PharmacyProfileDTO;
+import com.findmymeds.backend.dto.ReportRequestDTO;
 import com.findmymeds.backend.model.Pharmacy;
 import com.findmymeds.backend.model.PharmacyProfile;
 import com.findmymeds.backend.model.PharmacyReport;
@@ -19,7 +19,7 @@ public class PharmacyAdminCenterService {
     private final PharmacyProfileRepository pharmacyProfileRepository;
     private final PharmacyReportRepository pharmacyReportRepository;
 
-    public PharmacyProfileDto getProfile(Long pharmacyId) {
+    public PharmacyProfileDTO getProfile(Long pharmacyId) {
         if (pharmacyId == null) {
             throw new IllegalArgumentException("Pharmacy ID cannot be null");
         }
@@ -29,24 +29,24 @@ public class PharmacyAdminCenterService {
         PharmacyProfile profile = pharmacyProfileRepository.findByPharmacyId(pharmacyId)
                 .orElse(null);
 
-        PharmacyProfileDto dto = new PharmacyProfileDto();
+        PharmacyProfileDTO dto = new PharmacyProfileDTO();
         dto.setId(pharmacy.getId());
         dto.setName(pharmacy.getName());
         dto.setAddress(pharmacy.getAddress());
         dto.setLatitude(pharmacy.getLatitude());
         dto.setLongitude(pharmacy.getLongitude());
-        dto.setRating(pharmacy.getRating());
+        dto.setRating(0.0); // Rating field removed from Pharmacy entity
 
         if (profile != null) {
             dto.setLicenseDocument(profile.getLicenseDocument());
-            dto.setVerified(profile.getVerified());
+            dto.setVerified(pharmacy.getStatus() == com.findmymeds.backend.model.PharmacyStatus.ACTIVE);
             dto.setLogoPath(profile.getLogoPath());
         }
 
         return dto;
     }
 
-    public void submitReport(Long pharmacyId, ReportRequestDto request) {
+    public void submitReport(Long pharmacyId, ReportRequestDTO request) {
         if (pharmacyId == null) {
             throw new IllegalArgumentException("Pharmacy ID cannot be null");
         }
