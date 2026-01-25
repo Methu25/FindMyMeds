@@ -5,6 +5,9 @@ import com.findmymeds.backend.dto.MedicineInventoryDTO;
 import com.findmymeds.backend.dto.MedicineInventoryMetricsDTO;
 import com.findmymeds.backend.model.Medicine;
 import com.findmymeds.backend.model.PharmacyInventory;
+import com.findmymeds.backend.model.enums.NotificationType;
+import com.findmymeds.backend.model.enums.Priority;
+import com.findmymeds.backend.model.enums.UserType;
 import com.findmymeds.backend.repository.PharmacyInventoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,6 +20,9 @@ public class PharmacyMedicineInventoryService {
 
     @Autowired
     private PharmacyInventoryRepository inventoryRepository;
+
+    @Autowired
+    private PharmacyNotificationService notificationService;
 
     private Long getCurrentPharmacyId() {
         return 1L; // Hardcoded for development
@@ -38,13 +44,6 @@ public class PharmacyMedicineInventoryService {
 
     public Page<MedicineInventoryDTO> getInventory(String filter, String search, int page, int size) {
         Long pharmacyId = getCurrentPharmacyId();
-
-        // Note: 'filter' parameter is not fully implemented in Repository yet as the
-        // request was generic.
-        // If specific filters (e.g. "LOW_STOCK") are needed, the repository generic
-        // search/filter can be expanded.
-        // For now using the search functionality.
-
         Pageable pageable = PageRequest.of(page, size);
         Page<PharmacyInventory> inventoryPage = inventoryRepository.findByPharmacyIdAndSearch(pharmacyId, search,
                 pageable);
@@ -53,17 +52,43 @@ public class PharmacyMedicineInventoryService {
     }
 
     public MedicineDetailDTO getMedicineDetails(Long medicineId) {
-        // Here medicineId refers to the PharmacyInventory's ID based on the API
-        // specific requirement "GET /inventory/{medicineId}"
-        // Usually {medicineId} would imply the ID from Medicine table, but context
-        // implies managing inventory.
-        // Assuming the ID passed is the ID of the Inventory item
-        // (PharmacyInventory.id).
-
         PharmacyInventory inventory = inventoryRepository.findById(medicineId)
                 .orElseThrow(() -> new RuntimeException("Inventory item not found with id: " + medicineId));
 
         return mapToDetailDTO(inventory);
+    }
+
+    public void updateStock(Long inventoryId, Integer newQuantity) {
+        PharmacyInventory inventory = inventoryRepository.findById(inventoryId)
+                .orElseThrow(() -> new RuntimeException("Inventory not found"));
+
+        inventory.setAvailableQuantity(newQuantity);
+        inventoryRepository.save(inventory);
+
+        checkStockAndNotify(inventory);
+    }
+
+    private void checkStockAndNotify(PharmacyInventory inventory) {
+        if (inventory.getAvailableQuantity() == 0) {
+            notificationService.createNotification(
+                    UserType.PHARMACY,
+                    inventory.getPharmacy().getId(),
+                    NotificationType.MEDICINE,
+                    "Out of Stock Alert",
+                    "Medicine " + inventory.getMedicine().getMedicineName() + " is out of stock!",
+                    Priority.CRITICAL,
+                    inventory.getId());
+        } else if (inventory.getAvailableQuantity() <= 10) {
+            notificationService.createNotification(
+                    UserType.PHARMACY,
+                    inventory.getPharmacy().getId(),
+                    NotificationType.MEDICINE,
+                    "Low Stock Alert",
+                    "Medicine " + inventory.getMedicine().getMedicineName() + " is running low ("
+                            + inventory.getAvailableQuantity() + " left).",
+                    Priority.WARNING,
+                    inventory.getId());
+        }
     }
 
     private MedicineInventoryDTO mapToDTO(PharmacyInventory inventory) {
@@ -77,7 +102,6 @@ public class PharmacyMedicineInventoryService {
         dto.setPrice(inventory.getPrice());
         dto.setImageUrl(inventory.getMedicine().getImageUrl());
 
-        // Determine status
         if (inventory.getMedicine().getStatus() == Medicine.MedicineStatus.INACTIVE) {
             dto.setStatus("Deactivated");
         } else if (inventory.getAvailableQuantity() == 0) {

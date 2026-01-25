@@ -4,6 +4,8 @@ import com.findmymeds.backend.dto.NotificationCategoryCountDTO;
 import com.findmymeds.backend.dto.NotificationDTO;
 import com.findmymeds.backend.model.Notification;
 import com.findmymeds.backend.model.enums.NotificationType;
+import com.findmymeds.backend.model.enums.Priority;
+import com.findmymeds.backend.model.enums.UserType;
 import com.findmymeds.backend.repository.NotificationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -52,6 +54,10 @@ public class PharmacyNotificationService {
         return counts;
     }
 
+    public long getTotalUnreadCount() {
+        return notificationRepository.countUnreadByPharmacy(getCurrentPharmacyId());
+    }
+
     public Page<NotificationDTO> getNotifications(int page, int size) {
         Long pharmacyId = getCurrentPharmacyId();
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
@@ -63,9 +69,6 @@ public class PharmacyNotificationService {
         Notification notification = notificationRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Notification not found with id: " + id));
 
-        // Optional: Check if notification belongs to current user
-        // if (!notification.getUserId().equals(getCurrentPharmacyId())) throw ...
-
         notification.setRead(true);
         notification.setReadAt(LocalDateTime.now());
         notificationRepository.save(notification);
@@ -75,11 +78,27 @@ public class PharmacyNotificationService {
         NotificationDTO dto = new NotificationDTO();
         dto.setId(n.getId());
         dto.setType(n.getNotificationType());
+        dto.setPriority(n.getPriority());
         dto.setTitle(n.getTitle());
         dto.setMessage(n.getMessage());
         dto.setRead(n.getRead());
         dto.setCreatedAt(n.getCreatedAt());
         dto.setRelatedEntityId(n.getRelatedEntityId());
         return dto;
+    }
+
+    public void createNotification(UserType userType, Long userId, NotificationType type, String title, String message,
+            Priority priority, Long relatedEntityId) {
+        Notification n = new Notification();
+        n.setUserType(userType);
+        n.setUserId(userId);
+        n.setNotificationType(type);
+        n.setTitle(title);
+        n.setMessage(message);
+        n.setPriority(priority);
+        n.setRelatedEntityId(relatedEntityId);
+        n.setCreatedAt(LocalDateTime.now());
+        n.setRead(false);
+        notificationRepository.save(n);
     }
 }
