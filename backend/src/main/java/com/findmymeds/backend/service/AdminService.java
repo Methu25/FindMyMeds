@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -20,7 +21,7 @@ public class AdminService {
     private final AdminActionLogRepository actionLogRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public List getAllAdmins() {
+    public List<AdminResponse> getAllAdmins() {
         return adminRepository.findAll().stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
@@ -30,6 +31,16 @@ public class AdminService {
         Admin admin = adminRepository.findById(id)
                 .orElseThrow(() -> new AdminNotFoundException("Admin not found with id: " + id));
         return mapToResponse(admin);
+    }
+
+    // Add this new method that returns Optional<Admin> for the ProfileController
+    public Optional<Admin> getAdminEntityById(Long id) {
+        return adminRepository.findById(id);
+    }
+
+    // Add this new method that returns List<Admin> for the ProfileController
+    public List<Admin> getAllAdminEntities() {
+        return adminRepository.findAll();
     }
 
     public AdminMetricsResponse getMetrics() {

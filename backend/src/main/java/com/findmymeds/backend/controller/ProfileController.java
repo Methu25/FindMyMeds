@@ -17,10 +17,8 @@ public class ProfileController {
     // Simulate getting the "current" logged-in user (hardcoded ID 1 for now)
     @GetMapping
     public ResponseEntity<Admin> getProfile() {
-        // Mock: Try to find ID 1, otherwise return the first available admin for demo
-        // purposes
-        return adminService.getAdminById(1L)
-                .or(() -> adminService.getAllAdmins().stream().findFirst())
+        return adminService.getAdminEntityById(1L)
+                .or(() -> adminService.getAllAdminEntities().stream().findFirst())
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
