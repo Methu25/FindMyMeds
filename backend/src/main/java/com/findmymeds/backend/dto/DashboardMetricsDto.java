@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class DashboardMetricsDto {
     private long todaysReservations;
-    private long pendingOrders;
-    private long outOfStockMedicines;
-    private long expiringSoonCount;
+    private long completedToday;
+    private long rejectedToday;
+    private long inStockMedicines;
 }

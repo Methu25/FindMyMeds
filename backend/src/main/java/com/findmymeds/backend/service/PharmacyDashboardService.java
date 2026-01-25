@@ -23,11 +23,12 @@ public class PharmacyDashboardService {
 
         long todaysReservations = reservationRepository.countByPharmacyIdAndDateBetween(pharmacyId, startOfDay,
                 endOfDay);
-        long pendingOrders = reservationRepository.countPending(pharmacyId);
-        long outOfStock = inventoryRepository.countOutOfStock(pharmacyId);
-        long expiringSoon = 0; // inventoryRepository.countExpiringSoon(pharmacyId); -- Assuming 0 as no expiry
-                               // column in entity
+        long completedToday = reservationRepository.countByPharmacyIdAndStatusAndDateBetween(
+                pharmacyId, com.findmymeds.backend.model.enums.ReservationStatus.COLLECTED, startOfDay, endOfDay);
+        long rejectedToday = reservationRepository.countByPharmacyIdAndStatusAndDateBetween(
+                pharmacyId, com.findmymeds.backend.model.enums.ReservationStatus.CANCELLED, startOfDay, endOfDay);
+        long inStockMedicines = inventoryRepository.countInStock(pharmacyId);
 
-        return new DashboardMetricsDto(todaysReservations, pendingOrders, outOfStock, expiringSoon);
+        return new DashboardMetricsDto(todaysReservations, completedToday, rejectedToday, inStockMedicines);
     }
 }
