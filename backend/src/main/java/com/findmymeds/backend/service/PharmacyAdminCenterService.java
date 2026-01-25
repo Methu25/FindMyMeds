@@ -19,7 +19,7 @@ public class PharmacyAdminCenterService {
     private final PharmacyProfileRepository pharmacyProfileRepository;
     private final PharmacyReportRepository pharmacyReportRepository;
 
-    public PharmacyProfileDto getProfile(Long pharmacyId) {
+    public PharmacyProfileDto getProfile(@org.springframework.lang.NonNull Long pharmacyId) {
         Pharmacy pharmacy = pharmacyRepository.findById(pharmacyId)
                 .orElseThrow(() -> new RuntimeException("Pharmacy not found"));
 
@@ -43,7 +43,7 @@ public class PharmacyAdminCenterService {
         return dto;
     }
 
-    public void submitReport(Long pharmacyId, ReportRequestDto request) {
+    public void submitReport(@org.springframework.lang.NonNull Long pharmacyId, ReportRequestDto request) {
         Pharmacy pharmacy = pharmacyRepository.getReferenceById(pharmacyId);
         PharmacyReport report = new PharmacyReport();
         report.setPharmacy(pharmacy);

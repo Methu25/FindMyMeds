@@ -17,11 +17,11 @@ public class AdminPharmacyInventoryService {
         return inventoryRepository.findByPharmacyId(pharmacyId);
     }
 
-    public PharmacyInventory saveInventory(PharmacyInventory inventory) {
+    public PharmacyInventory saveInventory(@org.springframework.lang.NonNull PharmacyInventory inventory) {
         return inventoryRepository.save(inventory);
     }
 
-    public PharmacyInventory updateInventory(PharmacyInventory inventory) {
+    public PharmacyInventory updateInventory(@org.springframework.lang.NonNull PharmacyInventory inventory) {
         return inventoryRepository.save(inventory);
     }
 }

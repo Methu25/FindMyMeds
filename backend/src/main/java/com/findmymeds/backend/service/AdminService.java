@@ -27,7 +27,7 @@ public class AdminService {
                 .collect(Collectors.toList());
     }
 
-    public AdminResponse getAdminById(Long id) {
+    public AdminResponse getAdminById(@org.springframework.lang.NonNull Long id) {
         Admin admin = adminRepository.findById(id)
                 .orElseThrow(() -> new AdminNotFoundException("Admin not found with id: " + id));
         return mapToResponse(admin);
@@ -52,7 +52,8 @@ public class AdminService {
     }
 
     @Transactional
-    public AdminResponse createAdmin(CreateAdminRequest request, Long currentAdminId) {
+    public AdminResponse createAdmin(CreateAdminRequest request,
+            @org.springframework.lang.NonNull Long currentAdminId) {
         if (adminRepository.existsByEmail(request.getEmail())) {
             throw new DuplicateEmailException("Email already exists: " + request.getEmail());
         }
@@ -72,8 +73,9 @@ public class AdminService {
     }
 
     @Transactional
-    public AdminResponse updateAdminEmail(Long adminId, UpdateAdminEmailRequest request,
-                                          Long currentAdminId) {
+    public AdminResponse updateAdminEmail(@org.springframework.lang.NonNull Long adminId,
+            UpdateAdminEmailRequest request,
+            @org.springframework.lang.NonNull Long currentAdminId) {
         Admin admin = adminRepository.findById(adminId)
                 .orElseThrow(() -> new AdminNotFoundException("Admin not found with id: " + adminId));
 
@@ -93,7 +95,8 @@ public class AdminService {
     }
 
     @Transactional
-    public void deleteAdmin(Long adminId, Long currentAdminId) {
+    public void deleteAdmin(@org.springframework.lang.NonNull Long adminId,
+            @org.springframework.lang.NonNull Long currentAdminId) {
         Admin admin = adminRepository.findById(adminId)
                 .orElseThrow(() -> new AdminNotFoundException("Admin not found with id: " + adminId));
 
@@ -108,8 +111,8 @@ public class AdminService {
                 "Deleted admin: " + adminName);
     }
 
-    private void logAction(Long adminId, String actionType, String targetTable,
-                           Long targetId, String description) {
+    private void logAction(@org.springframework.lang.NonNull Long adminId, String actionType, String targetTable,
+            Long targetId, String description) {
         AdminActionLog log = new AdminActionLog();
 
         Admin admin = adminRepository.getReferenceById(adminId);
@@ -128,7 +131,6 @@ public class AdminService {
                 admin.getFullName(),
                 admin.getEmail(),
                 admin.getRole(),
-                admin.getCreatedAt()
-        );
+                admin.getCreatedAt());
     }
 }
