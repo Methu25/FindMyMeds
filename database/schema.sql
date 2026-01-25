@@ -89,8 +89,12 @@ CREATE TABLE pharmacies (
     email VARCHAR(255),
     phone VARCHAR(255),
     address TEXT,
+    latitude DOUBLE,
+    longitude DOUBLE;
     operating_hours VARCHAR(255),
-    status ENUM('ACTIVE', 'SUSPENDED'),
+    status ENUM('PENDING','ACTIVE','SUSPENDED','REJECTED','REMOVED'),
+    is_deleted BOOLEAN DEFAULT FALSE,
+    deleted_at DATETIME,
     created_at DATETIME
 );
 
