@@ -15,24 +15,11 @@ public class ProfileController {
     private final AdminService adminService;
 
     @GetMapping
-    public ResponseEntity<AdminResponse> getProfile() {
-        AdminResponse admin = null;
-
-        try {
-            admin = adminService.getAdminById(1L); // may throw exception
-        } catch (RuntimeException e) {
-            // fallback to first admin
-        }
-
-        if (admin == null) {
-            admin = adminService.getAllAdmins().stream().findFirst().orElse(null);
-        }
-
-        if (admin != null) {
-            return ResponseEntity.ok(admin);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<Admin> getProfile() {
+        return adminService.getAdminEntityById(1L)
+                .or(() -> adminService.getAllAdminEntities().stream().findFirst())
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
 }
