@@ -47,6 +47,8 @@ Thumbs.db
 *.tar.gz
 *.rar
 *.iml
-.idea/
-backend/target/
-*.class
+
+# Environment variables
+.env
+.env.local
+.env.*.local
