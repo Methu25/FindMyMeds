@@ -1,0 +1,19 @@
+{
+    "civilian": {
+        "id": 1
+    },
+    "pharmacy": {
+        "id": 1
+    },
+    "totalAmount": 25.0,
+    "status": "PENDING",
+    "items": [
+        {
+            "medicine": {
+                "id": 1
+            },
+            "quantity": 2,
+            "price": 12.5
+        }
+    ]
+}

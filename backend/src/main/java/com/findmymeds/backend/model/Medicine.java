@@ -50,7 +50,7 @@ public class Medicine {
     private LocalDateTime lastUpdated;
 
     public enum MedicineType {
-        TABLET, CAPSULE, SYRUP, INJECTION, OINTMENT, CREAM, DROPS, INHALER, OTHER
+        TABLET, CAPSULE, SYRUP, INJECTION, OINTMENT, CREAM, DROPS, INHALER, OTHER, SUSPENSION, CREAM_OINTMENT
     }
 
     public enum MedicineStatus {

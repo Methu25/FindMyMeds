@@ -13,7 +13,7 @@ const ProfilePage = () => {
 
     const fetchProfile = async () => {
         try {
-            const res = await fetch('http://localhost:8081/api/profile');
+            const res = await fetch('http://localhost:8080/api/profile');
             if (res.ok) {
                 setProfile(await res.json());
             }
