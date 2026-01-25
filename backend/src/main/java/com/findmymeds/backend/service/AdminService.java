@@ -34,7 +34,7 @@ public class AdminService {
     }
 
     // Add this new method that returns Optional<Admin> for the ProfileController
-    public Optional<Admin> getAdminEntityById(Long id) {
+    public Optional<Admin> getAdminEntityById(@org.springframework.lang.NonNull Long id) {
         return adminRepository.findById(id);
     }
 
