@@ -27,7 +27,8 @@ public class AdminPharmacyService {
         return pharmacyRepository.save(pharmacy);
     }
 
-    public Pharmacy updatePharmacyStatus(@org.springframework.lang.NonNull Long id, PharmacyStatus status) {
+    public Pharmacy updatePharmacyStatus(@org.springframework.lang.NonNull Long id,
+            com.findmymeds.backend.model.PharmacyStatus status) {
         Pharmacy pharmacy = getPharmacyById(id);
         pharmacy.setStatus(status);
         return pharmacyRepository.save(pharmacy);

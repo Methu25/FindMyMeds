@@ -37,7 +37,7 @@ public class AdminPharmacyController {
 
     @PatchMapping("/{id}/status")
     public Pharmacy updatePharmacyStatus(@PathVariable @org.springframework.lang.NonNull Long id,
-            @RequestParam PharmacyStatus status) {
+            @RequestParam com.findmymeds.backend.model.PharmacyStatus status) {
         return pharmacyService.updatePharmacyStatus(id, status);
     }
 }
