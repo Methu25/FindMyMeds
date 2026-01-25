@@ -32,7 +32,8 @@ public class PharmacyMedicineInventoryController {
     }
 
     @GetMapping("/{medicineId}")
-    public ResponseEntity<MedicineDetailDTO> getMedicineDetails(@PathVariable Long medicineId) {
+    public ResponseEntity<MedicineDetailDTO> getMedicineDetails(
+            @PathVariable @org.springframework.lang.NonNull Long medicineId) {
         return ResponseEntity.ok(inventoryService.getMedicineDetails(medicineId));
     }
 }

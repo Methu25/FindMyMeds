@@ -21,25 +21,25 @@ public class AdminController {
 
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
-    public ResponseEntity<List> getAllAdmins() {
+    public ResponseEntity<List<AdminResponse>> getAllAdmins() {
         return ResponseEntity.ok(adminService.getAllAdmins());
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
-    public ResponseEntity getAdminById(@PathVariable Long id) {
+    public ResponseEntity<AdminResponse> getAdminById(@PathVariable @org.springframework.lang.NonNull Long id) {
         return ResponseEntity.ok(adminService.getAdminById(id));
     }
 
     @GetMapping("/metrics")
     @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
-    public ResponseEntity getMetrics() {
+    public ResponseEntity<AdminMetricsResponse> getMetrics() {
         return ResponseEntity.ok(adminService.getMetrics());
     }
 
     @PostMapping
     @PreAuthorize("hasRole('SUPER_ADMIN')")
-    public ResponseEntity createAdmin(
+    public ResponseEntity<AdminResponse> createAdmin(
             @Valid @RequestBody CreateAdminRequest request,
             Authentication authentication) {
 
@@ -50,8 +50,8 @@ public class AdminController {
 
     @PatchMapping("/{id}/email")
     @PreAuthorize("hasRole('SUPER_ADMIN')")
-    public ResponseEntity updateAdminEmail(
-            @PathVariable Long id,
+    public ResponseEntity<AdminResponse> updateAdminEmail(
+            @PathVariable @org.springframework.lang.NonNull Long id,
             @Valid @RequestBody UpdateAdminEmailRequest request,
             Authentication authentication) {
 
@@ -62,8 +62,8 @@ public class AdminController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('SUPER_ADMIN')")
-    public ResponseEntity deleteAdmin(
-            @PathVariable Long id,
+    public ResponseEntity<Void> deleteAdmin(
+            @PathVariable @org.springframework.lang.NonNull Long id,
             Authentication authentication) {
 
         Long currentAdminId = getCurrentAdminId(authentication);
@@ -71,7 +71,7 @@ public class AdminController {
         return ResponseEntity.noContent().build();
     }
 
-    private Long getCurrentAdminId(Authentication authentication) {
+    private long getCurrentAdminId(Authentication authentication) {
         return Long.parseLong(authentication.getName());
     }
 }

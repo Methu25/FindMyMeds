@@ -51,14 +51,14 @@ public class PharmacyMedicineInventoryService {
         return inventoryPage.map(this::mapToDTO);
     }
 
-    public MedicineDetailDTO getMedicineDetails(Long medicineId) {
+    public MedicineDetailDTO getMedicineDetails(@org.springframework.lang.NonNull Long medicineId) {
         PharmacyInventory inventory = inventoryRepository.findById(medicineId)
                 .orElseThrow(() -> new RuntimeException("Inventory item not found with id: " + medicineId));
 
         return mapToDetailDTO(inventory);
     }
 
-    public void updateStock(Long inventoryId, Integer newQuantity) {
+    public void updateStock(@org.springframework.lang.NonNull Long inventoryId, Integer newQuantity) {
         PharmacyInventory inventory = inventoryRepository.findById(inventoryId)
                 .orElseThrow(() -> new RuntimeException("Inventory not found"));
 

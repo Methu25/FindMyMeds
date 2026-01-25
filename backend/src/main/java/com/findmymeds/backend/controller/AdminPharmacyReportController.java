@@ -21,17 +21,18 @@ public class AdminPharmacyReportController {
     }
 
     @GetMapping("/pharmacy/{pharmacyId}")
-    public List<PharmacyReport> getReportsByPharmacy(@PathVariable Long pharmacyId) {
+    public List<PharmacyReport> getReportsByPharmacy(@PathVariable @org.springframework.lang.NonNull Long pharmacyId) {
         return reportService.getReportsByPharmacy(pharmacyId);
     }
 
     @PostMapping
-    public PharmacyReport createReport(@RequestBody PharmacyReport report) {
+    public PharmacyReport createReport(@RequestBody @org.springframework.lang.NonNull PharmacyReport report) {
         return reportService.saveReport(report);
     }
 
     @PatchMapping("/{reportId}/status")
-    public PharmacyReport updateReportStatus(@PathVariable Long reportId, @RequestParam ReportStatus status) {
+    public PharmacyReport updateReportStatus(@PathVariable @org.springframework.lang.NonNull Long reportId,
+            @RequestParam ReportStatus status) {
         return reportService.updateReportStatus(reportId, status);
     }
 }

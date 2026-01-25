@@ -31,12 +31,13 @@ public class AdminPharmacyController {
     }
 
     @PostMapping
-    public Pharmacy createPharmacy(@RequestBody Pharmacy pharmacy) {
+    public Pharmacy createPharmacy(@RequestBody @org.springframework.lang.NonNull Pharmacy pharmacy) {
         return pharmacyService.savePharmacy(pharmacy);
     }
 
     @PatchMapping("/{id}/status")
-    public Pharmacy updatePharmacyStatus(@PathVariable Long id, @RequestParam PharmacyStatus status) {
+    public Pharmacy updatePharmacyStatus(@PathVariable @org.springframework.lang.NonNull Long id,
+            @RequestParam PharmacyStatus status) {
         return pharmacyService.updatePharmacyStatus(id, status);
     }
 }

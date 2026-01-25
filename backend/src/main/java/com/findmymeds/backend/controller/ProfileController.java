@@ -25,7 +25,7 @@ public class ProfileController {
         }
 
         if (admin == null) {
-            admin = (AdminResponse) adminService.getAllAdmins().stream().findFirst().orElse(null);
+            admin = adminService.getAllAdmins().stream().findFirst().orElse(null);
         }
 
         if (admin != null) {
