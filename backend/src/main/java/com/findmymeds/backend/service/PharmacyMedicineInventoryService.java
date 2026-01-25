@@ -8,6 +8,7 @@ import com.findmymeds.backend.model.PharmacyInventory;
 import com.findmymeds.backend.model.enums.NotificationType;
 import com.findmymeds.backend.model.enums.Priority;
 import com.findmymeds.backend.model.enums.UserType;
+import com.findmymeds.backend.repository.MedicineRepository;
 import com.findmymeds.backend.repository.PharmacyInventoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,6 +23,9 @@ public class PharmacyMedicineInventoryService {
     private PharmacyInventoryRepository inventoryRepository;
 
     @Autowired
+    private MedicineRepository medicineRepository;
+
+    @Autowired
     private PharmacyNotificationService notificationService;
 
     private Long getCurrentPharmacyId() {
@@ -30,14 +34,16 @@ public class PharmacyMedicineInventoryService {
 
     public MedicineInventoryMetricsDTO getInventoryMetrics() {
         Long pharmacyId = getCurrentPharmacyId();
+        java.time.LocalDate today = java.time.LocalDate.now();
+        java.time.LocalDate thirtyDaysLater = today.plusDays(30);
 
         return MedicineInventoryMetricsDTO.builder()
                 .totalMedicines(inventoryRepository.countByPharmacyId(pharmacyId))
                 .inStock(inventoryRepository.countInStock(pharmacyId))
                 .lowStock(inventoryRepository.countLowStock(pharmacyId))
                 .outOfStock(inventoryRepository.countOutOfStock(pharmacyId))
-                .expired(0)
-                .expiringSoon(0)
+                .expired(inventoryRepository.countExpired(pharmacyId, today))
+                .expiringSoon(inventoryRepository.countExpiringSoon(pharmacyId, today, thirtyDaysLater))
                 .deactivated(inventoryRepository.countDeactivated(pharmacyId))
                 .build();
     }
@@ -68,6 +74,35 @@ public class PharmacyMedicineInventoryService {
         checkStockAndNotify(inventory);
     }
 
+    public void updatePrice(Long inventoryId, java.math.BigDecimal newPrice) {
+        PharmacyInventory inventory = inventoryRepository.findById(inventoryId)
+                .orElseThrow(() -> new RuntimeException("Inventory not found"));
+
+        inventory.setPrice(newPrice);
+        inventoryRepository.save(inventory);
+    }
+
+    public void deactivateMedicine(Long inventoryId) {
+        PharmacyInventory inventory = inventoryRepository.findById(inventoryId)
+                .orElseThrow(() -> new RuntimeException("Inventory not found"));
+
+        Medicine medicine = inventory.getMedicine();
+        medicine.setStatus(Medicine.MedicineStatus.INACTIVE);
+        medicineRepository.save(medicine);
+    }
+
+    public void deleteFromInventory(Long inventoryId) {
+        inventoryRepository.deleteById(inventoryId);
+    }
+
+    public void activateMedicine(Long inventoryId) {
+        PharmacyInventory inventory = inventoryRepository.findById(inventoryId)
+                .orElseThrow(() -> new RuntimeException("Inventory not found"));
+        Medicine medicine = inventory.getMedicine();
+        medicine.setStatus(Medicine.MedicineStatus.ACTIVE);
+        medicineRepository.save(medicine);
+    }
+
     private void checkStockAndNotify(PharmacyInventory inventory) {
         if (inventory.getAvailableQuantity() == 0) {
             notificationService.createNotification(
@@ -92,18 +127,31 @@ public class PharmacyMedicineInventoryService {
     }
 
     private MedicineInventoryDTO mapToDTO(PharmacyInventory inventory) {
+        Medicine medicine = inventory.getMedicine();
         MedicineInventoryDTO dto = new MedicineInventoryDTO();
         dto.setInventoryId(inventory.getId());
-        dto.setMedicineId(inventory.getMedicine().getId());
-        dto.setMedicineName(inventory.getMedicine().getMedicineName());
-        dto.setGenericName(inventory.getMedicine().getGenericName());
-        dto.setManufacturer(inventory.getMedicine().getManufacturer());
+        dto.setMedicineId(medicine.getId());
+        dto.setMedicineName(medicine.getMedicineName());
+        dto.setGenericName(medicine.getGenericName());
+        dto.setManufacturer(medicine.getManufacturer());
+        dto.setDosageForm(medicine.getDosageForm());
+        dto.setStrength(medicine.getStrength());
+        dto.setRequiresPrescription(medicine.isRequiresPrescription());
         dto.setStockQuantity(inventory.getAvailableQuantity());
         dto.setPrice(inventory.getPrice());
-        dto.setImageUrl(inventory.getMedicine().getImageUrl());
+        dto.setImageUrl(medicine.getImageUrl());
+        dto.setExpiryDate(inventory.getExpiryDate());
+        dto.setActiveIngredients(medicine.getActiveIngredients());
 
-        if (inventory.getMedicine().getStatus() == Medicine.MedicineStatus.INACTIVE) {
+        java.time.LocalDate today = java.time.LocalDate.now();
+        java.time.LocalDate thirtyDaysLater = today.plusDays(30);
+
+        if (medicine.getStatus() == Medicine.MedicineStatus.INACTIVE) {
             dto.setStatus("Deactivated");
+        } else if (inventory.getExpiryDate() != null && inventory.getExpiryDate().isBefore(today)) {
+            dto.setStatus("Expired");
+        } else if (inventory.getExpiryDate() != null && !inventory.getExpiryDate().isAfter(thirtyDaysLater)) {
+            dto.setStatus("Expiring Soon");
         } else if (inventory.getAvailableQuantity() == 0) {
             dto.setStatus("Out of Stock");
         } else if (inventory.getAvailableQuantity() <= 10) {
@@ -133,12 +181,23 @@ public class PharmacyMedicineInventoryService {
         dto.setDescription(medicine.getDescription());
         dto.setRequiresPrescription(medicine.isRequiresPrescription());
         dto.setImageUrl(medicine.getImageUrl());
+        dto.setActiveIngredients(medicine.getActiveIngredients());
 
         dto.setAvailableQuantity(inventory.getAvailableQuantity());
         dto.setPrice(inventory.getPrice());
+        dto.setExpiryDate(inventory.getExpiryDate());
+        dto.setBatchNumber(inventory.getBatchNumber());
+        dto.setApprovalStatus(medicine.getApprovalStatus() != null ? medicine.getApprovalStatus().name() : "PENDING");
+
+        java.time.LocalDate today = java.time.LocalDate.now();
+        java.time.LocalDate thirtyDaysLater = today.plusDays(30);
 
         if (medicine.getStatus() == Medicine.MedicineStatus.INACTIVE) {
             dto.setStatus("Deactivated");
+        } else if (inventory.getExpiryDate() != null && inventory.getExpiryDate().isBefore(today)) {
+            dto.setStatus("Expired");
+        } else if (inventory.getExpiryDate() != null && !inventory.getExpiryDate().isAfter(thirtyDaysLater)) {
+            dto.setStatus("Expiring Soon");
         } else if (inventory.getAvailableQuantity() == 0) {
             dto.setStatus("Out of Stock");
         } else if (inventory.getAvailableQuantity() <= 10) {
