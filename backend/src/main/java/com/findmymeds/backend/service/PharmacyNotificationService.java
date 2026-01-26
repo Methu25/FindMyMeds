@@ -2,7 +2,6 @@ package com.findmymeds.backend.service;
 
 import com.findmymeds.backend.dto.NotificationCategoryCountDTO;
 import com.findmymeds.backend.dto.NotificationDTO;
-import com.findmymeds.backend.model.Notification;
 import com.findmymeds.backend.model.enums.NotificationType;
 import com.findmymeds.backend.model.enums.Priority;
 import com.findmymeds.backend.model.enums.UserType;
@@ -14,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.management.Notification;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -1,12 +1,12 @@
 package com.findmymeds.backend.controller;
 
-import com.findmymeds.backend.model.Notification;
 import com.findmymeds.backend.model.enums.Role;
 import com.findmymeds.backend.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 
+import javax.management.Notification;
 import java.util.List;
 import java.util.Map;
 
