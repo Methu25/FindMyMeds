@@ -1,6 +1,7 @@
 package com.findmymeds.backend.model;
 
 import jakarta.persistence.*;
+import com.findmymeds.backend.model.Civilian;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,6 +21,9 @@ public class Reservation {
 
     @ManyToOne
     private Pharmacy pharmacy;
+
+    @ManyToOne
+    private Civilian civilian;
 
     private Double totalAmount;
     private LocalDateTime reservationDate;

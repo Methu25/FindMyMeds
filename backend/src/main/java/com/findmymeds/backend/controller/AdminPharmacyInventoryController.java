@@ -15,17 +15,19 @@ public class AdminPharmacyInventoryController {
     private AdminPharmacyInventoryService inventoryService;
 
     @GetMapping("/pharmacy/{pharmacyId}")
-    public List<PharmacyInventory> getInventoryByPharmacy(@PathVariable Long pharmacyId) {
+    public List<PharmacyInventory> getInventoryByPharmacy(
+            @PathVariable @org.springframework.lang.NonNull Long pharmacyId) {
         return inventoryService.getInventoryByPharmacy(pharmacyId);
     }
 
     @PostMapping
-    public PharmacyInventory addInventory(@RequestBody PharmacyInventory inventory) {
+    public PharmacyInventory addInventory(@RequestBody @org.springframework.lang.NonNull PharmacyInventory inventory) {
         return inventoryService.saveInventory(inventory);
     }
 
     @PutMapping
-    public PharmacyInventory updateInventory(@RequestBody PharmacyInventory inventory) {
+    public PharmacyInventory updateInventory(
+            @RequestBody @org.springframework.lang.NonNull PharmacyInventory inventory) {
         return inventoryService.updateInventory(inventory);
     }
 }

@@ -18,16 +18,16 @@ public class AdminPharmacyService {
         return pharmacyRepository.findAll();
     }
 
-    public Pharmacy getPharmacyById(Long id) {
+    public Pharmacy getPharmacyById(@org.springframework.lang.NonNull Long id) {
         return pharmacyRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Pharmacy not found"));
     }
 
-    public Pharmacy savePharmacy(Pharmacy pharmacy) {
+    public Pharmacy savePharmacy(@org.springframework.lang.NonNull Pharmacy pharmacy) {
         return pharmacyRepository.save(pharmacy);
     }
 
-    public Pharmacy updatePharmacyStatus(Long id, PharmacyStatus status) {
+    public Pharmacy updatePharmacyStatus(@org.springframework.lang.NonNull Long id, PharmacyStatus status) {
         Pharmacy pharmacy = getPharmacyById(id);
         pharmacy.setStatus(status);
         return pharmacyRepository.save(pharmacy);

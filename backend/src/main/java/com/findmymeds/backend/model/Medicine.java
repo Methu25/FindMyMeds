@@ -20,6 +20,7 @@ public class Medicine {
 
     private String medicineName;
     private String genericName;
+    private String activeIngredients; // Comma separated or tags
 
     @Enumerated(EnumType.STRING)
     private MedicineType type;
@@ -41,6 +42,10 @@ public class Medicine {
     @Enumerated(EnumType.STRING)
     private MedicineStatus status;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "approval_status")
+    private ApprovalStatus approvalStatus = ApprovalStatus.PENDING;
+
     private boolean removed = false;
 
     @CreationTimestamp
@@ -50,10 +55,14 @@ public class Medicine {
     private LocalDateTime lastUpdated;
 
     public enum MedicineType {
-        TABLET, CAPSULE, SYRUP, INJECTION, OINTMENT, CREAM, DROPS, INHALER, OTHER
+        TABLET, CAPSULE, SYRUP, INJECTION, OINTMENT, CREAM, DROPS, INHALER, OTHER, SUSPENSION, CREAM_OINTMENT
     }
 
     public enum MedicineStatus {
         ACTIVE, INACTIVE, OUT_OF_STOCK, DISCONTINUED
+    }
+
+    public enum ApprovalStatus {
+        APPROVED, PENDING, REJECTED
     }
 }

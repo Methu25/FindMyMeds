@@ -36,7 +36,7 @@ public class PharmacyNotificationController {
     }
 
     @PutMapping("/{id}/read")
-    public ResponseEntity<Void> markAsRead(@PathVariable Long id) {
+    public ResponseEntity<Void> markAsRead(@PathVariable @org.springframework.lang.NonNull Long id) {
         notificationService.markAsRead(id);
         return ResponseEntity.ok().build();
     }

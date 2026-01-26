@@ -22,11 +22,11 @@ public class AdminPharmacyReportService {
         return reportRepository.findByPharmacyId(pharmacyId);
     }
 
-    public PharmacyReport saveReport(PharmacyReport report) {
+    public PharmacyReport saveReport(@org.springframework.lang.NonNull PharmacyReport report) {
         return reportRepository.save(report);
     }
 
-    public PharmacyReport updateReportStatus(Long reportId, ReportStatus status) {
+    public PharmacyReport updateReportStatus(@org.springframework.lang.NonNull Long reportId, ReportStatus status) {
         PharmacyReport report = reportRepository.findById(reportId)
                 .orElseThrow(() -> new RuntimeException("Report not found"));
         report.setStatus(status);

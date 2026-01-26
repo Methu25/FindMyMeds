@@ -31,6 +31,12 @@ public class PharmacyInventory {
     @Column(name = "last_updated")
     private LocalDateTime lastUpdated;
 
+    @Column(name = "expiry_date")
+    private java.time.LocalDate expiryDate;
+
+    @Column(name = "batch_number")
+    private String batchNumber;
+
     @PrePersist
     public void onCreate() {
         this.lastUpdated = LocalDateTime.now();

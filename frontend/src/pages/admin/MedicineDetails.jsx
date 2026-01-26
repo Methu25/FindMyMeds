@@ -26,7 +26,7 @@ const MedicineDetails = () => {
 
     const fetchMedicine = async () => {
         try {
-            const res = await fetch(`http://localhost:8081/api/medicines/${id}`);
+            const res = await fetch(`http://localhost:8080/api/medicines/${id}`);
             if (res.ok) {
                 const data = await res.json();
                 setMedicine(data);
@@ -45,11 +45,11 @@ const MedicineDetails = () => {
         setActionLoading(true);
         try {
             if (activeModal === 'REMOVE') {
-                await fetch(`http://localhost:8081/api/medicines/${id}`, { method: 'DELETE' });
+                await fetch(`http://localhost:8080/api/medicines/${id}`, { method: 'DELETE' });
                 navigate('/admin/medicines');
             } else {
                 const status = activeModal === 'ACTIVATE' ? 'ACTIVE' : 'INACTIVE';
-                await fetch(`http://localhost:8081/api/medicines/${id}/status?status=${status}`, { method: 'PATCH' });
+                await fetch(`http://localhost:8080/api/medicines/${id}/status?status=${status}`, { method: 'PATCH' });
                 fetchMedicine(); // Refresh
                 setActiveModal(null);
             }
@@ -64,7 +64,7 @@ const MedicineDetails = () => {
         e.preventDefault();
         setActionLoading(true);
         try {
-            const res = await fetch(`http://localhost:8081/api/medicines/${id}`, {
+            const res = await fetch(`http://localhost:8080/api/medicines/${id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(updateForm)
@@ -256,7 +256,7 @@ const MedicineDetails = () => {
                     <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setActiveModal(null)} />
                     <div className="relative bg-white rounded-xl shadow-xl w-full max-w-sm p-6 text-center">
                         <div className={`mx-auto w-12 h-12 rounded-full flex items-center justify-center mb-4 ${activeModal === 'REMOVE' ? 'bg-red-100 text-red-600' :
-                                activeModal === 'DEACTIVATE' ? 'bg-yellow-100 text-yellow-600' : 'bg-green-100 text-green-600'
+                            activeModal === 'DEACTIVATE' ? 'bg-yellow-100 text-yellow-600' : 'bg-green-100 text-green-600'
                             }`}>
                             {activeModal === 'REMOVE' ? <Trash2 size={24} /> :
                                 activeModal === 'DEACTIVATE' ? <Power size={24} /> : <CheckCircle size={24} />}
@@ -283,7 +283,7 @@ const MedicineDetails = () => {
                                 onClick={handleAction}
                                 disabled={actionLoading}
                                 className={`px-4 py-2 rounded-lg text-sm font-medium text-white ${activeModal === 'REMOVE' ? 'bg-red-600 hover:bg-red-700' :
-                                        activeModal === 'DEACTIVATE' ? 'bg-yellow-600 hover:bg-yellow-700' : 'bg-green-600 hover:bg-green-700'
+                                    activeModal === 'DEACTIVATE' ? 'bg-yellow-600 hover:bg-yellow-700' : 'bg-green-600 hover:bg-green-700'
                                     }`}
                             >
                                 {actionLoading ? 'Processing...' : 'Confirm'}

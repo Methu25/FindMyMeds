@@ -17,7 +17,7 @@ public class AdminPharmacyProfileService {
         return profileRepository.findByPharmacyId(pharmacyId);
     }
 
-    public PharmacyProfile saveProfile(PharmacyProfile profile) {
+    public PharmacyProfile saveProfile(@org.springframework.lang.NonNull PharmacyProfile profile) {
         return profileRepository.save(profile);
     }
 }

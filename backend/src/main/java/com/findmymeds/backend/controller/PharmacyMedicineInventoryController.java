@@ -32,7 +32,38 @@ public class PharmacyMedicineInventoryController {
     }
 
     @GetMapping("/{medicineId}")
-    public ResponseEntity<MedicineDetailDTO> getMedicineDetails(@PathVariable Long medicineId) {
+    public ResponseEntity<MedicineDetailDTO> getMedicineDetails(
+            @PathVariable Long medicineId) {
         return ResponseEntity.ok(inventoryService.getMedicineDetails(medicineId));
+    }
+
+    @PatchMapping("/{id}/price")
+    public ResponseEntity<Void> updatePrice(@PathVariable Long id, @RequestParam java.math.BigDecimal price) {
+        inventoryService.updatePrice(id, price);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/{id}/quantity")
+    public ResponseEntity<Void> updateQuantity(@PathVariable Long id, @RequestParam Integer quantity) {
+        inventoryService.updateStock(id, quantity);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/{id}/deactivate")
+    public ResponseEntity<Void> deactivate(@PathVariable Long id) {
+        inventoryService.deactivateMedicine(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/{id}/activate")
+    public ResponseEntity<Void> activate(@PathVariable Long id) {
+        inventoryService.activateMedicine(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        inventoryService.deleteFromInventory(id);
+        return ResponseEntity.ok().build();
     }
 }

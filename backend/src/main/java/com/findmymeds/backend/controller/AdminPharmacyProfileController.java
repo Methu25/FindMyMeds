@@ -20,7 +20,7 @@ public class AdminPharmacyProfileController {
     }
 
     @PostMapping
-    public PharmacyProfile saveProfile(@RequestBody PharmacyProfile profile) {
+    public PharmacyProfile saveProfile(@RequestBody @org.springframework.lang.NonNull PharmacyProfile profile) {
         return profileService.saveProfile(profile);
     }
 }
