@@ -1,49 +1,53 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { History, Settings } from 'lucide-react';
 import ReservationCard from '../../components/civilian/ReservationCard';
 import ReservationHistoryItem from '../../components/civilian/ReservationHistoryItem';
 import ReservationModal from '../../components/civilian/ReservationModal';
 import '../../styles/civilian/ActivityPage.css';
 
-const dummyCurrentReservations = [
-    {
-        id: 'RES-2024-001',
-        pharmacy: 'Citywide Pharmacy',
-        total: 970,
-        date: 'Jan 18, 2024',
-        time: '10:00 AM - 6:00 PM',
-        status: 'Ready for Pickup',
-        timelineStatus: 'ready',
-        items: [
-            { name: 'Paracetamol 500mg', quantity: 2, price: 150 },
-            { name: 'Amoxicillin 250mg', quantity: 1, price: 450 },
-            { name: 'Vitamin D3 1000IU', quantity: 1, price: 320 },
-        ]
-    },
-    {
-        id: 'RES-2024-002',
-        pharmacy: 'HealthPlus Drugstore',
-        total: 650,
-        date: 'Jan 20, 2024',
-        time: '9:00 AM - 8:00 PM',
-        status: 'Pending Confirmation',
-        timelineStatus: 'created',
-        items: [
-            { name: 'Ibuprofen 400mg', quantity: 1, price: 200 },
-            { name: 'Omeprazole 20mg', quantity: 2, price: 200 },
-        ]
-    },
-];
-
-const dummyHistoryReservations = [
-    { id: 'RES-2023-089', pharmacy: 'MediCare Pharmacy', date: 'Dec 28, 2023', status: 'Completed' },
-    { id: 'RES-2023-076', pharmacy: 'WellLife Chemist', date: 'Dec 15, 2023', status: 'Completed' },
-    { id: 'RES-2023-062', pharmacy: 'Citywide Pharmacy', date: 'Dec 05, 2023', status: 'Canceled' },
-    { id: 'RES-2023-045', pharmacy: 'HealthPlus Drugstore', date: 'Nov 22, 2023', status: 'Expired' },
-];
-
 function ActivityPage() {
+    const [currentReservations, setCurrentReservations] = useState([]);
+    const [historyReservations, setHistoryReservations] = useState([]);
     const [selectedReservation, setSelectedReservation] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        fetchReservations();
+    }, []);
+
+    const fetchReservations = async () => {
+        try {
+            const response = await fetch('http://localhost:8080/api/reservations');
+            if (response.ok) {
+                const data = await response.json();
+
+                // Map backend data to frontend format
+                const formatted = data.map(res => ({
+                    id: res.id,
+                    pharmacy: res.pharmacy ? res.pharmacy.name : 'Unknown Pharmacy',
+                    total: res.totalAmount,
+                    date: new Date(res.reservationDate).toLocaleDateString(),
+                    time: res.timeframe || new Date(res.reservationDate).toLocaleTimeString(),
+                    status: res.status,
+                    items: res.items?.map(item => ({
+                        name: item.medicine ? item.medicine.medicineName : 'Unknown Item',
+                        quantity: item.quantity,
+                        price: item.price
+                    })) || []
+                }));
+
+                const current = formatted.filter(r => ['PENDING', 'ACCEPTED', 'READY_FOR_PICKUP'].includes(r.status));
+                const history = formatted.filter(r => ['COMPLETED', 'CANCELLED', 'EXPIRED', 'REJECTED'].includes(r.status));
+
+                setCurrentReservations(current);
+                setHistoryReservations(history);
+            }
+        } catch (error) {
+            console.error("Error fetching reservations:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const handleViewDetails = (reservation) => {
         setSelectedReservation(reservation);
@@ -52,6 +56,8 @@ function ActivityPage() {
     const closeModal = () => {
         setSelectedReservation(null);
     };
+
+    if (loading) return <div className="p-8 text-center text-gray-500">Loading your activity...</div>;
 
     return (
         <div className="activity-page">
@@ -73,31 +79,39 @@ function ActivityPage() {
                 <section className="activity-section">
                     <h2>
                         Current Reservations
-                        <span className="count">{dummyCurrentReservations.length}</span>
+                        <span className="count">{currentReservations.length}</span>
                     </h2>
                     <div className="reservation-cards">
-                        {dummyCurrentReservations.map((reservation) => (
-                            <ReservationCard
-                                key={reservation.id}
-                                reservation={reservation}
-                                onViewDetails={handleViewDetails}
-                            />
-                        ))}
+                        {currentReservations.length === 0 ? (
+                            <p className="text-gray-400 italic">No active reservations.</p>
+                        ) : (
+                            currentReservations.map((reservation) => (
+                                <ReservationCard
+                                    key={reservation.id}
+                                    reservation={reservation}
+                                    onViewDetails={handleViewDetails}
+                                />
+                            ))
+                        )}
                     </div>
                 </section>
 
                 <section className="activity-section">
                     <h2>
                         Reservation History
-                        <span className="count">{dummyHistoryReservations.length}</span>
+                        <span className="count">{historyReservations.length}</span>
                     </h2>
                     <div className="reservation-cards">
-                        {dummyHistoryReservations.map((reservation) => (
-                            <ReservationHistoryItem
-                                key={reservation.id}
-                                reservation={reservation}
-                            />
-                        ))}
+                        {historyReservations.length === 0 ? (
+                            <p className="text-gray-400 italic">No past reservations.</p>
+                        ) : (
+                            historyReservations.map((reservation) => (
+                                <ReservationHistoryItem
+                                    key={reservation.id}
+                                    reservation={reservation}
+                                />
+                            ))
+                        )}
                     </div>
                 </section>
             </div>
