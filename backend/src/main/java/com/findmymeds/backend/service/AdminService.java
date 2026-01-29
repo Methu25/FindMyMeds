@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,10 +27,20 @@ public class AdminService {
                 .collect(Collectors.toList());
     }
 
-    public AdminResponse getAdminById(Long id) {
+    public AdminResponse getAdminById(@org.springframework.lang.NonNull Long id) {
         Admin admin = adminRepository.findById(id)
                 .orElseThrow(() -> new AdminNotFoundException("Admin not found with id: " + id));
         return mapToResponse(admin);
+    }
+
+    // Add this new method that returns Optional<Admin> for the ProfileController
+    public Optional<Admin> getAdminEntityById(@org.springframework.lang.NonNull Long id) {
+        return adminRepository.findById(id);
+    }
+
+    // Add this new method that returns List<Admin> for the ProfileController
+    public List<Admin> getAllAdminEntities() {
+        return adminRepository.findAll();
     }
 
     public AdminMetricsResponse getMetrics() {
@@ -41,7 +52,8 @@ public class AdminService {
     }
 
     @Transactional
-    public AdminResponse createAdmin(CreateAdminRequest request, Long currentAdminId) {
+    public AdminResponse createAdmin(CreateAdminRequest request,
+            @org.springframework.lang.NonNull Long currentAdminId) {
         if (adminRepository.existsByEmail(request.getEmail())) {
             throw new DuplicateEmailException("Email already exists: " + request.getEmail());
         }
@@ -61,8 +73,9 @@ public class AdminService {
     }
 
     @Transactional
+    
     public AdminResponse updateAdminEmail(Long adminId, UpdateAdminEmailRequest request,
-            Long currentAdminId) {
+                                          Long currentAdminId) {
         Admin admin = adminRepository.findById(adminId)
                 .orElseThrow(() -> new AdminNotFoundException("Admin not found with id: " + adminId));
 
@@ -82,7 +95,8 @@ public class AdminService {
     }
 
     @Transactional
-    public void deleteAdmin(Long adminId, Long currentAdminId) {
+    public void deleteAdmin(@org.springframework.lang.NonNull Long adminId,
+            @org.springframework.lang.NonNull Long currentAdminId) {
         Admin admin = adminRepository.findById(adminId)
                 .orElseThrow(() -> new AdminNotFoundException("Admin not found with id: " + adminId));
 
@@ -97,8 +111,9 @@ public class AdminService {
                 "Deleted admin: " + adminName);
     }
 
+    
     private void logAction(Long adminId, String actionType, String targetTable,
-            Long targetId, String description) {
+                           Long targetId, String description) {
         AdminActionLog log = new AdminActionLog();
 
         Admin admin = adminRepository.getReferenceById(adminId);

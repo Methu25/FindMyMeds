@@ -65,7 +65,7 @@ public class PharmacyNotificationService {
         return notifications.map(this::mapToDTO);
     }
 
-    public void markAsRead(Long id) {
+    public void markAsRead(@org.springframework.lang.NonNull Long id) {
         Notification notification = notificationRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Notification not found with id: " + id));
 

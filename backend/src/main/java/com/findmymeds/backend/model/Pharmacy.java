@@ -59,9 +59,4 @@ public class Pharmacy {
     @Transient
     private Double distance; // Optional, for UI purposes
 
-    public void setStatus(PharmacyStatus status2) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setStatus'");
-    }
-
 }
