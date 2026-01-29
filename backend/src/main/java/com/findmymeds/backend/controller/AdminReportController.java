@@ -23,14 +23,14 @@ public class AdminReportController {
     // Get all reports (Super Admin only)
     @GetMapping
     @PreAuthorize("hasRole('SUPER_ADMIN')")
-    public ResponseEntity<List> getAllReports() {
+    public ResponseEntity<List<ReportResponse>> getAllReports() {
         return ResponseEntity.ok(reportService.getAllReports());
     }
 
     // Get reports by status (Super Admin only)
     @GetMapping("/status/{status}")
     @PreAuthorize("hasRole('SUPER_ADMIN')")
-    public ResponseEntity<List> getReportsByStatus(
+    public ResponseEntity<List<ReportResponse>> getReportsByStatus(
             @PathVariable ReportStatus status) {
         return ResponseEntity.ok(reportService.getReportsByStatus(status));
     }
@@ -38,7 +38,7 @@ public class AdminReportController {
     // Get my reports (Regular Admin)
     @GetMapping("/my-reports")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List> getMyReports(Authentication authentication) {
+    public ResponseEntity<List<ReportResponse>> getMyReports(Authentication authentication) {
         Long adminId = getCurrentAdminId(authentication);
         return ResponseEntity.ok(reportService.getReportsByAdmin(adminId));
     }
@@ -46,21 +46,21 @@ public class AdminReportController {
     // Get report by ID
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
-    public ResponseEntity getReportById(@PathVariable Long id) {
+    public ResponseEntity<ReportResponse> getReportById(@PathVariable Long id) {
         return ResponseEntity.ok(reportService.getReportById(id));
     }
 
     // Get metrics (Super Admin only)
     @GetMapping("/metrics")
     @PreAuthorize("hasRole('SUPER_ADMIN')")
-    public ResponseEntity getMetrics() {
+    public ResponseEntity<ReportMetricsResponse> getMetrics() {
         return ResponseEntity.ok(reportService.getMetrics());
     }
 
     // Create report/inquiry (Regular Admin only)
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity createReport(
+    public ResponseEntity<ReportResponse> createReport(
             @Valid @RequestBody CreateReportRequest request,
             Authentication authentication) {
 
@@ -72,7 +72,7 @@ public class AdminReportController {
     // Update report status (Super Admin only)
     @PatchMapping("/{id}/status")
     @PreAuthorize("hasRole('SUPER_ADMIN')")
-    public ResponseEntity updateReportStatus(
+    public ResponseEntity<ReportResponse> updateReportStatus(
             @PathVariable Long id,
             @Valid @RequestBody UpdateReportStatusRequest request) {
 
