@@ -74,7 +74,7 @@ public class PharmacyMedicineInventoryService {
         checkStockAndNotify(inventory);
     }
 
-    public void updatePrice(Long inventoryId, java.math.BigDecimal newPrice) {
+    public void updatePrice(@org.springframework.lang.NonNull Long inventoryId, java.math.BigDecimal newPrice) {
         PharmacyInventory inventory = inventoryRepository.findById(inventoryId)
                 .orElseThrow(() -> new RuntimeException("Inventory not found"));
 
@@ -82,7 +82,7 @@ public class PharmacyMedicineInventoryService {
         inventoryRepository.save(inventory);
     }
 
-    public void deactivateMedicine(Long inventoryId) {
+    public void deactivateMedicine(@org.springframework.lang.NonNull Long inventoryId) {
         PharmacyInventory inventory = inventoryRepository.findById(inventoryId)
                 .orElseThrow(() -> new RuntimeException("Inventory not found"));
 
@@ -91,11 +91,11 @@ public class PharmacyMedicineInventoryService {
         medicineRepository.save(medicine);
     }
 
-    public void deleteFromInventory(Long inventoryId) {
+    public void deleteFromInventory(@org.springframework.lang.NonNull Long inventoryId) {
         inventoryRepository.deleteById(inventoryId);
     }
 
-    public void activateMedicine(Long inventoryId) {
+    public void activateMedicine(@org.springframework.lang.NonNull Long inventoryId) {
         PharmacyInventory inventory = inventoryRepository.findById(inventoryId)
                 .orElseThrow(() -> new RuntimeException("Inventory not found"));
         Medicine medicine = inventory.getMedicine();

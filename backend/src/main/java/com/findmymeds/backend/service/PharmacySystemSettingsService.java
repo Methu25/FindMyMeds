@@ -14,14 +14,14 @@ public class PharmacySystemSettingsService {
     private final PharmacySystemSettingsRepository settingsRepository;
     private final PharmacyRepository pharmacyRepository;
 
-    public SystemSettingsDTO getSettings(Long pharmacyId) {
+    public SystemSettingsDTO getSettings(@org.springframework.lang.NonNull Long pharmacyId) {
         PharmacySystemSettings settings = settingsRepository.findByPharmacyId(pharmacyId)
                 .orElseGet(() -> createDefaultSettings(pharmacyId));
 
         return mapToDto(settings);
     }
 
-    public void saveSettings(Long pharmacyId, SystemSettingsDTO dto) {
+    public void saveSettings(@org.springframework.lang.NonNull Long pharmacyId, SystemSettingsDTO dto) {
         PharmacySystemSettings settings = settingsRepository.findByPharmacyId(pharmacyId)
                 .orElseGet(() -> {
                     PharmacySystemSettings s = new PharmacySystemSettings();
@@ -33,7 +33,7 @@ public class PharmacySystemSettingsService {
         settingsRepository.save(settings);
     }
 
-    private PharmacySystemSettings createDefaultSettings(Long pharmacyId) {
+    private PharmacySystemSettings createDefaultSettings(@org.springframework.lang.NonNull Long pharmacyId) {
         PharmacySystemSettings settings = new PharmacySystemSettings();
         settings.setPharmacy(pharmacyRepository.getReferenceById(pharmacyId));
         return settingsRepository.save(settings);

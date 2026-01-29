@@ -27,12 +27,11 @@ public class ReportCleanupService {
         log.info("Starting cleanup of old resolved/rejected reports");
 
         LocalDateTime cutoffDate = LocalDateTime.now().minusDays(60);
-        List finalStatuses = Arrays.asList(
+        List<ReportStatus> finalStatuses = Arrays.asList(
                 ReportStatus.RESOLVED,
-                ReportStatus.REJECTED
-        );
+                ReportStatus.REJECTED);
 
-        List oldReports = reportRepository
+        List<AdminReportInquiry> oldReports = reportRepository
                 .findByStatusInAndUpdatedAtBefore(finalStatuses, cutoffDate);
 
         if (!oldReports.isEmpty()) {
