@@ -4,7 +4,6 @@ import com.findmymeds.backend.dto.MedicineDetailDTO;
 import com.findmymeds.backend.dto.MedicineInventoryDTO;
 import com.findmymeds.backend.dto.MedicineInventoryMetricsDTO;
 import com.findmymeds.backend.service.PharmacyMedicineInventoryService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,10 +11,10 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/pharmacy/inventory")
 @CrossOrigin(origins = { "http://localhost:5173", "http://localhost:5174" }, allowCredentials = "true")
+@lombok.RequiredArgsConstructor
 public class PharmacyMedicineInventoryController {
 
-    @Autowired
-    private PharmacyMedicineInventoryService inventoryService;
+    private final PharmacyMedicineInventoryService inventoryService;
 
     @GetMapping("/metrics")
     public ResponseEntity<MedicineInventoryMetricsDTO> getMetrics() {
@@ -33,36 +32,54 @@ public class PharmacyMedicineInventoryController {
 
     @GetMapping("/{medicineId}")
     public ResponseEntity<MedicineDetailDTO> getMedicineDetails(
-            @PathVariable Long medicineId) {
+            @PathVariable("medicineId") Long medicineId) {
+        if (medicineId == null) {
+            return ResponseEntity.badRequest().build();
+        }
         return ResponseEntity.ok(inventoryService.getMedicineDetails(medicineId));
     }
 
     @PatchMapping("/{id}/price")
-    public ResponseEntity<Void> updatePrice(@PathVariable Long id, @RequestParam java.math.BigDecimal price) {
+    public ResponseEntity<Void> updatePrice(@PathVariable("id") Long id, @RequestParam java.math.BigDecimal price) {
+        if (id == null) {
+            return ResponseEntity.badRequest().build();
+        }
         inventoryService.updatePrice(id, price);
         return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/{id}/quantity")
-    public ResponseEntity<Void> updateQuantity(@PathVariable Long id, @RequestParam Integer quantity) {
+    public ResponseEntity<Void> updateQuantity(@PathVariable("id") Long id, @RequestParam Integer quantity) {
+        if (id == null) {
+            return ResponseEntity.badRequest().build();
+        }
         inventoryService.updateStock(id, quantity);
         return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/{id}/deactivate")
-    public ResponseEntity<Void> deactivate(@PathVariable Long id) {
+    public ResponseEntity<Void> deactivate(@PathVariable("id") Long id) {
+        if (id == null) {
+            return ResponseEntity.badRequest().build();
+        }
         inventoryService.deactivateMedicine(id);
         return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/{id}/activate")
-    public ResponseEntity<Void> activate(@PathVariable Long id) {
+    public ResponseEntity<Void> activate(@PathVariable("id") Long id) {
+        if (id == null) {
+            return ResponseEntity.badRequest().build();
+        }
         inventoryService.activateMedicine(id);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
+        if (id == null) {
+            return ResponseEntity.badRequest().build();
+        }
         inventoryService.deleteFromInventory(id);
         return ResponseEntity.ok().build();
     }
@@ -74,7 +91,10 @@ public class PharmacyMedicineInventoryController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updateMedicine(@PathVariable Long id, @RequestBody MedicineInventoryDTO dto) {
+    public ResponseEntity<Void> updateMedicine(@PathVariable("id") Long id, @RequestBody MedicineInventoryDTO dto) {
+        if (id == null) {
+            return ResponseEntity.badRequest().build();
+        }
         inventoryService.updateInventory(id, dto);
         return ResponseEntity.ok().build();
     }
