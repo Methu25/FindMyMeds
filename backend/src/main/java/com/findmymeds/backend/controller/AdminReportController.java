@@ -46,7 +46,7 @@ public class AdminReportController {
     // Get report by ID
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
-    public ResponseEntity<ReportResponse> getReportById(@PathVariable Long id) {
+    public ResponseEntity<ReportResponse> getReportById(@PathVariable @org.springframework.lang.NonNull Long id) {
         return ResponseEntity.ok(reportService.getReportById(id));
     }
 
@@ -73,14 +73,14 @@ public class AdminReportController {
     @PatchMapping("/{id}/status")
     @PreAuthorize("hasRole('SUPER_ADMIN')")
     public ResponseEntity<ReportResponse> updateReportStatus(
-            @PathVariable Long id,
+            @PathVariable @org.springframework.lang.NonNull Long id,
             @Valid @RequestBody UpdateReportStatusRequest request) {
 
         ReportResponse response = reportService.updateReportStatus(id, request);
         return ResponseEntity.ok(response);
     }
 
-    private Long getCurrentAdminId(Authentication authentication) {
+    private @org.springframework.lang.NonNull Long getCurrentAdminId(Authentication authentication) {
         return Long.parseLong(authentication.getName());
     }
 }

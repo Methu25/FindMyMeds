@@ -1,6 +1,6 @@
 package com.findmymeds.backend.service;
 
-import com.findmymeds.backend.model.AdminNotFoundException; // Ensure this is imported
+import com.findmymeds.backend.model.AdminNotFoundException;
 import com.findmymeds.backend.model.*;
 import com.findmymeds.backend.model.enums.ReportStatus;
 import com.findmymeds.backend.repository.AdminReportRepository;
@@ -38,14 +38,13 @@ public class AdminReportService {
 
     // Get reports by admin (for regular admin to see their own)
     public List<ReportResponse> getReportsByAdmin(Long adminId) {
-        // CORRECTION 1: Use the updated Repository method name
         return reportRepository.findBySubmittedByAdminIdOrderByCreatedAtDesc(adminId).stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
     }
 
     // Get report by ID
-    public ReportResponse getReportById(Long id) {
+    public ReportResponse getReportById(@org.springframework.lang.NonNull Long id) {
         AdminReportInquiry report = reportRepository.findById(id)
                 .orElseThrow(() -> new AdminNotFoundException("Report not found with id: " + id));
         return mapToResponse(report);
@@ -64,18 +63,14 @@ public class AdminReportService {
 
     // Create new report/inquiry (Admin only)
     @Transactional
-    public ReportResponse createReport(CreateReportRequest request, Long adminId) {
+    public ReportResponse createReport(CreateReportRequest request, @org.springframework.lang.NonNull Long adminId) {
         AdminReportInquiry report = new AdminReportInquiry();
 
-        // CORRECTION 2: Map to Entity field 'submittedByAdminId'
         report.setSubmittedByAdminId(adminId);
-
         report.setType(request.getType());
         report.setTitle(request.getTitle());
         report.setCategory(request.getCategory());
         report.setPriority(request.getPriority());
-
-        // CORRECTION 3: Map DTO 'details' to Entity 'description'
         report.setDescription(request.getDetails());
 
         // Convert attachments list to JSON string
@@ -95,7 +90,8 @@ public class AdminReportService {
 
     // Update report status (Super Admin only)
     @Transactional
-    public ReportResponse updateReportStatus(Long reportId, UpdateReportStatusRequest request) {
+    public ReportResponse updateReportStatus(@org.springframework.lang.NonNull Long reportId,
+            UpdateReportStatusRequest request) {
         AdminReportInquiry report = reportRepository.findById(reportId)
                 .orElseThrow(() -> new AdminNotFoundException("Report not found with id: " + reportId));
 
@@ -109,22 +105,19 @@ public class AdminReportService {
     private ReportResponse mapToResponse(AdminReportInquiry report) {
         ReportResponse response = new ReportResponse();
         response.setId(report.getId());
-
-        // CORRECTION 4: Map Entity 'submittedByAdminId' to DTO 'adminId'
         response.setAdminId(report.getSubmittedByAdminId());
 
         // Get admin name
-        adminRepository.findById(report.getSubmittedByAdminId())
-                .ifPresent(admin -> response.setAdminName(admin.getFullName()));
+        if (report.getSubmittedByAdminId() != null) {
+            adminRepository.findById(report.getSubmittedByAdminId())
+                    .ifPresent(admin -> response.setAdminName(admin.getFullName()));
+        }
 
         response.setType(report.getType());
         response.setTitle(report.getTitle());
         response.setCategory(report.getCategory());
         response.setPriority(report.getPriority());
-
-        // CORRECTION 5: Map Entity 'description' to DTO 'details'
         response.setDetails(report.getDescription());
-
         response.setStatus(report.getStatus());
         response.setCreatedAt(report.getCreatedAt());
         response.setUpdatedAt(report.getUpdatedAt());
@@ -134,8 +127,7 @@ public class AdminReportService {
             try {
                 List<String> attachments = objectMapper.readValue(
                         report.getAttachments(),
-                        objectMapper.getTypeFactory().constructCollectionType(List.class, String.class)
-                );
+                        objectMapper.getTypeFactory().constructCollectionType(List.class, String.class));
                 response.setAttachments(attachments);
             } catch (Exception e) {
                 response.setAttachments(Collections.emptyList());

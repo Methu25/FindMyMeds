@@ -30,7 +30,7 @@ public class PharmacySystemSettingsService {
                 });
 
         updateEntityFromDto(settings, dto);
-        settingsRepository.save(settings);
+        settingsRepository.save(java.util.Objects.requireNonNull(settings));
     }
 
     private PharmacySystemSettings createDefaultSettings(@org.springframework.lang.NonNull Long pharmacyId) {

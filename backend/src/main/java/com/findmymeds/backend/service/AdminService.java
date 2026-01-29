@@ -73,9 +73,10 @@ public class AdminService {
     }
 
     @Transactional
-    
-    public AdminResponse updateAdminEmail(Long adminId, UpdateAdminEmailRequest request,
-                                          Long currentAdminId) {
+
+    public AdminResponse updateAdminEmail(@org.springframework.lang.NonNull Long adminId,
+            UpdateAdminEmailRequest request,
+            @org.springframework.lang.NonNull Long currentAdminId) {
         Admin admin = adminRepository.findById(adminId)
                 .orElseThrow(() -> new AdminNotFoundException("Admin not found with id: " + adminId));
 
@@ -111,9 +112,8 @@ public class AdminService {
                 "Deleted admin: " + adminName);
     }
 
-    
-    private void logAction(Long adminId, String actionType, String targetTable,
-                           Long targetId, String description) {
+    private void logAction(@org.springframework.lang.NonNull Long adminId, String actionType, String targetTable,
+            Long targetId, String description) {
         AdminActionLog log = new AdminActionLog();
 
         Admin admin = adminRepository.getReferenceById(adminId);
