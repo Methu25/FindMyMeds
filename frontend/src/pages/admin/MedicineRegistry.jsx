@@ -45,7 +45,7 @@ const MedicineRegistry = () => {
 
     const fetchMetrics = async () => {
         try {
-            const res = await fetch('http://localhost:8081/api/medicines/metrics'); // Port 8081 for backend
+            const res = await fetch('http://localhost:8080/api/medicines/metrics'); // Port 8080 for backend
             if (res.ok) setMetrics(await res.json());
         } catch (e) {
             console.error(e);
@@ -56,7 +56,7 @@ const MedicineRegistry = () => {
 
     const fetchNotifications = async () => {
         try {
-            const res = await fetch('http://localhost:8081/api/medicines/notifications');
+            const res = await fetch('http://localhost:8080/api/medicines/notifications');
             if (res.ok) setNotifications(await res.json());
         } catch (e) { console.error(e); }
     };
@@ -71,7 +71,7 @@ const MedicineRegistry = () => {
             params.append('page', pagination.page);
             params.append('size', pagination.size);
 
-            const res = await fetch(`http://localhost:8081/api/medicines?${params}`);
+            const res = await fetch(`http://localhost:8080/api/medicines?${params}`);
             if (res.ok) {
                 const data = await res.json();
                 setMedicines(data.content);

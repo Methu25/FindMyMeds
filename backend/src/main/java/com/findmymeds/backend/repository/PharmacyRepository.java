@@ -21,4 +21,6 @@ public interface PharmacyRepository extends JpaRepository<Pharmacy, Long> {
             "cos(radians(p.longitude) - radians(:lng)) + " +
             "sin(radians(:lat)) * sin(radians(p.latitude)))) < :radius", nativeQuery = true)
     List<Pharmacy> findNearby(@Param("lat") double lat, @Param("lng") double lng, @Param("radius") double radius);
+
+    List<Pharmacy> findByStatus(com.findmymeds.backend.model.PharmacyStatus status);
 }
