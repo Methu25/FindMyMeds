@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@SuppressWarnings("null")
 public class AdminReportService {
 
     private final AdminReportRepository reportRepository;
@@ -134,8 +135,7 @@ public class AdminReportService {
             try {
                 List<String> attachments = objectMapper.readValue(
                         report.getAttachments(),
-                        objectMapper.getTypeFactory().constructCollectionType(List.class, String.class)
-                );
+                        objectMapper.getTypeFactory().constructCollectionType(List.class, String.class));
                 response.setAttachments(attachments);
             } catch (Exception e) {
                 response.setAttachments(Collections.emptyList());

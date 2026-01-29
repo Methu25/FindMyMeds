@@ -1,7 +1,6 @@
 package com.findmymeds.backend.model;
 
 import jakarta.persistence.*;
-import com.findmymeds.backend.model.Civilian;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
