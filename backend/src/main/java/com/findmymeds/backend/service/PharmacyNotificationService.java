@@ -74,6 +74,31 @@ public class PharmacyNotificationService {
         notificationRepository.save(notification);
     }
 
+    public NotificationDTO getNotificationById(Long id) {
+        Notification notification = notificationRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Notification not found with id: " + id));
+        return mapToDTO(notification);
+    }
+
+    public void deleteNotification(@org.springframework.lang.NonNull Long id) {
+        notificationRepository.deleteById(id);
+    }
+
+    public void markAllAsRead() {
+        Long pharmacyId = getCurrentPharmacyId();
+        List<Notification> unreadNotifications = notificationRepository.findAllUnreadByPharmacy(pharmacyId);
+        unreadNotifications.forEach(n -> {
+            n.setRead(true);
+            n.setReadAt(LocalDateTime.now());
+        });
+        notificationRepository.saveAll(unreadNotifications);
+    }
+
+    public void deleteAllNotifications() {
+        Long pharmacyId = getCurrentPharmacyId();
+        notificationRepository.deleteAllByPharmacy(pharmacyId);
+    }
+
     private NotificationDTO mapToDTO(Notification n) {
         NotificationDTO dto = new NotificationDTO();
         dto.setId(n.getId());

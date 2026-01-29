@@ -74,7 +74,7 @@ public class PharmacyMedicineInventoryService {
         checkStockAndNotify(inventory);
     }
 
-    public void updatePrice(Long inventoryId, java.math.BigDecimal newPrice) {
+    public void updatePrice(@org.springframework.lang.NonNull Long inventoryId, java.math.BigDecimal newPrice) {
         PharmacyInventory inventory = inventoryRepository.findById(inventoryId)
                 .orElseThrow(() -> new RuntimeException("Inventory not found"));
 
@@ -82,7 +82,7 @@ public class PharmacyMedicineInventoryService {
         inventoryRepository.save(inventory);
     }
 
-    public void deactivateMedicine(Long inventoryId) {
+    public void deactivateMedicine(@org.springframework.lang.NonNull Long inventoryId) {
         PharmacyInventory inventory = inventoryRepository.findById(inventoryId)
                 .orElseThrow(() -> new RuntimeException("Inventory not found"));
 
@@ -101,6 +101,61 @@ public class PharmacyMedicineInventoryService {
         Medicine medicine = inventory.getMedicine();
         medicine.setStatus(Medicine.MedicineStatus.ACTIVE);
         medicineRepository.save(medicine);
+    }
+
+    public void addMedicineToInventory(MedicineInventoryDTO dto) {
+        Long pharmacyId = getCurrentPharmacyId();
+
+        Medicine medicine;
+        if (dto.getMedicineId() != null) {
+            medicine = medicineRepository.findById(dto.getMedicineId())
+                    .orElseThrow(() -> new RuntimeException("Medicine not found"));
+        } else {
+            medicine = new Medicine();
+            medicine.setMedicineName(dto.getMedicineName());
+            medicine.setGenericName(dto.getGenericName());
+            medicine.setManufacturer(dto.getManufacturer());
+            medicine.setDosageForm(dto.getDosageForm());
+            medicine.setStrength(dto.getStrength());
+            medicine.setRequiresPrescription(dto.isRequiresPrescription());
+            medicine.setImageUrl(dto.getImageUrl());
+            medicine.setActiveIngredients(dto.getActiveIngredients());
+            medicine.setStatus(Medicine.MedicineStatus.ACTIVE);
+            medicine = medicineRepository.save(medicine);
+        }
+
+        PharmacyInventory inventory = new PharmacyInventory();
+        com.findmymeds.backend.model.Pharmacy pharmacy = new com.findmymeds.backend.model.Pharmacy();
+        pharmacy.setId(pharmacyId);
+        inventory.setPharmacy(pharmacy);
+        inventory.setMedicine(medicine);
+        inventory.setAvailableQuantity(dto.getStockQuantity());
+        inventory.setPrice(dto.getPrice());
+        inventory.setExpiryDate(dto.getExpiryDate());
+
+        inventoryRepository.save(inventory);
+    }
+
+    public void updateInventory(Long inventoryId, MedicineInventoryDTO dto) {
+        PharmacyInventory inventory = inventoryRepository.findById(inventoryId)
+                .orElseThrow(() -> new RuntimeException("Inventory not found"));
+
+        inventory.setAvailableQuantity(dto.getStockQuantity());
+        inventory.setPrice(dto.getPrice());
+        inventory.setExpiryDate(dto.getExpiryDate());
+
+        Medicine medicine = inventory.getMedicine();
+        medicine.setMedicineName(dto.getMedicineName());
+        medicine.setGenericName(dto.getGenericName());
+        medicine.setManufacturer(dto.getManufacturer());
+        medicine.setDosageForm(dto.getDosageForm());
+        medicine.setStrength(dto.getStrength());
+        medicine.setRequiresPrescription(dto.isRequiresPrescription());
+        medicine.setImageUrl(dto.getImageUrl());
+        medicine.setActiveIngredients(dto.getActiveIngredients());
+
+        medicineRepository.save(medicine);
+        inventoryRepository.save(inventory);
     }
 
     private void checkStockAndNotify(PharmacyInventory inventory) {

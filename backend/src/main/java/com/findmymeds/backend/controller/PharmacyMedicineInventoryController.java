@@ -66,4 +66,16 @@ public class PharmacyMedicineInventoryController {
         inventoryService.deleteFromInventory(id);
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping
+    public ResponseEntity<Void> addMedicine(@RequestBody MedicineInventoryDTO dto) {
+        inventoryService.addMedicineToInventory(dto);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> updateMedicine(@PathVariable Long id, @RequestBody MedicineInventoryDTO dto) {
+        inventoryService.updateInventory(id, dto);
+        return ResponseEntity.ok().build();
+    }
 }
