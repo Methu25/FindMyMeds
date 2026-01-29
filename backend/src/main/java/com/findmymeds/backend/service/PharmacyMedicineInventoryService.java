@@ -28,6 +28,9 @@ public class PharmacyMedicineInventoryService {
     @Autowired
     private PharmacyNotificationService notificationService;
 
+    @Autowired
+    private com.findmymeds.backend.repository.PharmacyRepository pharmacyRepository;
+
     private Long getCurrentPharmacyId() {
         return 1L; // Hardcoded for development
     }
@@ -101,6 +104,42 @@ public class PharmacyMedicineInventoryService {
         Medicine medicine = inventory.getMedicine();
         medicine.setStatus(Medicine.MedicineStatus.ACTIVE);
         medicineRepository.save(medicine);
+    }
+
+    public void addMedicineToInventory(MedicineInventoryDTO dto) {
+        Long pharmacyId = getCurrentPharmacyId();
+        com.findmymeds.backend.model.Pharmacy pharmacy = pharmacyRepository.findById(pharmacyId)
+                .orElseThrow(() -> new RuntimeException("Pharmacy not found"));
+
+        Medicine medicine = medicineRepository.findById(dto.getMedicineId())
+                .orElseThrow(() -> new RuntimeException("Medicine not found with id: " + dto.getMedicineId()));
+
+        PharmacyInventory inventory = new PharmacyInventory();
+        inventory.setPharmacy(pharmacy);
+        inventory.setMedicine(medicine);
+        inventory.setAvailableQuantity(dto.getStockQuantity() != null ? dto.getStockQuantity() : 0);
+        inventory.setPrice(dto.getPrice() != null ? dto.getPrice() : java.math.BigDecimal.ZERO);
+        inventory.setExpiryDate(dto.getExpiryDate());
+
+        inventoryRepository.save(inventory);
+    }
+
+    public void updateInventory(Long id, MedicineInventoryDTO dto) {
+        PharmacyInventory inventory = inventoryRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Inventory item not found with id: " + id));
+
+        if (dto.getStockQuantity() != null) {
+            inventory.setAvailableQuantity(dto.getStockQuantity());
+        }
+        if (dto.getPrice() != null) {
+            inventory.setPrice(dto.getPrice());
+        }
+        if (dto.getExpiryDate() != null) {
+            inventory.setExpiryDate(dto.getExpiryDate());
+        }
+
+        inventoryRepository.save(inventory);
+        checkStockAndNotify(inventory);
     }
 
     private void checkStockAndNotify(PharmacyInventory inventory) {

@@ -57,6 +57,5 @@ public class Pharmacy {
     private LocalDateTime createdAt;
 
     @Transient
-    private Double distance; // Optional, for UI purposes
-
+    private Double distance;
 }
