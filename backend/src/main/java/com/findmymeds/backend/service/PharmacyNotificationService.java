@@ -7,7 +7,6 @@ import com.findmymeds.backend.model.enums.NotificationType;
 import com.findmymeds.backend.model.enums.Priority;
 import com.findmymeds.backend.model.enums.UserType;
 import com.findmymeds.backend.repository.NotificationRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,10 +19,10 @@ import java.util.Arrays;
 import java.util.List;
 
 @Service
+@lombok.RequiredArgsConstructor
 public class PharmacyNotificationService {
 
-    @Autowired
-    private NotificationRepository notificationRepository;
+    private final NotificationRepository notificationRepository;
 
     private Long getCurrentPharmacyId() {
         return 1L; // Hardcoded for development
@@ -72,6 +71,31 @@ public class PharmacyNotificationService {
         notification.setRead(true);
         notification.setReadAt(LocalDateTime.now());
         notificationRepository.save(notification);
+    }
+
+    public NotificationDTO getNotificationById(@org.springframework.lang.NonNull Long id) {
+        Notification notification = notificationRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Notification not found with id: " + id));
+        return mapToDTO(notification);
+    }
+
+    public void deleteNotification(@org.springframework.lang.NonNull Long id) {
+        notificationRepository.deleteById(id);
+    }
+
+    public void markAllAsRead() {
+        Long pharmacyId = getCurrentPharmacyId();
+        List<Notification> unreadNotifications = notificationRepository.findAllUnreadByPharmacy(pharmacyId);
+        unreadNotifications.forEach(n -> {
+            n.setRead(true);
+            n.setReadAt(LocalDateTime.now());
+        });
+        notificationRepository.saveAll(unreadNotifications);
+    }
+
+    public void deleteAllNotifications() {
+        Long pharmacyId = getCurrentPharmacyId();
+        notificationRepository.deleteAllByPharmacy(pharmacyId);
     }
 
     private NotificationDTO mapToDTO(Notification n) {
