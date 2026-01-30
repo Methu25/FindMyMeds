@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "pharmacies")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -40,7 +41,6 @@ public class Pharmacy {
 
     @Column
     private Double longitude;
-
 
     @Column(name = "operating_hours")
     private String operatingHours;
