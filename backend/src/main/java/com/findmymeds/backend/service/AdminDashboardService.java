@@ -50,24 +50,6 @@ public class AdminDashboardService {
                                 permanentBanned);
         }
 
-        public AdminSystemOverviewDTO getSystemOverview() {
-
-                long totalCivilians = civilianRepository.count();
-
-                long totalAdmins = adminRepository.count();
-                long activeAdmins = adminRepository.countByStatus(AdminStatus.ACTIVE);
-
-                long totalPharmacies = pharmacyRepository.count();
-                long pendingPharmacies = pharmacyRepository.countByStatus(PharmacyStatus.PENDING);
-
-                return new AdminSystemOverviewDTO(
-                                totalCivilians,
-                                totalAdmins,
-                                activeAdmins,
-                                totalPharmacies,
-                                pendingPharmacies);
-        }
-
         public AdminPendingAlertsDTO getPendingAlerts() {
 
                 long pendingAppeals = civilianAppealRepository.countByStatus(AppealStatus.PENDING);

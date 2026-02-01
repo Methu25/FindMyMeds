@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 public class AdminOverviewAdminDTO {
     private long totalCivilians;
     private long temporaryBans;
-    private long pendingAppeals;
+    private long pendingCivilianAppeals;
     private long pendingPharmacyRequests;
     private long activePharmacies;
 }

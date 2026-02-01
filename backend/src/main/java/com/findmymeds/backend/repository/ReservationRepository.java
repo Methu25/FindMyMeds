@@ -14,45 +14,35 @@ import java.util.List;
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, String> {
 
-    @Query("""
-                SELECT COUNT(r)
-                FROM Reservation r
-                WHERE r.pharmacy.id = :pharmacyId
-                  AND r.reservationDate >= :start
-                  AND r.reservationDate < :end
-            """)
-    long countByPharmacyIdAndDateBetween(
-            @Param("pharmacyId") Long pharmacyId,
-            @Param("start") LocalDateTime start,
-            @Param("end") LocalDateTime end);
+        @Query("""
+                            SELECT COUNT(r)
+                            FROM Reservation r
+                            WHERE r.pharmacy.id = :pharmacyId
+                              AND r.reservationDate >= :start
+                              AND r.reservationDate < :end
+                        """)
+        long countByPharmacyIdAndDateBetween(
+                        @Param("pharmacyId") Long pharmacyId,
+                        @Param("start") LocalDateTime start,
+                        @Param("end") LocalDateTime end);
 
-    @Query("SELECT COUNT(r) FROM Reservation r WHERE r.pharmacy.id = :pharmacyId AND r.status = :status AND r.reservationDate >= :start AND r.reservationDate < :end")
-    long countByPharmacyIdAndStatusAndDateBetween(
-            @Param("pharmacyId") Long pharmacyId,
-            @Param("status") ReservationStatus status,
-            @Param("start") LocalDateTime start,
-            @Param("end") LocalDateTime end);
+        @Query("""
+                            SELECT COUNT(r)
+                            FROM Reservation r
+                            WHERE r.pharmacy.id = :pharmacyId
+                              AND r.status = :status
+                        """)
+        long countByPharmacyIdAndStatus(
+                        @Param("pharmacyId") Long pharmacyId,
+                        @Param("status") ReservationStatus status);
 
-    @Query("SELECT COUNT(r) FROM Reservation r WHERE r.pharmacy.id = :pharmacyId AND r.status = 'PENDING'")
-    long countPending(@Param("pharmacyId") Long pharmacyId);
-
-    @Query("""
-                SELECT COUNT(r)
-                FROM Reservation r
-                WHERE r.pharmacy.id = :pharmacyId
-                  AND r.status = :status
-            """)
-    long countByPharmacyIdAndStatus(
-            @Param("pharmacyId") Long pharmacyId,
-            @Param("status") ReservationStatus status);
-
-    @Query("""
-                SELECT function('date', r.reservationDate) AS date, COUNT(r) AS count
-                FROM Reservation r
-                WHERE r.reservationDate >= :from
-                GROUP BY function('date', r.reservationDate)
-                ORDER BY function('date', r.reservationDate)
-            """)
-    List<ReservationCountByDate> countReservationsPerDay(
-            @Param("from") LocalDateTime from);
+        @Query("""
+                            SELECT function('date', r.reservationDate) AS date, COUNT(r) AS count
+                            FROM Reservation r
+                            WHERE r.reservationDate >= :from
+                            GROUP BY function('date', r.reservationDate)
+                            ORDER BY function('date', r.reservationDate)
+                        """)
+        List<ReservationCountByDate> countReservationsPerDay(
+                        @Param("from") LocalDateTime from);
 }

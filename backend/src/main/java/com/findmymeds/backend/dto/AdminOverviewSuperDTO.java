@@ -12,5 +12,5 @@ public class AdminOverviewSuperDTO {
     private long totalAdmins;
     private long activeAdmins;
     private long totalPharmacies;
-    private long pendingPharmacies;
+    private long pendingPharmacyApprovals;
 }

@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AdminNotificationMetricsDTO {
-    private long read;
-    private long unread;
+    private long readNotifications;
+    private long unreadNotifications;
 }

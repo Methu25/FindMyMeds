@@ -28,9 +28,6 @@ public class PharmacyMedicineInventoryService {
     @Autowired
     private PharmacyNotificationService notificationService;
 
-    @Autowired
-    private com.findmymeds.backend.repository.PharmacyRepository pharmacyRepository;
-
     private Long getCurrentPharmacyId() {
         return 1L; // Hardcoded for development
     }
@@ -109,14 +106,11 @@ public class PharmacyMedicineInventoryService {
     public void addMedicineToInventory(MedicineInventoryDTO dto) {
         Long pharmacyId = getCurrentPharmacyId();
 
-        com.findmymeds.backend.model.Pharmacy pharmacy = pharmacyRepository.findById(pharmacyId)
-                .orElseThrow(() -> new RuntimeException("Pharmacy not found"));
-
         Medicine medicine;
         Long medicineId = dto.getMedicineId();
-        if (medicineId != null && medicineId > 0) {
+        if (medicineId != null) {
             medicine = medicineRepository.findById(medicineId)
-                    .orElseThrow(() -> new RuntimeException("Medicine not found with id: " + medicineId));
+                    .orElseThrow(() -> new RuntimeException("Medicine not found"));
         } else {
             medicine = new Medicine();
             medicine.setMedicineName(dto.getMedicineName());
@@ -132,10 +126,12 @@ public class PharmacyMedicineInventoryService {
         }
 
         PharmacyInventory inventory = new PharmacyInventory();
+        com.findmymeds.backend.model.Pharmacy pharmacy = new com.findmymeds.backend.model.Pharmacy();
+        pharmacy.setId(pharmacyId);
         inventory.setPharmacy(pharmacy);
         inventory.setMedicine(medicine);
-        inventory.setAvailableQuantity(dto.getStockQuantity() != null ? dto.getStockQuantity() : 0);
-        inventory.setPrice(dto.getPrice() != null ? dto.getPrice() : java.math.BigDecimal.ZERO);
+        inventory.setAvailableQuantity(dto.getStockQuantity());
+        inventory.setPrice(dto.getPrice());
         inventory.setExpiryDate(dto.getExpiryDate());
 
         inventoryRepository.save(inventory);

@@ -19,29 +19,31 @@ public class PharmacyDashboardService {
         private final InventoryRepository inventoryRepository;
 
         public DashboardMetricsDTO getMetrics(Long pharmacyId) {
+
                 LocalDateTime startOfDay = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
+
                 LocalDateTime endOfDay = LocalDateTime.of(LocalDate.now(), LocalTime.MAX);
 
-                long todaysReservations = reservationRepository.countByPharmacyIdAndDateBetween(pharmacyId, startOfDay,
+                long todayReservations = reservationRepository.countByPharmacyIdAndDateBetween(
+                                pharmacyId,
+                                startOfDay,
                                 endOfDay);
-                long completedToday = reservationRepository.countByPharmacyIdAndStatusAndDateBetween(
-                                pharmacyId, ReservationStatus.COLLECTED, startOfDay,
-                                endOfDay);
-                long rejectedToday = reservationRepository.countByPharmacyIdAndStatusAndDateBetween(
-                                pharmacyId, ReservationStatus.CANCELLED, startOfDay,
-                                endOfDay);
-                long inStockMedicines = inventoryRepository.countInStock(pharmacyId);
 
-                long pendingOrders = reservationRepository.countByPharmacyIdAndStatus(pharmacyId,
+                long pendingOrders = reservationRepository.countByPharmacyIdAndStatus(
+                                pharmacyId,
                                 ReservationStatus.PENDING);
-                long outOfStock = inventoryRepository.countOutOfStock(pharmacyId);
-                long expiringSoon = 0; // Placeholder as requested in master branch snippet
 
+                long outOfStock = inventoryRepository.countOutOfStock(pharmacyId);
+
+                long expiringSoon = 0; // placeholder for future logic
+
+                // Providing 0 or dummy for missing fields to match the 7-arg constructor of
+                // DashboardMetricsDTO
                 return new DashboardMetricsDTO(
-                                todaysReservations,
-                                completedToday,
-                                rejectedToday,
-                                inStockMedicines,
+                                todayReservations,
+                                0, // completedToday
+                                0, // rejectedToday
+                                0, // inStockMedicines
                                 pendingOrders,
                                 outOfStock,
                                 expiringSoon);

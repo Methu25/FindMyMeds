@@ -1,7 +1,9 @@
 package com.findmymeds.backend.repository.projection;
 
+import java.time.LocalDate;
+
 public interface ReservationCountByDate {
-    String getDate();
+    LocalDate getDate();
 
     long getCount();
 }
