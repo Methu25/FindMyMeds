@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import AdminLayout from "../../../components/admin/AdminLayout";
-import AdminSidebar from "../../../components/admin/HomeAdminSidebar";
+import AdminLayout from "../../../components/admin/layout/AdminLayout";
+import AdminSidebar from "../../../components/admin/layout/AdminSidebar";
 import MetricCard from "../../../components/admin/Pharmacy/MetricCard";
-import TypeCard from "../../../components/admin/Pharmacy/PharmacyTypeCard";
+import TypeCard from "../../../components/admin/Pharmacy/TypeCard";
 import PharmacyTable from "../../../components/admin/Pharmacy/PharmacyTable";
 import NotificationPanel from "../../../components/admin/Pharmacy/NotificationPanel";
-import QuickActionsPanel from "../../../components/admin/Pharmacy/QuickActionPanel";
+import QuickActionsPanel from "../../../components/admin/Pharmacy/QuickActionsPanel";
 
 const PharmacyManagementHome = () => {
   const [metrics] = useState({ total: 124, active: 98, suspended: 26, removed: 10 });
