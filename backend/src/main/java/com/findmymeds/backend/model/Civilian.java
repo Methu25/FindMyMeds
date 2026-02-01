@@ -59,6 +59,9 @@ public class Civilian {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @Column(name = "ban_reason", columnDefinition = "TEXT")
+    private String banReason;
+
     @PreUpdate
     public void setUpdatedAt() {
         this.updatedAt = LocalDateTime.now();
