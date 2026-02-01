@@ -1,5 +1,6 @@
 package com.findmymeds.backend.model;
 
+import com.findmymeds.backend.model.enums.PharmacyStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,6 +8,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "pharmacies")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -39,7 +41,6 @@ public class Pharmacy {
 
     @Column
     private Double longitude;
-
 
     @Column(name = "operating_hours")
     private String operatingHours;

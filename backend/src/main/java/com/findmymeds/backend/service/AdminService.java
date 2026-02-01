@@ -1,5 +1,6 @@
 package com.findmymeds.backend.service;
 
+import com.findmymeds.backend.dto.AdminProfileDTO;
 import com.findmymeds.backend.model.*;
 import com.findmymeds.backend.model.enums.Role;
 import com.findmymeds.backend.repository.AdminActionLogRepository;
@@ -8,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.List;
 import java.util.Optional;
@@ -132,5 +134,23 @@ public class AdminService {
                 admin.getEmail(),
                 admin.getRole(),
                 admin.getCreatedAt());
+    }
+
+    public AdminProfileDTO getCurrentAdminProfile() {
+
+        String email =
+                SecurityContextHolder
+                        .getContext()
+                        .getAuthentication()
+                        .getName();
+
+        Admin admin =
+                adminRepository.findByEmail(email)
+                        .orElseThrow(() -> new RuntimeException("Admin not found"));
+
+        return new AdminProfileDTO(
+                admin.getFullName(),   // or getName()
+                admin.getRole()
+        );
     }
 }
