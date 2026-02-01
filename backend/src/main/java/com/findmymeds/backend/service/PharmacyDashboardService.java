@@ -1,6 +1,7 @@
 package com.findmymeds.backend.service;
 
 import com.findmymeds.backend.dto.DashboardMetricsDTO;
+import com.findmymeds.backend.model.enums.ReservationStatus;
 import com.findmymeds.backend.repository.InventoryRepository;
 import com.findmymeds.backend.repository.ReservationRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,13 +25,25 @@ public class PharmacyDashboardService {
                 long todaysReservations = reservationRepository.countByPharmacyIdAndDateBetween(pharmacyId, startOfDay,
                                 endOfDay);
                 long completedToday = reservationRepository.countByPharmacyIdAndStatusAndDateBetween(
-                                pharmacyId, com.findmymeds.backend.model.enums.ReservationStatus.COLLECTED, startOfDay,
+                                pharmacyId, ReservationStatus.COLLECTED, startOfDay,
                                 endOfDay);
                 long rejectedToday = reservationRepository.countByPharmacyIdAndStatusAndDateBetween(
-                                pharmacyId, com.findmymeds.backend.model.enums.ReservationStatus.CANCELLED, startOfDay,
+                                pharmacyId, ReservationStatus.CANCELLED, startOfDay,
                                 endOfDay);
                 long inStockMedicines = inventoryRepository.countInStock(pharmacyId);
 
-                return new DashboardMetricsDTO(todaysReservations, completedToday, rejectedToday, inStockMedicines);
+                long pendingOrders = reservationRepository.countByPharmacyIdAndStatus(pharmacyId,
+                                ReservationStatus.PENDING);
+                long outOfStock = inventoryRepository.countOutOfStock(pharmacyId);
+                long expiringSoon = 0; // Placeholder as requested in master branch snippet
+
+                return new DashboardMetricsDTO(
+                                todaysReservations,
+                                completedToday,
+                                rejectedToday,
+                                inStockMedicines,
+                                pendingOrders,
+                                outOfStock,
+                                expiringSoon);
         }
 }

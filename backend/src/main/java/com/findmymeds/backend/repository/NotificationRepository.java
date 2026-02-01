@@ -39,7 +39,8 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
     @Query("DELETE FROM Notification n WHERE n.read = true AND n.readAt < :cutoff")
     void deleteOldReadNotifications(@Param("cutoff") LocalDateTime cutoff);
 
-    // ✅ Admin dashboard: total unread notifications for role ADMIN
+    long countByTargetRoleAndReadTrue(Role targetRole);
+
     long countByTargetRoleAndReadFalse(Role targetRole);
 
     // ✅ Admin dashboard: latest 2 unread notifications for role ADMIN

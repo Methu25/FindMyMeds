@@ -12,4 +12,7 @@ public class DashboardMetricsDTO {
     private long completedToday;
     private long rejectedToday;
     private long inStockMedicines;
+    private long pendingOrders;
+    private long outOfStock;
+    private long expiringSoon;
 }
