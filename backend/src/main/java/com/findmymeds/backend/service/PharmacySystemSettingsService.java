@@ -25,7 +25,7 @@ public class PharmacySystemSettingsService {
         PharmacySystemSettings settings = settingsRepository.findByPharmacyId(pharmacyId)
                 .orElseGet(() -> {
                     PharmacySystemSettings s = new PharmacySystemSettings();
-                    s.setPharmacy(pharmacyRepository.getReferenceById(pharmacyId));
+                    s.setPharmacy(pharmacyRepository.getReferenceById(java.util.Objects.requireNonNull(pharmacyId)));
                     return s;
                 });
 
@@ -35,7 +35,7 @@ public class PharmacySystemSettingsService {
 
     private PharmacySystemSettings createDefaultSettings(Long pharmacyId) {
         PharmacySystemSettings settings = new PharmacySystemSettings();
-        settings.setPharmacy(pharmacyRepository.getReferenceById(pharmacyId));
+        settings.setPharmacy(pharmacyRepository.getReferenceById(java.util.Objects.requireNonNull(pharmacyId)));
         return settingsRepository.save(settings);
     }
 
