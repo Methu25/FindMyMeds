@@ -11,6 +11,9 @@ public interface InventoryRepository extends JpaRepository<PharmacyInventory, Lo
     @Query("SELECT COUNT(i) FROM PharmacyInventory i WHERE i.pharmacy.id = :pharmacyId AND i.availableQuantity = 0")
     long countOutOfStock(Long pharmacyId);
 
+    @Query("SELECT COUNT(i) FROM PharmacyInventory i WHERE i.pharmacy.id = :pharmacyId AND i.availableQuantity > 0")
+    long countInStock(Long pharmacyId);
+
     // Assuming "Expiring Soon" logic check expiry date if exists, but Inventory
     // entity doesn't seem to have expiryDate in previous context.
     // However, I see "Medicine" has removed/status.

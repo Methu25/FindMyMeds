@@ -17,6 +17,8 @@ public class ProfileController {
 
     @GetMapping
     public ResponseEntity<Admin> getProfile() {
+        // Mock: Try to find ID 1, otherwise return the first available admin for demo
+        // purposes
         return adminService.getAdminEntityById(1L)
                 .or(() -> adminService.getAllAdminEntities().stream().findFirst())
                 .map(ResponseEntity::ok)

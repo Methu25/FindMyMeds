@@ -2,6 +2,7 @@ package com.findmymeds.backend.controller;
 
 import com.findmymeds.backend.dto.AdminProfileDTO;
 import com.findmymeds.backend.model.*;
+import com.findmymeds.backend.model.enums.AdminStatus; // <--- Added this import
 import com.findmymeds.backend.service.AdminService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -60,6 +61,18 @@ public class AdminController {
         AdminResponse response = adminService.updateAdminEmail(id, request, currentAdminId);
         return ResponseEntity.ok(response);
     }
+
+    // --- NEW ENDPOINT: Handles Activate / Deactivate ---
+    @PatchMapping("/{id}/status")
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
+    public ResponseEntity<Void> updateAdminStatus(
+            @PathVariable @org.springframework.lang.NonNull Long id,
+            @RequestParam AdminStatus status) {
+
+        adminService.updateAdminStatus(id, status);
+        return ResponseEntity.ok().build();
+    }
+    // ---------------------------------------------------
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('SUPER_ADMIN')")
