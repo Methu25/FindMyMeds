@@ -7,6 +7,7 @@ import Home from './pages/Home';
 
 // Admin Pages 
 import AdminDashboard from './pages/admin/AdminDashboard';
+import AdminManagement from './pages/admin/AdminManagement';
 import AdminCenter from './pages/pharmacy/AdminCenter.jsx';
 import SystemSettings from './pages/pharmacy/SystemSettings.jsx';
 import MedicineRegistry from './pages/admin/MedicineRegistry';
@@ -45,7 +46,7 @@ function App() {
           <Route index element={<Navigate to="dashboard" replace />} />
 
           <Route path="dashboard" element={<AdminDashboard />} />
-          <Route path="admin-center" element={<AdminCenter />} />
+          <Route path="administrators" element={<AdminManagement />} />
           <Route path="settings" element={<SystemSettings />} />
 
           {/* Medicines */}
