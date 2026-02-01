@@ -7,6 +7,9 @@ import org.springframework.stereotype.Repository;
 
 
 import java.util.Optional;
+import java.time.LocalDateTime;
+import java.util.List;
+
 
 @Repository
 public interface CivilianAppealRepository extends JpaRepository<CivilianAppeal, Long> {
@@ -20,6 +23,11 @@ public interface CivilianAppealRepository extends JpaRepository<CivilianAppeal, 
     boolean existsByCivilianIdAndStatus(Long civilianId, AppealStatus status);
 
     Optional<CivilianAppeal> findTopByCivilianIdOrderByCreatedAtDesc(Long civilianId);
+
+    List<CivilianAppeal> findByCivilianIdOrderByCreatedAtDesc(Long civilianId);
+
+    boolean existsByCivilianIdAndCreatedAtAfter(Long civilianId, LocalDateTime time);
+
 
 
 }

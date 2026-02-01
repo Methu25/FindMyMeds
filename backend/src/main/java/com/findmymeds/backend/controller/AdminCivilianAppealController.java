@@ -2,6 +2,9 @@ package com.findmymeds.backend.controller;
 
 import com.findmymeds.backend.dto.AdminAppealRejectRequestDTO;
 import com.findmymeds.backend.service.CivilianAppealAdminService;
+import com.findmymeds.backend.dto.AdminAppealDetailsDTO;
+import com.findmymeds.backend.dto.AdminAppealRejectRequestDTO;
+import com.findmymeds.backend.service.CivilianAppealQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,6 +14,12 @@ import org.springframework.web.bind.annotation.*;
 public class AdminCivilianAppealController {
 
     private final CivilianAppealAdminService appealAdminService;
+    private final CivilianAppealQueryService appealQueryService;
+
+    @GetMapping("/{appealId}")
+    public AdminAppealDetailsDTO getAppeal(@PathVariable Long appealId) {
+        return appealQueryService.getAppealDetails(appealId);
+    }
 
     @PostMapping("/{appealId}/approve")
     public void approve(@PathVariable Long appealId, @RequestParam Long adminId) {
