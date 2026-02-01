@@ -19,6 +19,7 @@ import ProfilePage from './pages/admin/ProfilePage';
 import CivilianManagement from './pages/admin/CivilianManagement';
 
 // Pharmacy Pages 
+import PharmacyDashboard from './pages/pharmacy/Dashboard';
 import MedicineInventory from './pages/pharmacy/MedicineInventory';
 import PharmacyMedicineDetails from './pages/pharmacy/MedicineDetails';
 import PharmacyNotificationCenter from './pages/pharmacy/NotificationCenter';
@@ -72,7 +73,7 @@ function App() {
         <Route path="/pharmacy/*" element={
           <NotificationProvider>
             <Routes>
-              <Route index element={<AdminDashboard />} />
+              <Route index element={<PharmacyDashboard />} />
               <Route path="inventory" element={<MedicineInventory />} />
               <Route path="medicines/:id" element={<PharmacyMedicineDetails />} />
               <Route path="notifications" element={<PharmacyNotificationCenter />} />
