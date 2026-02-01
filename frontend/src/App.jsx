@@ -2,10 +2,13 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import AdminLayout from './components/admin/AdminLayout';
 
-// Admin Pages
-import Dashboard from './pages/pharmacy/Dashboard.jsx'
-import AdminCenter from './pages/pharmacy/AdminCenter.jsx'
-import SystemSettings from './pages/pharmacy/SystemSettings.jsx'
+// Landing Page 
+import Home from './pages/Home';
+
+// Admin Pages 
+import AdminDashboard from './pages/admin/AdminDashboard';
+import AdminCenter from './pages/pharmacy/AdminCenter.jsx';
+import SystemSettings from './pages/pharmacy/SystemSettings.jsx';
 import MedicineRegistry from './pages/admin/MedicineRegistry';
 import AddMedicine from './pages/admin/AddMedicine';
 import MedicineDetails from './pages/admin/MedicineDetails';
@@ -14,13 +17,13 @@ import NotificationDetails from './pages/admin/NotificationDetails';
 import ProfilePage from './pages/admin/ProfilePage';
 import CivilianManagement from './pages/admin/CivilianManagement';
 
-// Pharmacy Pages (HEAD)
+// Pharmacy Pages 
 import MedicineInventory from './pages/pharmacy/MedicineInventory';
 import PharmacyMedicineDetails from './pages/pharmacy/MedicineDetails';
 import PharmacyNotificationCenter from './pages/pharmacy/NotificationCenter';
 import PharmacyNotificationDetails from './pages/pharmacy/NotificationDetails';
 
-// Civilian Pages (Master)
+// Civilian Pages 
 import CivilianLayout from './components/civilian/CivilianLayout';
 import ActivityPage from './pages/civilian/ActivityPage';
 import FindPharmacy from './pages/civilian/FindPharmacy';
@@ -32,23 +35,31 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Navigate to="/admin" replace />} />
+        {/* Landing page first */}
+        <Route path="/" element={<Home />} />
 
-        {/* Admin Routes */}
+        {/*  Admin Routes */}
         <Route path="/admin" element={<AdminLayout />}>
-          <Route index element={<div className="p-4">Dashboard Placeholder</div>} />
 
-          {/* Placeholders for other sections */}
-          <Route path="dashboard" element={<Dashboard />} />
+          {/* When visiting /admin -> go to /admin/dashboard */}
+          <Route index element={<Navigate to="dashboard" replace />} />
+
+          <Route path="dashboard" element={<AdminDashboard />} />
           <Route path="admin-center" element={<AdminCenter />} />
           <Route path="settings" element={<SystemSettings />} />
+
+          {/* Medicines */}
           <Route path="medicines" element={<MedicineRegistry />} />
           <Route path="medicines/add" element={<AddMedicine />} />
           <Route path="medicines/:id" element={<MedicineDetails />} />
+
+          {/* Pharmacies placeholder */}
           <Route path="pharmacies" element={<div className="p-4">Pharmacy Management Placeholder</div>} />
+
+          {/* Civilians */}
           <Route path="civilians" element={<CivilianManagement />} />
 
-          {/* Notification Center */}
+          {/* Notifications */}
           <Route path="notifications" element={<NotificationCenter />} />
           <Route path="notifications/:id" element={<NotificationDetails />} />
 
@@ -56,11 +67,11 @@ function App() {
           <Route path="profile" element={<ProfilePage />} />
         </Route>
 
-        {/* Pharmacy Routes (HEAD) */}
+        {/* Pharmacy Routes */}
         <Route path="/pharmacy/*" element={
           <NotificationProvider>
             <Routes>
-              <Route index element={<Dashboard />} />
+              <Route index element={<AdminDashboard />} />
               <Route path="inventory" element={<MedicineInventory />} />
               <Route path="medicines/:id" element={<PharmacyMedicineDetails />} />
               <Route path="notifications" element={<PharmacyNotificationCenter />} />
