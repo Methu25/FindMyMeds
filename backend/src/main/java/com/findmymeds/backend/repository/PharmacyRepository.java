@@ -1,7 +1,7 @@
 package com.findmymeds.backend.repository;
 
 import com.findmymeds.backend.model.Pharmacy;
-import com.findmymeds.backend.model.PharmacyStatus;
+import com.findmymeds.backend.model.enums.PharmacyStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

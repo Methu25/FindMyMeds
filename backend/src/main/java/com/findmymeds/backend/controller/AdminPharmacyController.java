@@ -1,7 +1,7 @@
 package com.findmymeds.backend.controller;
 
 import com.findmymeds.backend.model.Pharmacy;
-import com.findmymeds.backend.model.PharmacyStatus;
+import com.findmymeds.backend.model.enums.PharmacyStatus;
 import com.findmymeds.backend.service.AdminPharmacyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

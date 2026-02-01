@@ -45,7 +45,8 @@ public class PharmacySystemSettingsService {
                 settings.getTheme(),
                 settings.getDefaultHomepage(),
                 settings.isInventoryAlerts(),
-                settings.isExpiryAlerts());
+                settings.isExpiryAlerts(),
+                settings.isSystemMessages());
     }
 
     private void updateEntityFromDto(PharmacySystemSettings entity, SystemSettingsDTO dto) {
@@ -54,5 +55,6 @@ public class PharmacySystemSettingsService {
         entity.setDefaultHomepage(dto.getDefaultHomepage());
         entity.setInventoryAlerts(dto.isInventoryAlerts());
         entity.setExpiryAlerts(dto.isExpiryAlerts());
+        entity.setSystemMessages(dto.isSystemMessages());
     }
 }

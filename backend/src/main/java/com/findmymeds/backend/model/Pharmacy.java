@@ -1,5 +1,6 @@
 package com.findmymeds.backend.model;
 
+import com.findmymeds.backend.model.enums.PharmacyStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -108,11 +108,28 @@ public class PharmacyMedicineInventoryService {
 
     public void addMedicineToInventory(MedicineInventoryDTO dto) {
         Long pharmacyId = getCurrentPharmacyId();
+
         com.findmymeds.backend.model.Pharmacy pharmacy = pharmacyRepository.findById(pharmacyId)
                 .orElseThrow(() -> new RuntimeException("Pharmacy not found"));
 
-        Medicine medicine = medicineRepository.findById(dto.getMedicineId())
-                .orElseThrow(() -> new RuntimeException("Medicine not found with id: " + dto.getMedicineId()));
+        Medicine medicine;
+        Long medicineId = dto.getMedicineId();
+        if (medicineId != null && medicineId > 0) {
+            medicine = medicineRepository.findById(medicineId)
+                    .orElseThrow(() -> new RuntimeException("Medicine not found with id: " + medicineId));
+        } else {
+            medicine = new Medicine();
+            medicine.setMedicineName(dto.getMedicineName());
+            medicine.setGenericName(dto.getGenericName());
+            medicine.setManufacturer(dto.getManufacturer());
+            medicine.setDosageForm(dto.getDosageForm());
+            medicine.setStrength(dto.getStrength());
+            medicine.setRequiresPrescription(dto.isRequiresPrescription());
+            medicine.setImageUrl(dto.getImageUrl());
+            medicine.setActiveIngredients(dto.getActiveIngredients());
+            medicine.setStatus(Medicine.MedicineStatus.ACTIVE);
+            medicine = medicineRepository.save(medicine);
+        }
 
         PharmacyInventory inventory = new PharmacyInventory();
         inventory.setPharmacy(pharmacy);
@@ -124,22 +141,26 @@ public class PharmacyMedicineInventoryService {
         inventoryRepository.save(inventory);
     }
 
-    public void updateInventory(Long id, MedicineInventoryDTO dto) {
-        PharmacyInventory inventory = inventoryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Inventory item not found with id: " + id));
+    public void updateInventory(@org.springframework.lang.NonNull Long inventoryId, MedicineInventoryDTO dto) {
+        PharmacyInventory inventory = inventoryRepository.findById(inventoryId)
+                .orElseThrow(() -> new RuntimeException("Inventory not found"));
 
-        if (dto.getStockQuantity() != null) {
-            inventory.setAvailableQuantity(dto.getStockQuantity());
-        }
-        if (dto.getPrice() != null) {
-            inventory.setPrice(dto.getPrice());
-        }
-        if (dto.getExpiryDate() != null) {
-            inventory.setExpiryDate(dto.getExpiryDate());
-        }
+        inventory.setAvailableQuantity(dto.getStockQuantity());
+        inventory.setPrice(dto.getPrice());
+        inventory.setExpiryDate(dto.getExpiryDate());
 
+        Medicine medicine = inventory.getMedicine();
+        medicine.setMedicineName(dto.getMedicineName());
+        medicine.setGenericName(dto.getGenericName());
+        medicine.setManufacturer(dto.getManufacturer());
+        medicine.setDosageForm(dto.getDosageForm());
+        medicine.setStrength(dto.getStrength());
+        medicine.setRequiresPrescription(dto.isRequiresPrescription());
+        medicine.setImageUrl(dto.getImageUrl());
+        medicine.setActiveIngredients(dto.getActiveIngredients());
+
+        medicineRepository.save(medicine);
         inventoryRepository.save(inventory);
-        checkStockAndNotify(inventory);
     }
 
     private void checkStockAndNotify(PharmacyInventory inventory) {

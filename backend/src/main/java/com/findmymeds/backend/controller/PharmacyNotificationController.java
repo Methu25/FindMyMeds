@@ -3,7 +3,6 @@ package com.findmymeds.backend.controller;
 import com.findmymeds.backend.dto.NotificationCategoryCountDTO;
 import com.findmymeds.backend.dto.NotificationDTO;
 import com.findmymeds.backend.service.PharmacyNotificationService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,10 +12,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/pharmacy/notifications")
 @CrossOrigin(origins = { "http://localhost:5173", "http://localhost:5174" }, allowCredentials = "true")
+@lombok.RequiredArgsConstructor
 public class PharmacyNotificationController {
 
-    @Autowired
-    private PharmacyNotificationService notificationService;
+    private final PharmacyNotificationService notificationService;
 
     @GetMapping("/categories")
     public ResponseEntity<List<NotificationCategoryCountDTO>> getCategoryCounts() {
@@ -36,8 +35,40 @@ public class PharmacyNotificationController {
     }
 
     @PutMapping("/{id}/read")
-    public ResponseEntity<Void> markAsRead(@PathVariable @org.springframework.lang.NonNull Long id) {
+    public ResponseEntity<Void> markAsRead(@PathVariable("id") Long id) {
+        if (id == null) {
+            return ResponseEntity.badRequest().build();
+        }
         notificationService.markAsRead(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<NotificationDTO> getNotification(@PathVariable("id") Long id) {
+        if (id == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(notificationService.getNotificationById(id));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteNotification(@PathVariable("id") Long id) {
+        if (id == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        notificationService.deleteNotification(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/read-all")
+    public ResponseEntity<Void> markAllAsRead() {
+        notificationService.markAllAsRead();
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/all")
+    public ResponseEntity<Void> deleteAll() {
+        notificationService.deleteAllNotifications();
         return ResponseEntity.ok().build();
     }
 }

@@ -36,7 +36,7 @@ public class PharmacyAdminCenterService {
 
         if (profile != null) {
             dto.setLicenseDocument(profile.getLicenseDocument());
-            dto.setVerified(pharmacy.getStatus() == com.findmymeds.backend.model.PharmacyStatus.ACTIVE);
+            dto.setVerified(pharmacy.getStatus() == com.findmymeds.backend.model.enums.PharmacyStatus.ACTIVE);
             dto.setLogoPath(profile.getLogoPath());
         }
 
@@ -63,6 +63,8 @@ public class PharmacyAdminCenterService {
             report.setType(com.findmymeds.backend.model.enums.ReportType.REPORT);
         }
         report.setStatus(com.findmymeds.backend.model.enums.ReportStatus.PENDING);
+        report.setPriority(com.findmymeds.backend.model.enums.Priority.INFO);
+        report.setIssueCategory(com.findmymeds.backend.model.enums.IssueCategory.OTHER);
 
         pharmacyReportRepository.save(report);
     }
