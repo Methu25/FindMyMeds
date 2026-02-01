@@ -1,15 +1,58 @@
+import { useState, useEffect } from 'react'
 import Layout from '../../components/pharmacy/Layout'
 import MetricCard from '../../components/pharmacy/MetricCard'
 import { Package, CheckCircle, XCircle, Pill } from 'lucide-react'
 
 export default function Dashboard() {
+    const [metrics, setMetrics] = useState({
+        todaysReservations: 0,
+        completedToday: 0,
+        rejectedToday: 0,
+        inStockMedicines: 0
+    });
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchMetrics = async () => {
+            try {
+                const response = await fetch('http://localhost:8080/api/pharmacy/dashboard/metrics');
+                if (response.ok) {
+                    const data = await response.json();
+                    setMetrics(data);
+                }
+            } catch (error) {
+                console.error('Failed to fetch metrics:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchMetrics();
+    }, []);
+
     return (
         <Layout title="Dashboard">
             <div className="grid grid-cols-4 gap-6 mb-10">
-                <MetricCard title="Today's Reservations" value={175} icon={Package} />
-                <MetricCard title="Today's Completed" value={74} icon={CheckCircle} />
-                <MetricCard title="Rejected Today" value={29} icon={XCircle} />
-                <MetricCard title="In Stock Medicines" value={178} icon={Pill} />
+                <MetricCard
+                    title="Today's Reservations"
+                    value={loading ? '...' : metrics.todaysReservations}
+                    icon={Package}
+                />
+                <MetricCard
+                    title="Today's Completed"
+                    value={loading ? '...' : metrics.completedToday}
+                    icon={CheckCircle}
+                />
+                <MetricCard
+                    title="Rejected Today"
+                    value={loading ? '...' : metrics.rejectedToday}
+                    icon={XCircle}
+                />
+                <MetricCard
+                    title="In Stock Medicines"
+                    value={loading ? '...' : metrics.inStockMedicines}
+                    icon={Pill}
+                />
             </div>
 
             <div className="grid grid-cols-3 gap-8">

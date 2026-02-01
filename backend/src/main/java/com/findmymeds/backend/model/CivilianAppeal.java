@@ -4,10 +4,14 @@ import com.findmymeds.backend.model.enums.AppealStatus;
 import com.findmymeds.backend.model.enums.BanType;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import java.time.LocalDateTime;
 
 @Data
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "civilian_appeals")
 public class CivilianAppeal {
     @Id

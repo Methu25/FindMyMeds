@@ -59,12 +59,5 @@ public class Pharmacy {
     private LocalDateTime createdAt;
 
     @Transient
-    private Double distance; // Optional, for UI purposes
-
-    public Double getRating() {
-        return 0.0;
-    }
-
-    public void setStatus(com.findmymeds.backend.model.enums.PharmacyStatus status) {
-    }
+    private Double distance;
 }
