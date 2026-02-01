@@ -2,7 +2,6 @@ package com.findmymeds.backend.controller;
 
 import com.findmymeds.backend.dto.*;
 import com.findmymeds.backend.service.AdminDashboardService;
-
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -67,5 +66,4 @@ public class AdminDashboardController {
     public AdminNotificationMetricsDTO getNotificationMetrics() {
         return adminDashboardService.getNotificationMetrics();
     }
-
 }
