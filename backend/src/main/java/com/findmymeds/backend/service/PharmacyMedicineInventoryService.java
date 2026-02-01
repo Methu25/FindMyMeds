@@ -57,15 +57,15 @@ public class PharmacyMedicineInventoryService {
         return inventoryPage.map(this::mapToDTO);
     }
 
-    public MedicineDetailDTO getMedicineDetails(@org.springframework.lang.NonNull Long medicineId) {
-        PharmacyInventory inventory = inventoryRepository.findById(medicineId)
+    public MedicineDetailDTO getMedicineDetails(Long medicineId) {
+        PharmacyInventory inventory = inventoryRepository.findById(java.util.Objects.requireNonNull(medicineId))
                 .orElseThrow(() -> new RuntimeException("Inventory item not found with id: " + medicineId));
 
         return mapToDetailDTO(inventory);
     }
 
-    public void updateStock(@org.springframework.lang.NonNull Long inventoryId, Integer newQuantity) {
-        PharmacyInventory inventory = inventoryRepository.findById(inventoryId)
+    public void updateStock(Long inventoryId, Integer newQuantity) {
+        PharmacyInventory inventory = inventoryRepository.findById(java.util.Objects.requireNonNull(inventoryId))
                 .orElseThrow(() -> new RuntimeException("Inventory not found"));
 
         inventory.setAvailableQuantity(newQuantity);
@@ -74,16 +74,16 @@ public class PharmacyMedicineInventoryService {
         checkStockAndNotify(inventory);
     }
 
-    public void updatePrice(@org.springframework.lang.NonNull Long inventoryId, java.math.BigDecimal newPrice) {
-        PharmacyInventory inventory = inventoryRepository.findById(inventoryId)
+    public void updatePrice(Long inventoryId, java.math.BigDecimal newPrice) {
+        PharmacyInventory inventory = inventoryRepository.findById(java.util.Objects.requireNonNull(inventoryId))
                 .orElseThrow(() -> new RuntimeException("Inventory not found"));
 
         inventory.setPrice(newPrice);
         inventoryRepository.save(inventory);
     }
 
-    public void deactivateMedicine(@org.springframework.lang.NonNull Long inventoryId) {
-        PharmacyInventory inventory = inventoryRepository.findById(inventoryId)
+    public void deactivateMedicine(Long inventoryId) {
+        PharmacyInventory inventory = inventoryRepository.findById(java.util.Objects.requireNonNull(inventoryId))
                 .orElseThrow(() -> new RuntimeException("Inventory not found"));
 
         Medicine medicine = inventory.getMedicine();
@@ -91,12 +91,12 @@ public class PharmacyMedicineInventoryService {
         medicineRepository.save(medicine);
     }
 
-    public void deleteFromInventory(@org.springframework.lang.NonNull Long inventoryId) {
-        inventoryRepository.deleteById(inventoryId);
+    public void deleteFromInventory(Long inventoryId) {
+        inventoryRepository.deleteById(java.util.Objects.requireNonNull(inventoryId));
     }
 
-    public void activateMedicine(@org.springframework.lang.NonNull Long inventoryId) {
-        PharmacyInventory inventory = inventoryRepository.findById(inventoryId)
+    public void activateMedicine(Long inventoryId) {
+        PharmacyInventory inventory = inventoryRepository.findById(java.util.Objects.requireNonNull(inventoryId))
                 .orElseThrow(() -> new RuntimeException("Inventory not found"));
         Medicine medicine = inventory.getMedicine();
         medicine.setStatus(Medicine.MedicineStatus.ACTIVE);
@@ -137,8 +137,8 @@ public class PharmacyMedicineInventoryService {
         inventoryRepository.save(inventory);
     }
 
-    public void updateInventory(@org.springframework.lang.NonNull Long inventoryId, MedicineInventoryDTO dto) {
-        PharmacyInventory inventory = inventoryRepository.findById(inventoryId)
+    public void updateInventory(Long inventoryId, MedicineInventoryDTO dto) {
+        PharmacyInventory inventory = inventoryRepository.findById(java.util.Objects.requireNonNull(inventoryId))
                 .orElseThrow(() -> new RuntimeException("Inventory not found"));
 
         inventory.setAvailableQuantity(dto.getStockQuantity());

@@ -34,6 +34,29 @@ export default function AdminCenter() {
         fetchProfile();
     }, []);
 
+    const [formData, setFormData] = useState({
+        type: 'REPORT',
+        title: '',
+        description: ''
+    });
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await fetch('http://localhost:8080/api/pharmacy/reports', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
+            if (response.ok) {
+                alert('Report submitted successfully');
+                setFormData({ type: 'REPORT', title: '', description: '' });
+            }
+        } catch (err) {
+            alert('Failed to submit report');
+        }
+    };
+
     if (loading) return <Layout title="Admin Center"><div className="p-8">Loading...</div></Layout>;
 
     return (
@@ -43,24 +66,41 @@ export default function AdminCenter() {
                     <h3 className="text-2xl font-bold mb-6 text-primary">Pharmacy Profile</h3>
                     <div className="space-y-4 text-gray-700">
                         <p><strong>Name:</strong> {profile?.name || 'N/A'}</p>
+                        <p><strong>Address:</strong> {profile?.address || 'N/A'}</p>
                         <p><strong>License:</strong> {profile?.licenseDocument || 'N/A'}</p>
                         <p><strong>Verified:</strong> {profile?.verified ? 'Yes' : 'No'}</p>
-                        <p><strong>Rating:</strong> {profile?.rating || 'N/A'}</p>
-                        <p><strong>Address:</strong> {profile?.address || 'N/A'}</p>
-                        {/* Add other fields as per DTO */}
+                        <p><strong>Rating:</strong> {profile?.rating || '0.0'}</p>
                     </div>
                 </div>
 
                 <div className="bg-white p-8 rounded-xl shadow-sm border">
                     <h3 className="text-2xl font-bold mb-6 text-primary">Contact Admin</h3>
-                    <form className="space-y-5">
-                        <select className="w-full border rounded-lg px-5 py-3">
-                            <option>Report Issue</option>
-                            <option>Inquiry</option>
+                    <form className="space-y-5" onSubmit={handleSubmit}>
+                        <select
+                            className="w-full border rounded-lg px-5 py-3"
+                            value={formData.type}
+                            onChange={(e) => setFormData({ ...formData, type: e.target.value })}
+                        >
+                            <option value="REPORT">Report Issue</option>
+                            <option value="INQUIRY">Inquiry</option>
                         </select>
-                        <input type="text" placeholder="Title" className="w-full border rounded-lg px-5 py-3" />
-                        <textarea rows="6" placeholder="Description..." className="w-full border rounded-lg px-5 py-4"></textarea>
-                        <button className="w-full bg-primary text-white py-3 rounded-lg hover:bg-primary-dark">
+                        <input
+                            type="text"
+                            placeholder="Title"
+                            className="w-full border rounded-lg px-5 py-3"
+                            value={formData.title}
+                            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                            required
+                        />
+                        <textarea
+                            rows="6"
+                            placeholder="Description..."
+                            className="w-full border rounded-lg px-5 py-4"
+                            value={formData.description}
+                            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                            required
+                        ></textarea>
+                        <button type="submit" className="w-full bg-primary text-white py-3 rounded-lg hover:bg-primary-dark transition">
                             Submit
                         </button>
                     </form>
