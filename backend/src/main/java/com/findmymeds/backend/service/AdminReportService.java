@@ -45,7 +45,7 @@ public class AdminReportService {
     }
 
     // Get report by ID
-    public ReportResponse getReportById(@org.springframework.lang.NonNull Long id) {
+    public ReportResponse getReportById(Long id) {
         AdminReportInquiry report = reportRepository.findById(id)
                 .orElseThrow(() -> new AdminNotFoundException("Report not found with id: " + id));
         return mapToResponse(report);
@@ -64,7 +64,7 @@ public class AdminReportService {
 
     // Create new report/inquiry (Admin only)
     @Transactional
-    public ReportResponse createReport(CreateReportRequest request, @org.springframework.lang.NonNull Long adminId) {
+    public ReportResponse createReport(CreateReportRequest request, Long adminId) {
         AdminReportInquiry report = new AdminReportInquiry();
 
         report.setSubmittedByAdminId(adminId);
@@ -91,7 +91,7 @@ public class AdminReportService {
 
     // Update report status (Super Admin only)
     @Transactional
-    public ReportResponse updateReportStatus(@org.springframework.lang.NonNull Long reportId,
+    public ReportResponse updateReportStatus(Long reportId,
             UpdateReportStatusRequest request) {
         AdminReportInquiry report = reportRepository.findById(reportId)
                 .orElseThrow(() -> new AdminNotFoundException("Report not found with id: " + reportId));
