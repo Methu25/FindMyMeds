@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { User, Mail, Phone, Shield, CheckCircle, ChevronLeft } from 'lucide-react';
 
-const ProfilePage = () => {
+const AdminProfilePage = () => {
     const navigate = useNavigate();
     const [profile, setProfile] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -112,4 +112,4 @@ const ProfilePage = () => {
     );
 };
 
-export default ProfilePage;
+export default AdminProfilePage;

@@ -5,7 +5,7 @@ import {
 } from 'lucide-react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 
-const MedicineDetails = () => {
+const AdminMedicineDetails = () => {
     const { id } = useParams();
     const navigate = useNavigate();
 
@@ -296,4 +296,4 @@ const MedicineDetails = () => {
     );
 };
 
-export default MedicineDetails;
+export default AdminMedicineDetails;
