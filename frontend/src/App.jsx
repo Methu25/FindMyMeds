@@ -16,6 +16,7 @@ import NotificationCenter from './pages/admin/NotificationCenter';
 import NotificationDetails from './pages/admin/NotificationDetails';
 import ProfilePage from './pages/admin/ProfilePage';
 import CivilianManagement from './pages/admin/CivilianManagement';
+import PharmacyManagementHome from './pages/admin/Pharmacy/PharmacyManagementHome';
 
 // Pharmacy Pages 
 import MedicineInventory from './pages/pharmacy/MedicineInventory';
@@ -53,8 +54,8 @@ function App() {
           <Route path="medicines/add" element={<AddMedicine />} />
           <Route path="medicines/:id" element={<MedicineDetails />} />
 
-          {/* Pharmacies placeholder */}
-          <Route path="pharmacies" element={<div className="p-4">Pharmacy Management Placeholder</div>} />
+          {/* Pharmacies */}
+          <Route path="pharmacies" element={<PharmacyManagementHome />} />
 
           {/* Civilians */}
           <Route path="civilians" element={<CivilianManagement />} />
