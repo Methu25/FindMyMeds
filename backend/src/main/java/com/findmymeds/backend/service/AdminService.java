@@ -3,6 +3,7 @@ package com.findmymeds.backend.service;
 import com.findmymeds.backend.dto.AdminProfileDTO;
 import com.findmymeds.backend.model.*;
 import com.findmymeds.backend.model.enums.Role;
+import com.findmymeds.backend.model.enums.AdminStatus; // <--- Added Import
 import com.findmymeds.backend.repository.AdminActionLogRepository;
 import com.findmymeds.backend.repository.AdminRepository;
 import lombok.RequiredArgsConstructor;
@@ -35,12 +36,10 @@ public class AdminService {
         return mapToResponse(admin);
     }
 
-    // Add this new method that returns Optional<Admin> for the ProfileController
     public Optional<Admin> getAdminEntityById(@org.springframework.lang.NonNull Long id) {
         return adminRepository.findById(id);
     }
 
-    // Add this new method that returns List<Admin> for the ProfileController
     public List<Admin> getAllAdminEntities() {
         return adminRepository.findAll();
     }
@@ -55,7 +54,7 @@ public class AdminService {
 
     @Transactional
     public AdminResponse createAdmin(CreateAdminRequest request,
-            @org.springframework.lang.NonNull Long currentAdminId) {
+                                     @org.springframework.lang.NonNull Long currentAdminId) {
         if (adminRepository.existsByEmail(request.getEmail())) {
             throw new DuplicateEmailException("Email already exists: " + request.getEmail());
         }
@@ -65,6 +64,7 @@ public class AdminService {
         admin.setEmail(request.getEmail());
         admin.setRole(request.getRole());
         admin.setPasswordHash(passwordEncoder.encode(request.getPassword()));
+        // Set default status if needed, e.g., admin.setStatus(AdminStatus.ACTIVE);
 
         Admin savedAdmin = adminRepository.save(admin);
 
@@ -76,8 +76,8 @@ public class AdminService {
 
     @Transactional
     public AdminResponse updateAdminEmail(@org.springframework.lang.NonNull Long adminId,
-            UpdateAdminEmailRequest request,
-            @org.springframework.lang.NonNull Long currentAdminId) {
+                                          UpdateAdminEmailRequest request,
+                                          @org.springframework.lang.NonNull Long currentAdminId) {
         Admin admin = adminRepository.findById(adminId)
                 .orElseThrow(() -> new AdminNotFoundException("Admin not found with id: " + adminId));
 
@@ -96,9 +96,27 @@ public class AdminService {
         return mapToResponse(updatedAdmin);
     }
 
+    // --- NEW METHOD ADDED HERE ---
+    @Transactional
+    public void updateAdminStatus(@org.springframework.lang.NonNull Long adminId, AdminStatus status) {
+        Admin admin = adminRepository.findById(adminId)
+                .orElseThrow(() -> new AdminNotFoundException("Admin not found with id: " + adminId));
+
+        admin.setStatus(status);
+        adminRepository.save(admin);
+
+        // Fetch current user automatically for logging
+        String currentEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        adminRepository.findByEmail(currentEmail).ifPresent(currentAdmin ->
+                logAction(currentAdmin.getId(), "UPDATE_STATUS", "admins", adminId,
+                        "Updated status to " + status)
+        );
+    }
+    // -----------------------------
+
     @Transactional
     public void deleteAdmin(@org.springframework.lang.NonNull Long adminId,
-            @org.springframework.lang.NonNull Long currentAdminId) {
+                            @org.springframework.lang.NonNull Long currentAdminId) {
         Admin admin = adminRepository.findById(adminId)
                 .orElseThrow(() -> new AdminNotFoundException("Admin not found with id: " + adminId));
 
@@ -114,7 +132,7 @@ public class AdminService {
     }
 
     private void logAction(@org.springframework.lang.NonNull Long adminId, String actionType, String targetTable,
-            Long targetId, String description) {
+                           Long targetId, String description) {
         AdminActionLog log = new AdminActionLog();
 
         Admin admin = adminRepository.getReferenceById(adminId);
@@ -137,19 +155,13 @@ public class AdminService {
     }
 
     public AdminProfileDTO getCurrentAdminProfile() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        String email =
-                SecurityContextHolder
-                        .getContext()
-                        .getAuthentication()
-                        .getName();
-
-        Admin admin =
-                adminRepository.findByEmail(email)
-                        .orElseThrow(() -> new RuntimeException("Admin not found"));
+        Admin admin = adminRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Admin not found"));
 
         return new AdminProfileDTO(
-                admin.getFullName(),   // or getName()
+                admin.getFullName(),
                 admin.getRole()
         );
     }
