@@ -58,6 +58,17 @@ public class Pharmacy {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+    @Column(name = "rating")
+    private Double rating;
+
+    @Column(name = "reviews")
+    private Integer reviews;
+
+    @Column(name = "badge")
+    private String badge;
+
     @Transient
     private Double distance;
+    private Double distance; // Optional, for UI purposes
+
 }

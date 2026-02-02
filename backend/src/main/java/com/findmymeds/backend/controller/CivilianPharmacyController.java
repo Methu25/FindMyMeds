@@ -17,8 +17,12 @@ public class CivilianPharmacyController {
     private CivilianPharmacyService pharmacyService;
 
     @GetMapping
-    public List<Pharmacy> searchPharmacies(@RequestParam(required = false) String query) {
-        return pharmacyService.searchPharmacies(query);
+    public List<Pharmacy> searchPharmacies(
+            @RequestParam(required = false) String query,
+            @RequestParam(required = false) String filter,
+            @RequestParam(required = false) Double lat,
+            @RequestParam(required = false) Double lng) {
+        return pharmacyService.searchPharmacies(query, filter, lat, lng);
     }
 
     @GetMapping("/nearby")
