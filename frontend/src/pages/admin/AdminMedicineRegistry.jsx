@@ -5,7 +5,7 @@ import {
 } from 'lucide-react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 
-const MedicineRegistry = () => {
+const AdminMedicineRegistry = () => {
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
 
@@ -349,4 +349,4 @@ const MedicineRegistry = () => {
     );
 };
 
-export default MedicineRegistry;
+export default AdminMedicineRegistry;

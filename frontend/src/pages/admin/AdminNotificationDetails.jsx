@@ -5,7 +5,7 @@ import {
     Shield, Activity, Calendar, Hash
 } from 'lucide-react';
 
-const NotificationDetails = () => {
+const AdminNotificationDetails = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const [notification, setNotification] = useState(null);
@@ -148,4 +148,4 @@ const NotificationDetails = () => {
     );
 };
 
-export default NotificationDetails;
+export default AdminNotificationDetails;

@@ -1,7 +1,7 @@
 package com.findmymeds.backend.controller;
 
 import com.findmymeds.backend.model.Medicine;
-import com.findmymeds.backend.service.MedicineService;
+import com.findmymeds.backend.service.AdminMedicineService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -13,11 +13,11 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/medicines")
 @CrossOrigin(origins = { "http://localhost:5173", "http://localhost:5174" }) // Allow frontend access
-public class MedicineController {
+public class AdminMedicineController {
 
-    private final MedicineService medicineService;
+    private final AdminMedicineService medicineService;
 
-    public MedicineController(MedicineService medicineService) {
+    public AdminMedicineController(AdminMedicineService medicineService) {
         this.medicineService = medicineService;
     }
 

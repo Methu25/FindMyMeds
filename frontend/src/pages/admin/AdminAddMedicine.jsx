@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ArrowLeft, Save, Upload } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 
-const AddMedicine = () => {
+const AdminAddMedicine = () => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
@@ -148,4 +148,4 @@ const AddMedicine = () => {
     );
 };
 
-export default AddMedicine;
+export default AdminAddMedicine;

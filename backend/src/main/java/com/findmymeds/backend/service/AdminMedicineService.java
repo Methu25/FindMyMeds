@@ -15,11 +15,11 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class MedicineService {
+public class AdminMedicineService {
 
     private final MedicineRepository medicineRepository;
 
-    public MedicineService(MedicineRepository medicineRepository) {
+    public AdminMedicineService(MedicineRepository medicineRepository) {
         this.medicineRepository = medicineRepository;
     }
 

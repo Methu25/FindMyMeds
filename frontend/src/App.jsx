@@ -8,21 +8,23 @@ import Home from './pages/Home';
 // Admin Pages 
 import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminManagement from './pages/admin/AdminManagement';
-import AdminCenter from './pages/pharmacy/AdminCenter.jsx';
-import SystemSettings from './pages/pharmacy/SystemSettings.jsx';
-import MedicineRegistry from './pages/admin/MedicineRegistry';
-import AddMedicine from './pages/admin/AddMedicine';
-import MedicineDetails from './pages/admin/MedicineDetails';
-import NotificationCenter from './pages/admin/NotificationCenter';
-import NotificationDetails from './pages/admin/NotificationDetails';
-import ProfilePage from './pages/admin/ProfilePage';
 import CivilianManagement from './pages/admin/CivilianManagement';
+import AdminMedicineRegistry from './pages/admin/AdminMedicineRegistry';
+import AdminAddMedicine from './pages/admin/AdminAddMedicine';
+import AdminMedicineDetails from './pages/admin/AdminMedicineDetails';
+import AdminNotificationCenter from './pages/admin/AdminNotificationCenter';
+import AdminNotificationDetails from './pages/admin/AdminNotificationDetails';
+import AdminProfilePage from './pages/admin/AdminProfilePage';
+import SystemSettings from './pages/admin/SystemSettings'; // Moved to admin
+import PharmacyManagementHome from './pages/admin/Pharmacy/PharmacyManagementHome'; // Imported PharmacyManagementHome
 
 // Pharmacy Pages 
+import PharmacyDashboard from './pages/pharmacy/Dashboard';
 import MedicineInventory from './pages/pharmacy/MedicineInventory';
 import PharmacyMedicineDetails from './pages/pharmacy/MedicineDetails';
 import PharmacyNotificationCenter from './pages/pharmacy/NotificationCenter';
 import PharmacyNotificationDetails from './pages/pharmacy/NotificationDetails';
+import AdminCenter from './pages/pharmacy/AdminCenter.jsx'; // This was originally here, keeping it.
 
 // Civilian Pages 
 import CivilianLayout from './components/civilian/CivilianLayout';
@@ -50,35 +52,35 @@ function App() {
           <Route path="settings" element={<SystemSettings />} />
 
           {/* Medicines */}
-          <Route path="medicines" element={<MedicineRegistry />} />
-          <Route path="medicines/add" element={<AddMedicine />} />
-          <Route path="medicines/:id" element={<MedicineDetails />} />
+          <Route path="medicines" element={<AdminMedicineRegistry />} />
+          <Route path="medicines/add" element={<AdminAddMedicine />} />
+          <Route path="medicines/:id" element={<AdminMedicineDetails />} />
 
           {/* Pharmacies placeholder */}
-          <Route path="pharmacies" element={<div className="p-4">Pharmacy Management Placeholder</div>} />
+          <Route path="pharmacies" element={<PharmacyManagementHome />} />
 
           {/* Civilians */}
           <Route path="civilians" element={<CivilianManagement />} />
 
           {/* Notifications */}
-          <Route path="notifications" element={<NotificationCenter />} />
-          <Route path="notifications/:id" element={<NotificationDetails />} />
+          <Route path="notifications" element={<AdminNotificationCenter />} />
+          <Route path="notifications/:id" element={<AdminNotificationDetails />} />
 
           {/* Profile */}
-          <Route path="profile" element={<ProfilePage />} />
+          <Route path="profile" element={<AdminProfilePage />} />
         </Route>
 
         {/* Pharmacy Routes */}
         <Route path="/pharmacy/*" element={
           <NotificationProvider>
             <Routes>
-              <Route index element={<AdminDashboard />} />
+              <Route index element={<PharmacyDashboard />} />
               <Route path="inventory" element={<MedicineInventory />} />
               <Route path="medicines/:id" element={<PharmacyMedicineDetails />} />
               <Route path="notifications" element={<PharmacyNotificationCenter />} />
               <Route path="notifications/:id" element={<PharmacyNotificationDetails />} />
               <Route path="admin-center" element={<AdminCenter />} />
-              <Route path="settings" element={<SystemSettings />} />
+              <Route path="settings" element={<div className="p-8">Pharmacy Settings Placeholder</div>} /> {/* SystemSettings moved to admin, so this is a placeholder now */}
               <Route path="current-reservations" element={<div className="p-8">Current Reservations Placeholder</div>} />
               <Route path="reservation-history" element={<div className="p-8">Reservation History Placeholder</div>} />
             </Routes>
