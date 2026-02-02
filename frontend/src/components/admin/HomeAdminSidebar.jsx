@@ -1,8 +1,53 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const Sidebar = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
   // Use state to track active navigation
   const [activeItem, setActiveItem] = useState('Overview');
+
+  // Map route paths to sidebar item names to keep standard highlighting
+  useEffect(() => {
+    const path = location.pathname;
+    if (path.includes('/dashboard')) setActiveItem('Overview');
+    else if (path.includes('/civilians')) setActiveItem('Civilians');
+    else if (path.includes('/pharmacies')) setActiveItem('Pharmacies');
+    else if (path.includes('/administrators')) setActiveItem('Administrators');
+    else if (path.includes('/medicines')) setActiveItem('Medicine Registry');
+    else if (path.includes('/profile')) setActiveItem('Profile');
+    else if (path.includes('/settings')) setActiveItem('Settings');
+  }, [location]);
+
+  const handleNavigation = (itemName) => {
+    setActiveItem(itemName);
+    switch (itemName) {
+      case 'Overview':
+        navigate('/admin/dashboard');
+        break;
+      case 'Civilians':
+        navigate('/admin/civilians');
+        break;
+      case 'Pharmacies':
+        navigate('/admin/pharmacies');
+        break;
+      case 'Administrators':
+        navigate('/admin/administrators');
+        break;
+      case 'Medicine Registry':
+        navigate('/admin/medicines');
+        break;
+      case 'Profile':
+        navigate('/admin/profile');
+        break;
+      case 'Settings':
+        navigate('/admin/settings');
+        break;
+      default:
+        break;
+    }
+  };
 
   const menuGroups = [
     {
@@ -50,10 +95,10 @@ const Sidebar = () => {
                 return (
                   <li key={item.name}>
                     <button
-                      onClick={() => setActiveItem(item.name)}
+                      onClick={() => handleNavigation(item.name)}
                       className={`w-full flex items-center gap-4 px-4 py-3 transition-all duration-200 text-sm relative group
-                        ${isActive 
-                          ? 'bg-[#E0F2F1] text-primary font-bold rounded-r-xl' 
+                        ${isActive
+                          ? 'bg-[#E0F2F1] text-primary font-bold rounded-r-xl'
                           : 'text-slate-500 font-semibold hover:bg-slate-50 hover:text-slate-900 rounded-xl'
                         }`}
                     >
@@ -61,7 +106,7 @@ const Sidebar = () => {
                       {isActive && (
                         <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-2/3 bg-primary rounded-r-full" />
                       )}
-                      
+
                       <i className={`${item.icon} w-5 text-center text-base ${isActive ? 'text-primary' : 'text-slate-400 group-hover:text-slate-600'}`}></i>
                       {item.name}
                     </button>

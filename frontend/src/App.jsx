@@ -7,6 +7,7 @@ import Home from './pages/Home';
 
 // Admin Pages 
 import AdminDashboard from './pages/admin/AdminDashboard';
+import AdminManagement from './pages/admin/AdminManagement';
 import AdminCenter from './pages/pharmacy/AdminCenter.jsx';
 import SystemSettings from './pages/pharmacy/SystemSettings.jsx';
 import MedicineRegistry from './pages/admin/MedicineRegistry';
@@ -18,6 +19,7 @@ import ProfilePage from './pages/admin/ProfilePage';
 import CivilianManagement from './pages/admin/CivilianManagement';
 
 // Pharmacy Pages 
+import PharmacyDashboard from './pages/pharmacy/Dashboard';
 import MedicineInventory from './pages/pharmacy/MedicineInventory';
 import PharmacyMedicineDetails from './pages/pharmacy/MedicineDetails';
 import PharmacyNotificationCenter from './pages/pharmacy/NotificationCenter';
@@ -45,7 +47,7 @@ function App() {
           <Route index element={<Navigate to="dashboard" replace />} />
 
           <Route path="dashboard" element={<AdminDashboard />} />
-          <Route path="admin-center" element={<AdminCenter />} />
+          <Route path="administrators" element={<AdminManagement />} />
           <Route path="settings" element={<SystemSettings />} />
 
           {/* Medicines */}
@@ -71,7 +73,7 @@ function App() {
         <Route path="/pharmacy/*" element={
           <NotificationProvider>
             <Routes>
-              <Route index element={<AdminDashboard />} />
+              <Route index element={<PharmacyDashboard />} />
               <Route path="inventory" element={<MedicineInventory />} />
               <Route path="medicines/:id" element={<PharmacyMedicineDetails />} />
               <Route path="notifications" element={<PharmacyNotificationCenter />} />
