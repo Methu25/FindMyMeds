@@ -45,4 +45,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, String
       """)
   List<ReservationCountByDate> countReservationsPerDay(
       @Param("from") LocalDateTime from);
+
+  List<Reservation> findByCivilianIdOrderByReservationDateDesc(Long civilianId);
+
 }

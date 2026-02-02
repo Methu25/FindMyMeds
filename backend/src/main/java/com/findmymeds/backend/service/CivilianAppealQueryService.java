@@ -1,6 +1,7 @@
 package com.findmymeds.backend.service;
 
 import com.findmymeds.backend.dto.AdminAppealDetailsDTO;
+import com.findmymeds.backend.dto.AdminAppealHistoryItemDTO;
 import com.findmymeds.backend.model.Civilian;
 import com.findmymeds.backend.model.CivilianAppeal;
 import com.findmymeds.backend.repository.CivilianAppealRepository;
@@ -28,16 +29,17 @@ public class CivilianAppealQueryService {
         int appealCount = c.getAppealCount() == null ? 0 : c.getAppealCount();
         int remaining = Math.max(0, CivilianRules.MAX_APPEALS - appealCount);
 
-        List<AdminAppealDetailsDTO.HistoryItem> history = historyRepository
+        List<AdminAppealHistoryItemDTO> history = historyRepository
                 .findTop10ByCivilianIdOrderByTimestampDesc(c.getId())
                 .stream()
-                .map(h -> AdminAppealDetailsDTO.HistoryItem.builder()
+                .map(h -> AdminAppealHistoryItemDTO.builder()
                         .actionType(h.getActionType())
                         .actionBy(h.getActionBy())
                         .reason(h.getReason())
                         .timestamp(h.getTimestamp())
                         .build())
                 .toList();
+
 
         return AdminAppealDetailsDTO.builder()
                 .appealId(appeal.getId())

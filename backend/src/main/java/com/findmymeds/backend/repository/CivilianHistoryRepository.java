@@ -13,4 +13,7 @@ public interface CivilianHistoryRepository extends JpaRepository<CivilianHistory
     Optional<CivilianHistory> findTopByCivilianIdOrderByTimestampDesc(Long civilianId);
 
     List<CivilianHistory> findTop10ByCivilianIdOrderByTimestampDesc(Long civilianId);
+
+
+    List<CivilianHistory> findTop50ByCivilianIdOrderByTimestampDesc(Long civilianId);
 }
