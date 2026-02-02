@@ -4,6 +4,7 @@ import com.findmymeds.backend.dto.ReservationDTO;
 import com.findmymeds.backend.service.PharmacyCurrentReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,20 +25,21 @@ public class PharmacyCurrentReservationController {
 
     @GetMapping
     @PreAuthorize("hasRole('PHARMACY')")
-    public ResponseEntity<List<ReservationDTO>> getCurrentReservations(@RequestParam String status, @RequestParam int page, @RequestParam int size) {
+    public ResponseEntity<List<ReservationDTO>> getCurrentReservations(@RequestParam String status,
+            @RequestParam int page, @RequestParam int size) {
         return ResponseEntity.ok(reservationService.getCurrentReservationsByStatus(status, page, size));
     }
 
     @PutMapping("/{id}/status")
     @PreAuthorize("hasRole('PHARMACY')")
-    public ResponseEntity<Void> updateReservationStatus(@PathVariable Long id, @RequestParam String status) {
+    public ResponseEntity<Void> updateReservationStatus(@PathVariable @NonNull Long id, @RequestParam String status) {
         reservationService.updateReservationStatus(id, status);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('PHARMACY')")
-    public ResponseEntity<ReservationDTO> getReservationDetails(@PathVariable Long id) {
+    public ResponseEntity<ReservationDTO> getReservationDetails(@PathVariable @NonNull Long id) {
         return ResponseEntity.ok(reservationService.getReservationDetails(id));
     }
 }

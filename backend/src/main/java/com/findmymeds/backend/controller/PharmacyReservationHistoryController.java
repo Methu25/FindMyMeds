@@ -4,6 +4,7 @@ import com.findmymeds.backend.dto.ReservationDTO;
 import com.findmymeds.backend.service.PharmacyReservationHistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,13 +25,14 @@ public class PharmacyReservationHistoryController {
 
     @GetMapping
     @PreAuthorize("hasRole('PHARMACY')")
-    public ResponseEntity<List<ReservationDTO>> getReservationHistory(@RequestParam String type, @RequestParam int page, @RequestParam int size) {
+    public ResponseEntity<List<ReservationDTO>> getReservationHistory(@RequestParam String type, @RequestParam int page,
+            @RequestParam int size) {
         return ResponseEntity.ok(reservationHistoryService.getReservationHistoryByType(type, page, size));
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('PHARMACY')")
-    public ResponseEntity<ReservationDTO> getReservationHistoryDetails(@PathVariable Long id) {
+    public ResponseEntity<ReservationDTO> getReservationHistoryDetails(@PathVariable @NonNull Long id) {
         return ResponseEntity.ok(reservationHistoryService.getReservationHistoryDetails(id));
     }
 }

@@ -6,6 +6,7 @@ import com.findmymeds.backend.repository.ReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,10 +20,9 @@ public class PharmacyReservationHistoryService {
 
     public List<Long> getReservationHistoryCounts() {
         return List.of(
-            reservationRepository.countByStatus("COLLECTED"),
-            reservationRepository.countByStatus("EXPIRED"),
-            reservationRepository.countByStatus("CANCELLED")
-        );
+                reservationRepository.countByStatus("COLLECTED"),
+                reservationRepository.countByStatus("EXPIRED"),
+                reservationRepository.countByStatus("CANCELLED"));
     }
 
     public List<ReservationDTO> getReservationHistoryByType(String type, int page, int size) {
@@ -32,7 +32,7 @@ public class PharmacyReservationHistoryService {
                 .collect(Collectors.toList());
     }
 
-    public ReservationDTO getReservationHistoryDetails(Long id) {
+    public ReservationDTO getReservationHistoryDetails(@NonNull Long id) {
         Reservation reservation = reservationRepository.findById(id).orElseThrow();
         return convertToDTO(reservation);
     }

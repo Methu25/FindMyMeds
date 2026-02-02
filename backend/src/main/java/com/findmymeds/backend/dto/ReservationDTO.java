@@ -1,7 +1,9 @@
 package com.findmymeds.backend.dto;
 
+import lombok.Data;
 import java.util.List;
 
+@Data
 public class ReservationDTO {
     private Long id;
     private String status;

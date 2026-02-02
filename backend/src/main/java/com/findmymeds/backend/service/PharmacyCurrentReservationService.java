@@ -6,6 +6,7 @@ import com.findmymeds.backend.repository.ReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,13 +20,12 @@ public class PharmacyCurrentReservationService {
 
     public List<Long> getCurrentReservationCounts() {
         return List.of(
-            reservationRepository.countByStatus("PENDING"),
-            reservationRepository.countByStatus("CONFIRMED"),
-            reservationRepository.countByStatus("ONGOING"),
-            reservationRepository.countByStatus("READY"),
-            reservationRepository.countByStatus("COLLECTED"),
-            reservationRepository.countByStatus("CANCELLED")
-        );
+                reservationRepository.countByStatus("PENDING"),
+                reservationRepository.countByStatus("CONFIRMED"),
+                reservationRepository.countByStatus("ONGOING"),
+                reservationRepository.countByStatus("READY"),
+                reservationRepository.countByStatus("COLLECTED"),
+                reservationRepository.countByStatus("CANCELLED"));
     }
 
     public List<ReservationDTO> getCurrentReservationsByStatus(String status, int page, int size) {
@@ -35,13 +35,13 @@ public class PharmacyCurrentReservationService {
                 .collect(Collectors.toList());
     }
 
-    public void updateReservationStatus(Long id, String status) {
+    public void updateReservationStatus(@NonNull Long id, String status) {
         Reservation reservation = reservationRepository.findById(id).orElseThrow();
-        reservation.setStatus(status);
+        reservation.setStatus(com.findmymeds.backend.model.enums.ReservationStatus.valueOf(status));
         reservationRepository.save(reservation);
     }
 
-    public ReservationDTO getReservationDetails(Long id) {
+    public ReservationDTO getReservationDetails(@NonNull Long id) {
         Reservation reservation = reservationRepository.findById(id).orElseThrow();
         return convertToDTO(reservation);
     }
