@@ -1,22 +1,22 @@
 import { useEffect, useState } from "react";
 
 /* ===== Components ===== */
-import MetricCard from "../../components/admin/Pharmacy/MetricCard";
-import NotificationPanel from "../../components/admin/Pharmacy/NotificationPanel";
-import PharmacyTable from "../../components/admin/Pharmacy/PharmacyTable";
-import PharmacyTypeCard from "../../components/admin/Pharmacy/PharmacyTypeCard";
-import QuickActionPanel from "../../components/admin/Pharmacy/QuickActionPanel";
+import MetricCard from "../../../components/admin/Pharmacy/MetricCard";
+import NotificationPanel from "../../../components/admin/Pharmacy/NotificationPanel";
+import PharmacyTable from "../../../components/admin/Pharmacy/PharmacyTable";
+import PharmacyTypeCard from "../../../components/admin/Pharmacy/PharmacyTypeCard";
+import QuickActionPanel from "../../../components/admin/Pharmacy/QuickActionPanel";
 
 /* ===== Modals ===== */
-import ActivatePharmacyModal from "../../components/admin/Pharmacy/ActivatePharmacyModal";
-import RejectPharmacyModal from "../../components/admin/Pharmacy/RejectPharmacyModal";
-import RemovePharmacyModal from "../../components/admin/Pharmacy/RemovePharmacyModal";
-import SuspendPharmacyModal from "../../components/admin/Pharmacy/SuspendPharmacyModal";
+import ActivatePharmacyModal from "../../../components/admin/Pharmacy/ActivatePharmacyModal";
+import RejectPharmacyModal from "../../../components/admin/Pharmacy/RejectPharmacyModal";
+import RemovePharmacyModal from "../../../components/admin/Pharmacy/RemovePharmacyModal";
+import SuspendPharmacyModal from "../../../components/admin/Pharmacy/SuspendPharmacyModal";
 
 /* ===== Services ===== */
 import {
-  getAllPharmacies,
-} from "../../Service/admin/pharmacyService";
+  getPharmacies,
+} from "../../../Service/admin/pharmacyService";
 
 const PharmacyManagementHome = () => {
   /* =======================
@@ -51,7 +51,7 @@ const PharmacyManagementHome = () => {
   const loadPharmacies = async () => {
     setLoading(true);
     try {
-      const response = await getAllPharmacies();
+      const response = await getPharmacies();
       setPharmacies(response.data || []);
     } catch (error) {
       console.error("Failed to load pharmacies", error);
@@ -117,10 +117,18 @@ const PharmacyManagementHome = () => {
         </div>
 
         {/* ===== METRICS ===== */}
-        <MetricCard pharmacies={pharmacies} loading={loading} />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <MetricCard title="Total Pharmacies" count={pharmacies.length || 0} />
+          <MetricCard title="Active" count={pharmacies.filter(p => p.status === 'ACTIVE').length || 0} />
+          <MetricCard title="Pending" count={pharmacies.filter(p => p.status === 'PENDING').length || 0} />
+          <MetricCard title="Suspended" count={pharmacies.filter(p => p.status === 'SUSPENDED').length || 0} />
+        </div>
 
         {/* ===== FILTER / TYPE ===== */}
-        <PharmacyTypeCard pharmacies={pharmacies} loading={loading} />
+        <div className="flex gap-4">
+          <PharmacyTypeCard type="Retail" count={pharmacies.filter(p => p.pharmacy_type === 'Retail').length || 0} />
+          <PharmacyTypeCard type="Hospital" count={pharmacies.filter(p => p.pharmacy_type === 'Hospital').length || 0} />
+        </div>
 
         {/* ===== TABLE ===== */}
         <PharmacyTable
