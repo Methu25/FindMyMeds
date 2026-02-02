@@ -15,7 +15,12 @@ export default function Dashboard() {
     useEffect(() => {
         const fetchMetrics = async () => {
             try {
-                const response = await fetch('http://localhost:8080/api/pharmacy/dashboard/metrics');
+                const token = localStorage.getItem('token');
+                const response = await fetch('http://localhost:8080/api/pharmacy/dashboard/metrics', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
                 if (response.ok) {
                     const data = await response.json();
                     setMetrics(data);
