@@ -69,6 +69,6 @@ public class Pharmacy {
 
     @Transient
     private Double distance;
-    private Double distance; // Optional, for UI purposes
+   // Optional, for UI purposes
 
 }
