@@ -1,53 +1,63 @@
 package com.findmymeds.backend.model;
 
 import com.findmymeds.backend.model.enums.PharmacyStatus;
-import com.findmymeds.backend.model.enums.PharmacyType;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
-@Data
 @Entity
-@Table(name = "pharmacies")
+@Table(name = "pharmacy")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Pharmacy {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "pharmacy_name")
-    private String pharmacyName;
+    private String name;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "pharmacy_type")
-    private PharmacyType pharmacyType;
-
-    @Column(name = "license_number", unique = true)
+    @Column(name = "license_number")
     private String licenseNumber;
 
     @Column(name = "owner_name")
     private String ownerName;
 
+    @Column(name = "email")
     private String email;
 
+    @Column(name = "phone")
     private String phone;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(name = "address")
     private String address;
 
-    private String district;
+    @Column
+    private Double latitude;
+
+    @Column
+    private Double longitude;
 
     @Column(name = "operating_hours")
     private String operatingHours;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "status")
     private PharmacyStatus status;
 
+    @Column(name = "is_deleted")
+    private Boolean isDeleted;
+
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
+
     @Column(name = "created_at")
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime createdAt;
 
-    @Column(name = "approved_by")
-    private Long approvedBy; // Admin ID
-
-    @Column(name = "approved_at")
-    private LocalDateTime approvedAt;
+    @Transient
+    private Double distance;
 }

@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Findmymeds - Reservation</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- RESET & BASIC STYLES --- */
+        :root {
+            --theme-color: #2FA4A9;
+            --sidebar-width: 250px;
+            --bg-light: #f4f7f9;
+            --text-dark: #2c3e50;
+            --text-gray: #64748b;
+            --border-radius: 16px;
+            --card-shadow: 0 4px 20px rgba(0,0,0,0.04);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        a { text-decoration: none; }
+        ul { list-style: none; }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: #ffffff;
+            height: 100%;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid #eaecf0;
+            flex-shrink: 0;
+        }
+
+        .brand {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--theme-color);
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .menu-list {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 14px 15px;
+            border-radius: 12px;
+            color: var(--text-gray);
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .menu-item i {
+            font-size: 18px;
+            width: 24px;
+            text-align: center;
+        }
+
+        .menu-item:hover, .menu-item.active {
+            background-color: #eefaf9;
+            color: var(--theme-color);
+        }
+
+        .logout-btn {
+            margin-top: auto;
+            color: #ef4444;
+        }
+        .logout-btn:hover {
+            background-color: #fef2f2;
+            color: #dc2626;
+        }
+
+        /* --- MAIN CONTENT --- */
+        .main-content {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 40px;
+        }
+
+        /* --- LAYOUT GRID --- */
+        .reservation-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr; 
+            gap: 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .col-section {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .section-header {
+            font-size: 1.4rem; /* Increased size */
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: var(--text-dark);
+            letter-spacing: -0.5px;
+        }
+
+        /* --- CARDS --- */
+        .card {
+            background-color: #ffffff;
+            border-radius: var(--border-radius);
+            padding: 35px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid #f0f0f0;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .card:hover {
+            box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+        }
+
+        /* --- LEFT SIDE STYLES --- */
+        
+        /* Make left cards tall */
+        .search-card {
+            min-height: 400px; /* Taller */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background-color: #f8fafc;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            border: 1px solid #e2e8f0;
+            transition: border-color 0.2s;
+        }
+        .search-box:focus-within {
+            border-color: var(--theme-color);
+        }
+        .search-box input {
+            border: none;
+            background: transparent;
+            width: 100%;
+            outline: none;
+            margin-left: 12px;
+            font-size: 15px;
+            color: var(--text-dark);
+        }
+
+        .medicine-suggestion {
+            background: linear-gradient(to bottom right, #f8fcfc, #f0fdfd);
+            border: 1px solid #e0f2f2;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            flex-grow: 1; /* Fills space */
+        }
+        
+        .med-tag {
+            display: inline-flex;
+            align-items: center;
+            font-size: 12px;
+            padding: 6px 10px;
+            border-radius: 6px;
+            background: #e2e8f0;
+            color: #475569;
+            margin-right: 8px;
+            font-weight: 600;
+        }
+        
+        .med-tag.warning {
+            background: #fee2e2;
+            color: #b91c1c;
+            border: 1px solid #fecaca;
+        }
+
+        .action-row {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            margin-top: auto;
+        }
+
+        .qty-stepper {
+            display: flex;
+            align-items: center;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .qty-btn {
+            background: #f1f5f9;
+            border: none;
+            width: 40px;
+            height: 45px;
+            font-weight: 700;
+            cursor: pointer;
+            color: var(--text-dark);
+            transition: background 0.2s;
+        }
+        .qty-btn:hover { background: #e2e8f0; }
+        
+        .qty-input {
+            width: 45px;
+            text-align: center;
+            border: none;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .btn-primary {
+            flex-grow: 1;
+            background-color: var(--theme-color);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(47, 164, 169, 0.2);
+        }
+        .btn-primary:hover {
+            background-color: #258e93;
+            transform: translateY(-2px);
+        }
+
+        .pharmacy-list-card {
+            min-height: 250px; /* Taller */
+        }
+
+        .pharmacy-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .pharmacy-item:last-child { border-bottom: none; }
+        
+        .pharm-name { font-weight: 700; font-size: 15px; color: var(--text-dark); }
+        .pharm-meta { font-size: 13px; color: var(--text-gray); margin-top: 4px; }
+        .pharm-dist { 
+            background: #eefaf9; 
+            color: var(--theme-color); 
+            padding: 6px 10px; 
+            border-radius: 20px; 
+            font-weight: 700; 
+            font-size: 13px;
+        }
+
+        /* --- RIGHT SIDE STYLES --- */
+        
+        .summary-card {
+            height: 100%;
+        }
+
+        .section-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            font-weight: 700;
+            color: #94a3b8;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .summary-list {
+            background: #f8fafc;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            padding: 8px 0;
+            font-weight: 500;
+            border-bottom: 1px dashed #e2e8f0;
+        }
+        .summary-item:last-child { border-bottom: none; }
+
+        /* Form Group styling with icons */
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .label-with-icon {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+        .label-with-icon i { color: var(--theme-color); }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.2s;
+            background: #fff;
+        }
+        .form-input:focus { 
+            border-color: var(--theme-color); 
+            box-shadow: 0 0 0 3px rgba(47, 164, 169, 0.1);
+        }
+
+        /* Custom File Upload Styling */
+        .file-upload-wrapper {
+            position: relative;
+            border: 2px dashed #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+        .file-upload-wrapper:hover { border-color: var(--theme-color); }
+        .file-upload-wrapper input[type="file"] {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+        .upload-text { font-size: 13px; color: var(--text-gray); }
+        .upload-text i { font-size: 20px; display: block; margin-bottom: 5px; color: var(--theme-color); }
+
+        /* Billing Section */
+        .billing-section {
+            background-color: #f1f5f9;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        .billing-table { width: 100%; font-size: 14px; }
+        .billing-table td { padding: 8px 0; }
+        .billing-table .price { text-align: right; font-weight: 600; font-family: monospace; font-size: 15px; }
+        .total-row td {
+            border-top: 2px solid #cbd5e1;
+            padding-top: 15px;
+            margin-top: 5px;
+            font-weight: 800;
+            font-size: 18px;
+            color: var(--theme-color);
+        }
+
+        .btn-reserve {
+            width: 100%;
+            background-color: transparent;
+            border: 2px solid var(--theme-color);
+            color: var(--theme-color);
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 14px;
+            margin-top: 25px;
+        }
+        .btn-reserve:hover {
+            background-color: var(--theme-color);
+            color: white;
+            box-shadow: 0 5px 15px rgba(47, 164, 169, 0.3);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 900px) {
+            .reservation-container { grid-template-columns: 1fr; }
+            .sidebar { width: 80px; padding: 20px 10px; }
+            .brand span, .menu-item span { display: none; }
+            .menu-item { justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="brand">
+            <img src="logo2.jpeg" alt="Logo" style="width: 30px; height: 30px;">
+            <span>Findmymeds</span>
+        </div>
+        <ul class="menu-list">
+            <li><a href="civilian-main.html" class="menu-item"><i class="fa-solid fa-house"></i><span>Home</span></a></li>
+            <li><a href="#" class="menu-item"><i class="fa-solid fa-clipboard-question"></i><span>Inquiries</span></a></li>
+            <li><a href="#" class="menu-item"><i class="fa-regular fa-calendar-check"></i><span>Reservations</span></a></li>
+            <li><a href="#" class="menu-item"><i class="fa-regular fa-comment-dots"></i><span>Feedback</span></a></li>
+            <li><a href="#" class="menu-item logout-btn"><i class="fa-solid fa-arrow-right-from-bracket"></i><span>Logout</span></a></li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        
+        <div class="reservation-container">
+            
+            <div class="col-section">
+                <h2 class="section-header">Find & Select Medicines</h2>
+                
+                <div class="card search-card">
+                    <div class="search-box">
+                        <i class="fa-solid fa-magnifying-glass" style="color: #94a3b8;"></i>
+                        <input type="text" placeholder="Search medicines by name or generic...">
+                    </div>
+
+                    <span class="section-label">Suggestions</span>
+                    
+                    <div class="medicine-suggestion">
+                        <div style="font-weight: 800; font-size: 18px; margin-bottom: 12px; color: var(--theme-color);">Amoxilin 250mg</div>
+                        <div style="margin-bottom: 15px;">
+                            <span class="med-tag"><i class="fa-solid fa-capsules" style="margin-right:5px;"></i> Capsule</span>
+                            <span class="med-tag warning"><i class="fa-solid fa-file-prescription" style="margin-right:5px;"></i> Prescription Required</span>
+                        </div>
+                        <p style="font-size: 14px; color: #64748b; line-height: 1.5;">
+                            Used to treat bacterial infections. Please ensure you have a valid prescription before adding to reservation.
+                        </p>
+                    </div>
+
+                    <div class="action-row">
+                        <div class="qty-stepper">
+                            <button class="qty-btn">-</button>
+                            <input type="text" value="1" class="qty-input" readonly>
+                            <button class="qty-btn">+</button>
+                        </div>
+                        <button class="btn-primary">
+                            <i class="fa-solid fa-plus" style="margin-right: 8px;"></i> Add to Reservation
+                        </button>
+                    </div>
+                </div>
+
+                <h2 class="section-header" style="margin-top: 10px;">Recommended Pharmacies</h2>
+                <div class="card pharmacy-list-card">
+                    <div class="pharmacy-item">
+                        <div>
+                            <div class="pharm-name">Citywide Pharmacy</div>
+                            <div class="pharm-meta"><i class="fa-solid fa-check-circle" style="color:var(--theme-color); margin-right:4px;"></i> 5 medicines available</div>
+                        </div>
+                        <div class="pharm-dist">2.5 km</div>
+                    </div>
+                    <div class="pharmacy-item">
+                        <div>
+                            <div class="pharm-name">HealthPlus Mart</div>
+                            <div class="pharm-meta"><i class="fa-solid fa-triangle-exclamation" style="color:orange; margin-right:4px;"></i> 3 medicines available</div>
+                        </div>
+                        <div class="pharm-dist">1.2 km</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-section">
+                <h2 class="section-header">Your Reservation</h2>
+
+                <div class="card summary-card">
+                    <span class="section-label">Order Summary</span>
+                    <div class="summary-list">
+                        <div class="summary-item">
+                            <span>Amocatemol 500mg</span>
+                            <span>x 2</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Vitamin C 500mg</span>
+                            <span>x 1</span>
+                        </div>
+                    </div>
+
+                    <span class="section-label">Reservation Details</span>
+                    
+                    <div class="form-group">
+                        <label class="label-with-icon"><i class="fa-regular fa-calendar-days"></i> Pick-up Date</label>
+                        <input type="date" class="form-input">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="label-with-icon"><i class="fa-solid fa-cloud-arrow-up"></i> Upload Prescription</label>
+                        <div class="file-upload-wrapper">
+                            <input type="file">
+                            <div class="upload-text">
+                                <i class="fa-regular fa-image"></i>
+                                <span>Click to upload or drag image here</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="label-with-icon"><i class="fa-solid fa-store"></i> Selected Pharmacy</label>
+                        <div style="position: relative;">
+                            <select class="form-input" style="appearance: none;">
+                                <option>Citywide Pharmacy (2.5km)</option>
+                                <option>HealthPlus Mart (1.2km)</option>
+                            </select>
+                            <i class="fa-solid fa-chevron-down" style="position: absolute; right: 15px; top: 15px; color: #999; pointer-events: none;"></i>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="label-with-icon"><i class="fa-regular fa-pen-to-square"></i> Note</label>
+                        <textarea class="form-input" placeholder="Any special instructions for the pharmacist..." style="height: 100px;"></textarea>
+                    </div>
+
+                    <div class="billing-section">
+                        <span class="section-label" style="margin-bottom: 10px; color: #64748b;">Billing Breakdown (Estimated)</span>
+                        <table class="billing-table">
+                            <tr>
+                                <td>Amocatemol</td>
+                                <td class="price">$5.00</td>
+                            </tr>
+                            <tr>
+                                <td>Vitamin C</td>
+                                <td class="price">$6.00</td>
+                            </tr>
+                            <tr>
+                                <td>Service Fee</td>
+                                <td class="price">$2.00</td>
+                            </tr>
+                            <tr class="total-row">
+                                <td>Total</td>
+                                <td class="price">$13.00</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <button class="btn-reserve">Confirm Reservation</button>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+</body>
+</html>

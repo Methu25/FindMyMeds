@@ -43,6 +43,10 @@ public class Notification {
     @Column(name = "related_entity_id")
     private Long relatedEntityId;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "priority")
+    private com.findmymeds.backend.model.enums.Priority priority;
+
     @Column(name = "read_at")
     private LocalDateTime readAt;
 }

@@ -12,7 +12,6 @@ public class AdminActivityLog {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "admin_id", nullable = false)
     private Long adminId;
 
     @Column(nullable = false)
