@@ -1,14 +1,14 @@
-// src/components/modals/RemovePharmacyModal.jsx
+// src/components/modals/ActivatePharmacyModal.jsx
 import React, { useState } from "react";
-import { removePharmacy } from "../../../Service/admin/pharmacyService";
+import { activatePharmacy } from "../../../Service/admin/pharmacyService";
 
-const RemovePharmacyModal = ({ isOpen, onClose, pharmacyId, onSuccess }) => {
+const ActivatePharmacyModal = ({ isOpen, onClose, pharmacyId, onSuccess }) => {
   const [loading, setLoading] = useState(false);
 
-  const handleRemove = async () => {
+  const handleActivate = async () => {
     try {
       setLoading(true);
-      await removePharmacy(pharmacyId);
+      await activatePharmacy(pharmacyId);
       onSuccess && onSuccess();
       onClose();
     } catch (error) {
@@ -23,16 +23,16 @@ const RemovePharmacyModal = ({ isOpen, onClose, pharmacyId, onSuccess }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-6 w-96 shadow-lg">
-        <h2 className="text-lg font-bold mb-4">Remove Pharmacy</h2>
-        <p className="mb-4">Are you sure you want to remove this pharmacy? This will move it to the Removed Pharmacy table.</p>
+        <h2 className="text-lg font-bold mb-4">Activate Pharmacy</h2>
+        <p className="mb-4">Do you want to reactivate this pharmacy? It will become active again.</p>
         <div className="flex justify-end gap-3">
           <button className="px-4 py-2 rounded bg-gray-200" onClick={onClose}>Cancel</button>
           <button
-            className="px-4 py-2 rounded bg-red-600 text-white"
-            onClick={handleRemove}
+            className="px-4 py-2 rounded bg-green-500 text-white"
+            onClick={handleActivate}
             disabled={loading}
           >
-            {loading ? "Removing..." : "Remove"}
+            {loading ? "Activating..." : "Activate"}
           </button>
         </div>
       </div>
@@ -40,4 +40,4 @@ const RemovePharmacyModal = ({ isOpen, onClose, pharmacyId, onSuccess }) => {
   );
 };
 
-export default RemovePharmacyModal;
+export default ActivatePharmacyModal;

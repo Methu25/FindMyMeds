@@ -1,25 +1,22 @@
 import { useEffect, useState } from "react";
 
-/* ===== Layout ===== */
-import AdminLayout from "../../components/admin/AdminLayout";
-
 /* ===== Components ===== */
-import MetricCard from "../../components/admin/Pharmacy/MetricCard";
-import NotificationPanel from "../../components/admin/Pharmacy/NotificationPanel";
-import PharmacyTable from "../../components/admin/Pharmacy/PharmacyTable";
-import PharmacyTypeCard from "../../components/admin/Pharmacy/PharmacyTypeCard";
-import QuickActionPanel from "../../components/admin/Pharmacy/QuickActionPanel";
+import MetricCard from "../../../components/admin/Pharmacy/MetricCard";
+import NotificationPanel from "../../../components/admin/Pharmacy/NotificationPanel";
+import PharmacyTable from "../../../components/admin/Pharmacy/PharmacyTable";
+import PharmacyTypeCard from "../../../components/admin/Pharmacy/PharmacyTypeCard";
+import QuickActionPanel from "../../../components/admin/Pharmacy/QuickActionPanel";
 
 /* ===== Modals ===== */
-import ActivatePharmacyModal from "../../components/admin/Pharmacy/ActivatePharmacyModal";
-import RejectPharmacyModal from "../../components/admin/Pharmacy/RejectPharmacyModal";
-import RemovePharmacyModal from "../../components/admin/Pharmacy/RemovePharmacyModal";
-import SuspendPharmacyModal from "../../components/admin/Pharmacy/SuspendPharmacyModal";
+import ActivatePharmacyModal from "../../../components/admin/Pharmacy/ActivatePharmacyModal";
+import RejectPharmacyModal from "../../../components/admin/Pharmacy/RejectPharmacyModal";
+import RemovePharmacyModal from "../../../components/admin/Pharmacy/RemovePharmacyModal";
+import SuspendPharmacyModal from "../../../components/admin/Pharmacy/SuspendPharmacyModal";
 
 /* ===== Services ===== */
 import {
-  getAllPharmacies,
-} from "../../Service/admin/pharmacyService";
+  getPharmacies,
+} from "../../../Service/admin/pharmacyService";
 
 const PharmacyManagementHome = () => {
   /* =======================
@@ -36,6 +33,7 @@ const PharmacyManagementHome = () => {
   const [openSuspend, setOpenSuspend] = useState(false);
 
   const [loading, setLoading] = useState(false);
+  const [notifications, setNotifications] = useState([]);
 
   /* =======================
      DATA FETCH
@@ -43,12 +41,17 @@ const PharmacyManagementHome = () => {
 
   useEffect(() => {
     loadPharmacies();
+    // Simulate fetching notifications
+    setNotifications([
+      { id: 1, message: "Pharmacy verification pending for 'City Meds'" },
+      { id: 2, message: "License expiration warning: 'HealthPlus'" }
+    ]);
   }, []);
 
   const loadPharmacies = async () => {
     setLoading(true);
     try {
-      const response = await getAllPharmacies();
+      const response = await getPharmacies();
       setPharmacies(response.data || []);
     } catch (error) {
       console.error("Failed to load pharmacies", error);
@@ -81,11 +84,16 @@ const PharmacyManagementHome = () => {
     setOpenSuspend(true);
   };
 
+  const handleView = (id) => {
+    console.log("View Pharmacy ID:", id);
+    const pharmacy = pharmacies.find(p => p.pharmacy_id === id);
+    if (pharmacy) setSelectedPharmacy(pharmacy);
+  };
+
   /* =======================
      RENDER
   ======================= */
 
-  // FIXED: Define actions for QuickActionsPanel
   const actions = [
     { label: "Add New Pharmacy", onClick: () => console.log("Add Pharmacy") },
     { label: "Generate Report", onClick: () => console.log("Generate Report") },
@@ -93,8 +101,10 @@ const PharmacyManagementHome = () => {
   ];
 
   return (
-    <AdminLayout>
-      <div className="p-6 space-y-6 bg-slate-50 min-h-screen">
+    <div className="flex w-full min-h-screen bg-slate-50">
+
+      {/* ===== MAIN CONTENT ===== */}
+      <div className="flex-1 p-6 space-y-6">
 
         {/* ===== PAGE HEADER ===== */}
         <div>
@@ -107,26 +117,29 @@ const PharmacyManagementHome = () => {
         </div>
 
         {/* ===== METRICS ===== */}
-        <MetricCard pharmacies={pharmacies} loading={loading} />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <MetricCard title="Total Pharmacies" count={pharmacies.length || 0} />
+          <MetricCard title="Active" count={pharmacies.filter(p => p.status === 'ACTIVE').length || 0} />
+          <MetricCard title="Pending" count={pharmacies.filter(p => p.status === 'PENDING').length || 0} />
+          <MetricCard title="Suspended" count={pharmacies.filter(p => p.status === 'SUSPENDED').length || 0} />
+        </div>
 
         {/* ===== FILTER / TYPE ===== */}
-        <PharmacyTypeCard pharmacies={pharmacies} loading={loading} />
-
-        {/* ===== QUICK ACTIONS ===== */}
-        <QuickActionPanel />
+        <div className="flex gap-4">
+          <PharmacyTypeCard type="Retail" count={pharmacies.filter(p => p.pharmacy_type === 'Retail').length || 0} />
+          <PharmacyTypeCard type="Hospital" count={pharmacies.filter(p => p.pharmacy_type === 'Hospital').length || 0} />
+        </div>
 
         {/* ===== TABLE ===== */}
         <PharmacyTable
           pharmacies={pharmacies}
           loading={loading}
+          onView={handleView}
           onActivate={handleActivate}
           onReject={handleReject}
           onRemove={handleRemove}
           onSuspend={handleSuspend}
         />
-
-        {/* ===== NOTIFICATIONS ===== */}
-        <NotificationPanel />
 
         {/* ===== MODALS ===== */}
         <ActivatePharmacyModal
@@ -156,16 +169,15 @@ const PharmacyManagementHome = () => {
           onClose={() => setOpenSuspend(false)}
           refresh={loadPharmacies}
         />
-
       </div>
 
+      {/* ===== RIGHT SIDEBAR ===== */}
       <div className="flex flex-col gap-6 w-80 p-6 border-l bg-white">
         <NotificationPanel notifications={notifications} />
-        <QuickActionsPanel actions={actions} />
+        <QuickActionPanel actions={actions} />
       </div>
     </div>
   );
 };
-
 
 export default PharmacyManagementHome;
