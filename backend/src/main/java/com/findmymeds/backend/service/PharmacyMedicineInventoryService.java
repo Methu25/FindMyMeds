@@ -10,23 +10,19 @@ import com.findmymeds.backend.model.enums.Priority;
 import com.findmymeds.backend.model.enums.UserType;
 import com.findmymeds.backend.repository.MedicineRepository;
 import com.findmymeds.backend.repository.PharmacyInventoryRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class PharmacyMedicineInventoryService {
 
-    @Autowired
-    private PharmacyInventoryRepository inventoryRepository;
-
-    @Autowired
-    private MedicineRepository medicineRepository;
-
-    @Autowired
-    private PharmacyNotificationService notificationService;
+    private final PharmacyInventoryRepository inventoryRepository;
+    private final MedicineRepository medicineRepository;
+    private final PharmacyNotificationService notificationService;
 
     private Long getCurrentPharmacyId() {
         return 1L; // Hardcoded for development
