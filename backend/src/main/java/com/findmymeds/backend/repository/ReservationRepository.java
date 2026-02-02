@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
+
     @Query("SELECT COUNT(r) FROM Reservation r WHERE r.status = :status")
     long countByStatus(@Param("status") String status);
 
