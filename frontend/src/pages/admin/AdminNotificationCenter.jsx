@@ -5,7 +5,7 @@ import {
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 
-const NotificationCenter = () => {
+const AdminNotificationCenter = () => {
     const navigate = useNavigate();
 
     // State
@@ -212,4 +212,4 @@ const NotificationCenter = () => {
     );
 };
 
-export default NotificationCenter;
+export default AdminNotificationCenter;

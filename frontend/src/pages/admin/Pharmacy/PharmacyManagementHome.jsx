@@ -85,6 +85,13 @@ const PharmacyManagementHome = () => {
      RENDER
   ======================= */
 
+  // FIXED: Define actions for QuickActionsPanel
+  const actions = [
+    { label: "Add New Pharmacy", onClick: () => console.log("Add Pharmacy") },
+    { label: "Generate Report", onClick: () => console.log("Generate Report") },
+    { label: "Review Approvals", onClick: () => console.log("Review Approvals") }
+  ];
+
   return (
     <AdminLayout>
       <div className="p-6 space-y-6 bg-slate-50 min-h-screen">
@@ -151,8 +158,14 @@ const PharmacyManagementHome = () => {
         />
 
       </div>
-    </AdminLayout>
+
+      <div className="flex flex-col gap-6 w-80 p-6 border-l bg-white">
+        <NotificationPanel notifications={notifications} />
+        <QuickActionsPanel actions={actions} />
+      </div>
+    </div>
   );
 };
+
 
 export default PharmacyManagementHome;
