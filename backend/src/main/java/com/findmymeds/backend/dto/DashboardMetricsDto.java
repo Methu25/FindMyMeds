@@ -15,4 +15,7 @@ public class DashboardMetricsDTO {
     private long pendingOrders;
     private long outOfStock;
     private long expiringSoon;
+    private long lowStock;
+    private long totalMedicines;
+    private double totalRevenue;
 }

@@ -1,42 +1,47 @@
 import { NavLink } from 'react-router-dom'
-import { Home, Package, History, Pill, Bell, Settings, MessageSquare } from 'lucide-react'
+import { Home, Package, History, Pill, Bell, Settings, MessageSquare, PieChart, User } from 'lucide-react'
 
 const menuItems = [
-    { name: 'Dashboard', icon: Home, path: '/pharmacy' },
+    { name: 'Dashboard', icon: Home, path: '/pharmacy', end: true },
     { name: 'Current Reservations', icon: Package, path: '/pharmacy/current-reservations' },
     { name: 'Reservation History', icon: History, path: '/pharmacy/reservation-history' },
-    { name: 'Medicine Inventory', icon: Pill, path: '/pharmacy/inventory' },
+    { name: 'Inventory Management', icon: Pill, path: '/pharmacy/inventory' },
+    { name: 'Reports', icon: PieChart, path: '/pharmacy/reports' },
     { name: 'Notification Center', icon: Bell, path: '/pharmacy/notifications' },
-    { name: 'Admin Center', icon: MessageSquare, path: '/pharmacy/admin-center' },
+    { name: 'Contact Admin', icon: MessageSquare, path: '/pharmacy/admin-center' },
+    { name: 'Pharmacy Profile', icon: User, path: '/pharmacy/profile' },
     { name: 'System Settings', icon: Settings, path: '/pharmacy/settings' },
 ]
 
 export default function Sidebar() {
     return (
         <div className="fixed left-0 top-0 h-screen w-64 bg-primary text-white flex flex-col shadow-xl">
-            <div className="p-6 border-b border-primary-dark">
-                <h1 className="text-2xl font-bold">FindMyMeds</h1>
-                <p className="text-sm opacity-90">Pharmacy Portal</p>
+            <div className="p-6 border-b border-white/10">
+                <h1 className="text-2xl font-black tracking-tight">FindMyMeds</h1>
+                <p className="text-[10px] font-bold uppercase tracking-widest opacity-60">Pharmacy Portal</p>
             </div>
-            <nav className="flex-1 p-4 space-y-1">
+            <nav className="flex-1 p-4 space-y-2 mt-4">
                 {menuItems.map((item) => {
                     const Icon = item.icon
                     return (
                         <NavLink
                             key={item.name}
                             to={item.path}
+                            end={item.end}
                             className={({ isActive }) =>
-                                `flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${isActive ? 'bg-primary-dark shadow-md' : 'hover:bg-primary-dark/70'
+                                `flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-300 font-bold text-sm ${isActive
+                                    ? 'bg-white text-primary shadow-lg shadow-black/10'
+                                    : 'hover:bg-white/10 text-white/80 hover:text-white'
                                 }`
                             }
                         >
-                            <Icon size={20} />
-                            <span className="font-medium">{item.name}</span>
+                            <Icon size={18} />
+                            <span>{item.name}</span>
                         </NavLink>
                     )
                 })}
             </nav>
-            <div className="p-4 text-xs opacity-75 border-t border-primary-dark">
+            <div className="p-6 text-[10px] font-black uppercase tracking-widest opacity-40 border-t border-white/10 text-center">
                 © 2026 FindMyMeds
             </div>
         </div>

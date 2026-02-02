@@ -33,6 +33,15 @@ public class Pharmacy {
     @Column(name = "phone")
     private String phone;
 
+    @Column(name = "registration_no")
+    private String registrationNo;
+
+    @Column(name = "nic")
+    private String nic;
+
+    @Column(name = "district")
+    private String district;
+
     @Column(name = "address")
     private String address;
 
