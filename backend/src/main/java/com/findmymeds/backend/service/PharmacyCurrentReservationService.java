@@ -35,13 +35,13 @@ public class PharmacyCurrentReservationService {
                 .collect(Collectors.toList());
     }
 
-    public void updateReservationStatus(@NonNull Long id, String status) {
+    public void updateReservationStatus(@NonNull String id, String status) {
         Reservation reservation = reservationRepository.findById(id).orElseThrow();
         reservation.setStatus(com.findmymeds.backend.model.enums.ReservationStatus.valueOf(status));
         reservationRepository.save(reservation);
     }
 
-    public ReservationDTO getReservationDetails(@NonNull Long id) {
+    public ReservationDTO getReservationDetails(@NonNull String id) {
         Reservation reservation = reservationRepository.findById(id).orElseThrow();
         return convertToDTO(reservation);
     }

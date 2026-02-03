@@ -32,7 +32,7 @@ public class PharmacyReservationHistoryController {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('PHARMACY')")
-    public ResponseEntity<ReservationDTO> getReservationHistoryDetails(@PathVariable @NonNull Long id) {
+    public ResponseEntity<ReservationDTO> getReservationHistoryDetails(@PathVariable @NonNull String id) {
         return ResponseEntity.ok(reservationHistoryService.getReservationHistoryDetails(id));
     }
 }
