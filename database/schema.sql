@@ -90,7 +90,7 @@ CREATE TABLE pharmacies (
     phone VARCHAR(255),
     address TEXT,
     latitude DOUBLE,
-    longitude DOUBLE;
+    longitude DOUBLE,
     operating_hours VARCHAR(255),
     status ENUM('PENDING','ACTIVE','SUSPENDED','REJECTED','REMOVED'),
     is_deleted BOOLEAN DEFAULT FALSE,
