@@ -37,18 +37,13 @@ public interface ReservationRepository extends JpaRepository<Reservation, String
                         @Param("pharmacyId") Long pharmacyId,
                         @Param("status") ReservationStatus status);
 
-        @Query("""
-                            SELECT function('date', r.reservationDate) AS date, COUNT(r) AS count
-                            FROM Reservation r
-                            WHERE r.reservationDate >= :from
-                            GROUP BY function('date', r.reservationDate)
-                            ORDER BY function('date', r.reservationDate)
-                        """)
-        List<ReservationCountByDate> countReservationsPerDay(
-                        @Param("from") LocalDateTime from);
-
-        @Query("SELECT COUNT(r) FROM Reservation r WHERE r.status = :status")
-        long countByStatus(@Param("status") String status);
-
-        List<Reservation> findByStatus(String status, Pageable pageable);
+  @Query("""
+          SELECT function('date', r.reservationDate) AS date, COUNT(r) AS count
+          FROM Reservation r
+          WHERE r.reservationDate >= :from
+          GROUP BY function('date', r.reservationDate)
+          ORDER BY function('date', r.reservationDate)
+      """)
+  List<ReservationCountByDate> countReservationsPerDay(
+      @Param("from") LocalDateTime from);
 }
