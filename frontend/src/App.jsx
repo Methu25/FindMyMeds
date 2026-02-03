@@ -1,4 +1,3 @@
-import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import AdminLayout from './components/admin/AdminLayout';
 
@@ -24,7 +23,9 @@ import MedicineInventory from './pages/pharmacy/MedicineInventory';
 import PharmacyMedicineDetails from './pages/pharmacy/MedicineDetails';
 import PharmacyNotificationCenter from './pages/pharmacy/NotificationCenter';
 import PharmacyNotificationDetails from './pages/pharmacy/NotificationDetails';
-import AdminCenter from './pages/pharmacy/AdminCenter.jsx'; // This was originally here, keeping it.
+import CurrentReservations from './pages/pharmacy/CurrentReservations';
+import ReservationHistory from './pages/pharmacy/ReservationHistory';
+import AdminCenter from './pages/pharmacy/AdminCenter.jsx';
 
 // Civilian Pages 
 import CivilianLayout from './components/civilian/CivilianLayout';
@@ -81,8 +82,8 @@ function App() {
               <Route path="notifications/:id" element={<PharmacyNotificationDetails />} />
               <Route path="admin-center" element={<AdminCenter />} />
               <Route path="settings" element={<div className="p-8">Pharmacy Settings Placeholder</div>} /> {/* SystemSettings moved to admin, so this is a placeholder now */}
-              <Route path="current-reservations" element={<div className="p-8">Current Reservations Placeholder</div>} />
-              <Route path="reservation-history" element={<div className="p-8">Reservation History Placeholder</div>} />
+              <Route path="current-reservations" element={<CurrentReservations />} />
+              <Route path="reservation-history" element={<ReservationHistory />} />
             </Routes>
           </NotificationProvider>
         } />

@@ -3,6 +3,7 @@ package com.findmymeds.backend.repository;
 import com.findmymeds.backend.model.Reservation;
 import com.findmymeds.backend.model.enums.ReservationStatus;
 import com.findmymeds.backend.repository.projection.ReservationCountByDate;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -45,4 +46,10 @@ public interface ReservationRepository extends JpaRepository<Reservation, String
       """)
   List<ReservationCountByDate> countReservationsPerDay(
       @Param("from") LocalDateTime from);
+
+  List<Reservation> findByCivilianIdOrderByReservationDateDesc(Long civilianId);
+
+  long countByStatus(ReservationStatus status);
+
+  List<Reservation> findByStatus(ReservationStatus status, Pageable pageable);
 }

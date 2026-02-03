@@ -3,7 +3,7 @@ package com.findmymeds.backend.dto;
 import lombok.Data;
 
 @Data
-public class PharmacyProfileDTO {
+public class PharmacyProfileDto {
     private Long id;
     private String name;
     private String address;

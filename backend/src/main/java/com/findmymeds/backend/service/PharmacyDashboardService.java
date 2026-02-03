@@ -1,6 +1,6 @@
 package com.findmymeds.backend.service;
 
-import com.findmymeds.backend.dto.DashboardMetricsDTO;
+import com.findmymeds.backend.dto.DashboardMetricsDto;
 import com.findmymeds.backend.model.enums.ReservationStatus;
 import com.findmymeds.backend.repository.InventoryRepository;
 import com.findmymeds.backend.repository.ReservationRepository;
@@ -18,7 +18,7 @@ public class PharmacyDashboardService {
         private final ReservationRepository reservationRepository;
         private final InventoryRepository inventoryRepository;
 
-        public DashboardMetricsDTO getMetrics(Long pharmacyId) {
+        public DashboardMetricsDto getMetrics(Long pharmacyId) {
 
                 LocalDateTime startOfDay = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
 
@@ -39,7 +39,7 @@ public class PharmacyDashboardService {
 
                 // Providing 0 or dummy for missing fields to match the 7-arg constructor of
                 // DashboardMetricsDTO
-                return new DashboardMetricsDTO(
+                return new DashboardMetricsDto(
                                 todayReservations,
                                 0, // completedToday
                                 0, // rejectedToday

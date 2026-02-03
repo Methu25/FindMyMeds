@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SystemSettingsDTO {
+public class SystemSettingsDto {
     private boolean notificationsEnabled;
     private String theme; // "Light" or "Dark"
     private String defaultHomepage;

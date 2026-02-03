@@ -78,7 +78,7 @@ const Sidebar = () => {
     <aside className="w-[260px] h-screen bg-white border-r border-slate-100 flex flex-col p-6 shadow-sm">
       {/* Brand Section */}
       <div className="flex items-center gap-3 mb-10 px-2">
-        <img src="/Logo.jpeg" alt="Logo" className="w-9 h-9 object-cover rounded-lg shadow-sm" />
+        <img src="/logo.jpeg" alt="Logo" className="w-9 h-9 object-cover rounded-lg shadow-sm" />
         <span className="text-xl font-extrabold text-slate-900 tracking-tight">FindMyMeds</span>
       </div>
 
