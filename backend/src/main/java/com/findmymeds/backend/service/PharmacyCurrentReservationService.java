@@ -20,17 +20,18 @@ public class PharmacyCurrentReservationService {
 
     public List<Long> getCurrentReservationCounts() {
         return List.of(
-                reservationRepository.countByStatus("PENDING"),
-                reservationRepository.countByStatus("CONFIRMED"),
-                reservationRepository.countByStatus("ONGOING"),
-                reservationRepository.countByStatus("READY"),
-                reservationRepository.countByStatus("COLLECTED"),
-                reservationRepository.countByStatus("CANCELLED"));
+                reservationRepository.countByStatus(com.findmymeds.backend.model.enums.ReservationStatus.PENDING),
+                reservationRepository.countByStatus(com.findmymeds.backend.model.enums.ReservationStatus.CONFIRMED),
+                reservationRepository.countByStatus(com.findmymeds.backend.model.enums.ReservationStatus.ONGOING),
+                reservationRepository.countByStatus(com.findmymeds.backend.model.enums.ReservationStatus.READY),
+                reservationRepository.countByStatus(com.findmymeds.backend.model.enums.ReservationStatus.COLLECTED),
+                reservationRepository.countByStatus(com.findmymeds.backend.model.enums.ReservationStatus.CANCELLED));
     }
 
     public List<ReservationDTO> getCurrentReservationsByStatus(String status, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return reservationRepository.findByStatus(status, pageable).stream()
+        return reservationRepository
+                .findByStatus(com.findmymeds.backend.model.enums.ReservationStatus.valueOf(status), pageable).stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }

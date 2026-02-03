@@ -20,14 +20,15 @@ public class PharmacyReservationHistoryService {
 
     public List<Long> getReservationHistoryCounts() {
         return List.of(
-                reservationRepository.countByStatus("COLLECTED"),
-                reservationRepository.countByStatus("EXPIRED"),
-                reservationRepository.countByStatus("CANCELLED"));
+                reservationRepository.countByStatus(com.findmymeds.backend.model.enums.ReservationStatus.COLLECTED),
+                reservationRepository.countByStatus(com.findmymeds.backend.model.enums.ReservationStatus.EXPIRED),
+                reservationRepository.countByStatus(com.findmymeds.backend.model.enums.ReservationStatus.CANCELLED));
     }
 
     public List<ReservationDTO> getReservationHistoryByType(String type, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return reservationRepository.findByStatus(type, pageable).stream()
+        return reservationRepository
+                .findByStatus(com.findmymeds.backend.model.enums.ReservationStatus.valueOf(type), pageable).stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
