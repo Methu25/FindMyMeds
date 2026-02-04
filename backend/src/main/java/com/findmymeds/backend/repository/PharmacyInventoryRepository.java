@@ -22,22 +22,35 @@ public interface PharmacyInventoryRepository extends JpaRepository<PharmacyInven
         // Metrics Queries
         long countByPharmacyId(Long pharmacyId);
 
-        @Query("SELECT COUNT(pi) FROM PharmacyInventory pi WHERE pi.pharmacy.id = :pharmacyId AND pi.availableQuantity > 10")
-        long countInStock(@Param("pharmacyId") Long pharmacyId);
+        @Query("SELECT COUNT(pi) FROM PharmacyInventory pi WHERE pi.pharmacy.id = :pharmacyId AND pi.medicine.status = 'ACTIVE' "
+                        +
+                        "AND (pi.expiryDate IS NULL OR pi.expiryDate > :thirtyDaysLater) AND pi.availableQuantity > 10")
+        long countInStock(@Param("pharmacyId") Long pharmacyId,
+                        @Param("thirtyDaysLater") java.time.LocalDate thirtyDaysLater);
 
-        @Query("SELECT COUNT(pi) FROM PharmacyInventory pi WHERE pi.pharmacy.id = :pharmacyId AND pi.availableQuantity > 0 AND pi.availableQuantity <= 10")
-        long countLowStock(@Param("pharmacyId") Long pharmacyId);
+        @Query("SELECT COUNT(pi) FROM PharmacyInventory pi WHERE pi.pharmacy.id = :pharmacyId AND pi.medicine.status = 'ACTIVE' "
+                        +
+                        "AND (pi.expiryDate IS NULL OR pi.expiryDate > :thirtyDaysLater) AND pi.availableQuantity > 0 AND pi.availableQuantity <= 10")
+        long countLowStock(@Param("pharmacyId") Long pharmacyId,
+                        @Param("thirtyDaysLater") java.time.LocalDate thirtyDaysLater);
 
-        @Query("SELECT COUNT(pi) FROM PharmacyInventory pi WHERE pi.pharmacy.id = :pharmacyId AND pi.availableQuantity = 0")
-        long countOutOfStock(@Param("pharmacyId") Long pharmacyId);
+        @Query("SELECT COUNT(pi) FROM PharmacyInventory pi WHERE pi.pharmacy.id = :pharmacyId AND pi.medicine.status = 'ACTIVE' "
+                        +
+                        "AND (pi.expiryDate IS NULL OR pi.expiryDate > :thirtyDaysLater) AND pi.availableQuantity = 0")
+        long countOutOfStock(@Param("pharmacyId") Long pharmacyId,
+                        @Param("thirtyDaysLater") java.time.LocalDate thirtyDaysLater);
 
         @Query("SELECT COUNT(pi) FROM PharmacyInventory pi WHERE pi.pharmacy.id = :pharmacyId AND pi.medicine.status = 'INACTIVE'")
         long countDeactivated(@Param("pharmacyId") Long pharmacyId);
 
-        @Query("SELECT COUNT(pi) FROM PharmacyInventory pi WHERE pi.pharmacy.id = :pharmacyId AND pi.expiryDate < :today")
+        @Query("SELECT COUNT(pi) FROM PharmacyInventory pi WHERE pi.pharmacy.id = :pharmacyId AND pi.medicine.status = 'ACTIVE' "
+                        +
+                        "AND pi.expiryDate < :today")
         long countExpired(@Param("pharmacyId") Long pharmacyId, @Param("today") java.time.LocalDate today);
 
-        @Query("SELECT COUNT(pi) FROM PharmacyInventory pi WHERE pi.pharmacy.id = :pharmacyId AND pi.expiryDate BETWEEN :today AND :thirtyDaysLater")
+        @Query("SELECT COUNT(pi) FROM PharmacyInventory pi WHERE pi.pharmacy.id = :pharmacyId AND pi.medicine.status = 'ACTIVE' "
+                        +
+                        "AND pi.expiryDate BETWEEN :today AND :thirtyDaysLater")
         long countExpiringSoon(@Param("pharmacyId") Long pharmacyId, @Param("today") java.time.LocalDate today,
                         @Param("thirtyDaysLater") java.time.LocalDate thirtyDaysLater);
 }
