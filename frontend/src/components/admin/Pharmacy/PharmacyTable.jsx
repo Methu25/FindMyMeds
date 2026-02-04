@@ -1,6 +1,6 @@
 import React from "react";
 
-const PharmacyTable = ({ pharmacies, onView }) => {
+const PharmacyTable = ({ pharmacies, onView, loading }) => {
   return (
     <div className="bg-white shadow rounded-lg overflow-x-auto">
       <table className="min-w-full divide-y divide-gray-200">
@@ -16,33 +16,44 @@ const PharmacyTable = ({ pharmacies, onView }) => {
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-200">
-          {pharmacies.map((pharmacy) => (
-            <tr key={pharmacy.pharmacy_id}>
-              <td className="px-4 py-2">{pharmacy.pharmacy_id}</td>
-              <td className="px-4 py-2">{pharmacy.pharmacy_name}</td>
-              <td className="px-4 py-2">{pharmacy.pharmacy_type}</td>
-              <td className="px-4 py-2">
-                <span className={`px-2 py-1 rounded-full text-white text-xs ${
-                  pharmacy.status === "ACTIVE" ? "bg-green-500" :
-                  pharmacy.status === "SUSPENDED" ? "bg-yellow-500" :
-                  "bg-gray-500"
-                }`}>
-                  {pharmacy.status}
-                </span>
-              </td>
-              <td className="px-4 py-2">{pharmacy.address}</td>
-              <td className="px-4 py-2">{pharmacy.contact_number}</td>
-              <td className="px-4 py-2 text-center">
-                <button
-                  onClick={() => onView(pharmacy.pharmacy_id)}
-                  className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 text-sm"
-                >
-                  View / Manage
-                </button>
+          {loading ? (
+            <tr>
+              <td colSpan={7} className="text-center py-4 text-gray-400">
+                Loading...
               </td>
             </tr>
-          ))}
-          {pharmacies.length === 0 && (
+          ) : pharmacies.length > 0 ? (
+            pharmacies.map((pharmacy) => (
+              <tr key={pharmacy.id}>
+                <td className="px-4 py-2">{pharmacy.pharmacy_id}</td>
+                <td className="px-4 py-2">{pharmacy.pharmacy_name}</td>
+                <td className="px-4 py-2">{pharmacy.pharmacy_type}</td>
+                <td className="px-4 py-2">
+                  <span
+                    className={`px-2 py-1 rounded-full text-white text-xs ${
+                      pharmacy.status === "ACTIVE"
+                        ? "bg-green-500"
+                        : pharmacy.status === "SUSPENDED"
+                        ? "bg-yellow-500"
+                        : "bg-gray-500"
+                    }`}
+                  >
+                    {pharmacy.status}
+                  </span>
+                </td>
+                <td className="px-4 py-2">{pharmacy.address}</td>
+                <td className="px-4 py-2">{pharmacy.contact_number}</td>
+                <td className="px-4 py-2 text-center">
+                  <button
+                    onClick={() => onView(pharmacy.id)}
+                    className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 text-sm"
+                  >
+                    View / Manage
+                  </button>
+                </td>
+              </tr>
+            ))
+          ) : (
             <tr>
               <td colSpan={7} className="text-center py-4 text-gray-400">
                 No pharmacies to display
