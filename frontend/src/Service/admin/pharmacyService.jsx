@@ -23,6 +23,7 @@ export async function getPharmacies(status = null, type = null) {
   return handleResponse(response);
 }
 
+
 // --- SINGLE PHARMACY DETAILS ---
 export async function getPharmacyDetails(pharmacyId) {
   const response = await fetch(`${API_BASE}/pharmacies/${pharmacyId}`, { method: "GET" });

@@ -1,6 +1,8 @@
 package com.findmymeds.backend.model;
 
 import com.findmymeds.backend.model.enums.PharmacyStatus;
+import com.findmymeds.backend.model.enums.PharmacyType;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -66,6 +68,11 @@ public class Pharmacy {
 
     @Column(name = "badge")
     private String badge;
+
+    @Enumerated(EnumType.STRING)
+@Column(name = "pharmacy_type", nullable = false)
+private PharmacyType pharmacyType;
+
 
     @Transient
     private Double distance;

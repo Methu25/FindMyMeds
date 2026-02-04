@@ -2,6 +2,7 @@ package com.findmymeds.backend.controller;
 
 import com.findmymeds.backend.model.Pharmacy;
 import com.findmymeds.backend.model.enums.PharmacyStatus;
+import com.findmymeds.backend.model.enums.PharmacyType;
 import com.findmymeds.backend.service.AdminPharmacyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -40,4 +41,12 @@ public class AdminPharmacyController {
             @RequestParam @org.springframework.lang.NonNull PharmacyStatus status) {
         return pharmacyService.updatePharmacyStatus(id, status);
     }
+    @GetMapping("/api/pharmacies")
+public List<Pharmacy> getPharmacies(
+    @RequestParam(required = false) PharmacyStatus status,
+    @RequestParam(required = false) PharmacyType type
+) {
+    return pharmacyService.getPharmacies(status, type);
+}
+
 }

@@ -2,6 +2,7 @@ package com.findmymeds.backend.service;
 
 import com.findmymeds.backend.model.Pharmacy;
 import com.findmymeds.backend.model.enums.PharmacyStatus;
+import com.findmymeds.backend.model.enums.PharmacyType;
 import com.findmymeds.backend.repository.AdminPharmacyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,4 +44,20 @@ public class AdminPharmacyService {
     public List<Pharmacy> getPharmaciesByStatus(PharmacyStatus status) {
         return pharmacyRepository.findByStatus(status);
     }
+    public List<Pharmacy> getPharmacies(
+        PharmacyStatus status,
+        PharmacyType type
+) {
+    if (status != null && type != null) {
+        return pharmacyRepository.findByStatusAndPharmacyType(status, type);
+    }
+    if (status != null) {
+        return pharmacyRepository.findByStatus(status);
+    }
+    if (type != null) {
+        return pharmacyRepository.findByPharmacyType(type);
+    }
+    return pharmacyRepository.findAll();
+}
+
 }
