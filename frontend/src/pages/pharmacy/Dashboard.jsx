@@ -29,8 +29,12 @@ export default function Dashboard() {
     useEffect(() => {
         const fetchDashboardData = async () => {
             try {
-                // Fetch metrics
-                const metricsRes = await fetch('http://localhost:8080/api/pharmacy/dashboard/metrics');
+                const token = localStorage.getItem('token');
+                const metricsRes = await fetch('http://localhost:8080/api/pharmacy/dashboard/metrics', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
                 if (metricsRes.ok) {
                     const data = await metricsRes.json();
                     setMetrics({
@@ -41,7 +45,7 @@ export default function Dashboard() {
                         totalRevenue: data.totalRevenue || 0,
                         outOfStock: data.outOfStock || 0,
                         expiringSoon: data.expiringSoon || 0,
-                        inStock: data.inStock || 0,
+                        inStock: data.inStockMedicines || 0,
                         lowStock: data.lowStock || 0,
                         totalMedicines: data.totalMedicines || 0
                     });

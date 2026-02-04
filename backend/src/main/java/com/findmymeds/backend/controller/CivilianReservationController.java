@@ -24,4 +24,9 @@ public class CivilianReservationController {
     public List<Reservation> getAllReservations() {
         return reservationService.getAllReservations();
     }
+
+    @GetMapping("/civilian/{civilianId}")
+    public List<Reservation> getReservationsByCivilian(@PathVariable Long civilianId) {
+        return reservationService.getReservationsByCivilian(civilianId);
+    }
 }

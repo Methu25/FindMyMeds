@@ -1,8 +1,8 @@
 package com.findmymeds.backend.service;
 
-import com.findmymeds.backend.dto.PharmacyProfileDTO;
+import com.findmymeds.backend.dto.PharmacyProfileDto;
 import com.findmymeds.backend.dto.PharmacyReportDTO;
-import com.findmymeds.backend.dto.ReportRequestDTO;
+import com.findmymeds.backend.dto.ReportRequestDto;
 import com.findmymeds.backend.model.Pharmacy;
 import com.findmymeds.backend.model.PharmacyProfile;
 import com.findmymeds.backend.model.PharmacyReport;
@@ -25,14 +25,14 @@ public class PharmacyAdminCenterService {
     private final PharmacyProfileRepository pharmacyProfileRepository;
     private final PharmacyReportRepository pharmacyReportRepository;
 
-    public PharmacyProfileDTO getProfile(Long pharmacyId) {
+    public PharmacyProfileDto getProfile(@org.springframework.lang.NonNull Long pharmacyId) {
         Pharmacy pharmacy = pharmacyRepository.findById(pharmacyId)
                 .orElseThrow(() -> new RuntimeException("Pharmacy not found"));
 
         PharmacyProfile profile = pharmacyProfileRepository.findByPharmacyId(pharmacyId)
                 .orElse(null);
 
-        PharmacyProfileDTO dto = new PharmacyProfileDTO();
+        PharmacyProfileDto dto = new PharmacyProfileDto();
         dto.setId(pharmacy.getId());
         dto.setName(pharmacy.getName());
         dto.setAddress(pharmacy.getAddress());
@@ -57,7 +57,7 @@ public class PharmacyAdminCenterService {
         return dto;
     }
 
-    public void submitReport(Long pharmacyId, ReportRequestDTO request) {
+    public void submitReport(Long pharmacyId, ReportRequestDto request) {
         Pharmacy pharmacy = pharmacyRepository.getReferenceById(pharmacyId);
         PharmacyReport report = new PharmacyReport();
         report.setPharmacy(pharmacy);

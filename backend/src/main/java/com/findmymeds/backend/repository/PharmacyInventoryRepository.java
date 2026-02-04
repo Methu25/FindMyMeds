@@ -31,9 +31,6 @@ public interface PharmacyInventoryRepository extends JpaRepository<PharmacyInven
         @Query("SELECT COUNT(pi) FROM PharmacyInventory pi WHERE pi.pharmacy.id = :pharmacyId AND pi.availableQuantity = 0")
         long countOutOfStock(@Param("pharmacyId") Long pharmacyId);
 
-        // Note: Expired/Expiring Soon queries skipped as expiry date is missing in
-        // entity. Service will handle this limitation.
-
         @Query("SELECT COUNT(pi) FROM PharmacyInventory pi WHERE pi.pharmacy.id = :pharmacyId AND pi.medicine.status = 'INACTIVE'")
         long countDeactivated(@Param("pharmacyId") Long pharmacyId);
 

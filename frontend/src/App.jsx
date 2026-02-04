@@ -1,4 +1,3 @@
-import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import AdminLayout from './components/admin/AdminLayout';
 
@@ -87,13 +86,13 @@ function App() {
               <Route path="admin-center" element={<AdminCenter />} />
               <Route path="settings" element={<PharmacySystemSettings />} />
               <Route path="current-reservations" element={<PharmacyCurrentReservations />} />
-              <Route path="reservation-history" element={<div className="p-20 text-center"><h2 className="text-2xl font-bold text-gray-400">Reservation History Module Coming Soon</h2></div>} />
+              <Route path="reservation-history" element={<PharmacyReservationHistory />} />
               {/* stock-management routes back to inventory as per user request */}
               <Route path="stock-management" element={<MedicineInventory />} />
               <Route path="reports" element={<div className="p-20 text-center"><h2 className="text-2xl font-bold text-gray-400">Reports Module Coming Soon</h2></div>} />
               <Route path="profile" element={<div className="p-20 text-center"><h2 className="text-2xl font-bold text-gray-400">Pharmacy Profile Coming Soon</h2></div>} />
-            </Routes>
-          </NotificationProvider>
+            </Routes >
+          </NotificationProvider >
         } />
 
         {/* Civilian Routes (Master) */}
@@ -103,8 +102,8 @@ function App() {
           <Route path="find-pharmacy" element={<FindPharmacy />} />
           <Route path="reservation" element={<ReservationPage />} />
         </Route>
-      </Routes>
-    </BrowserRouter>
+      </Routes >
+    </BrowserRouter >
   );
 }
 

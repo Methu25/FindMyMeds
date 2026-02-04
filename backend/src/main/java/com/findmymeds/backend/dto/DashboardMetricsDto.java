@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DashboardMetricsDTO {
+public class DashboardMetricsDto {
     private long todaysReservations;
     private long completedToday;
     private long rejectedToday;

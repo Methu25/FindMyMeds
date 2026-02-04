@@ -1,6 +1,6 @@
 package com.findmymeds.backend.controller;
 
-import com.findmymeds.backend.dto.DashboardMetricsDTO;
+import com.findmymeds.backend.dto.DashboardMetricsDto;
 import com.findmymeds.backend.service.PharmacyDashboardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +15,7 @@ public class PharmacyDashboardController {
     private final PharmacyDashboardService pharmacyDashboardService;
 
     @GetMapping("/metrics")
-    public ResponseEntity<DashboardMetricsDTO> getMetrics() {
+    public ResponseEntity<DashboardMetricsDto> getMetrics() {
         Long pharmacyId = 1L; // Mock ID for now, usually from Auth Context
         return ResponseEntity.ok(pharmacyDashboardService.getMetrics(pharmacyId));
     }

@@ -1,6 +1,6 @@
 package com.findmymeds.backend.service;
 
-import com.findmymeds.backend.dto.DashboardMetricsDTO;
+import com.findmymeds.backend.dto.DashboardMetricsDto;
 import com.findmymeds.backend.model.enums.ReservationStatus;
 import com.findmymeds.backend.repository.PharmacyInventoryRepository;
 import com.findmymeds.backend.repository.ReservationRepository;
@@ -18,7 +18,7 @@ public class PharmacyDashboardService {
         private final ReservationRepository reservationRepository;
         private final PharmacyInventoryRepository pharmacyInventoryRepository;
 
-        public DashboardMetricsDTO getMetrics(Long pharmacyId) {
+        public DashboardMetricsDto getMetrics(Long pharmacyId) {
                 LocalDateTime startOfDay = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
                 LocalDateTime endOfDay = LocalDateTime.of(LocalDate.now(), LocalTime.MAX);
 
@@ -53,7 +53,7 @@ public class PharmacyDashboardService {
                 // now
                 double totalRevenue = reservationRepository.calculateTotalRevenueByPharmacyId(pharmacyId);
 
-                return new DashboardMetricsDTO(
+                return new DashboardMetricsDto(
                                 todayReservations,
                                 completedToday,
                                 rejectedToday,
