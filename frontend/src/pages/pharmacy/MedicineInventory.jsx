@@ -32,8 +32,9 @@ export default function MedicineInventory() {
         setLoading(true)
         const queryParams = new URLSearchParams({
             page: 0,
-            size: 100, // Fetching more to allow client-side filtering for now
-            search: searchQuery
+            size: 100,
+            search: searchQuery,
+            filter: activeFilter
         })
 
         fetch(`http://localhost:8080/api/pharmacy/inventory?${queryParams}`)
@@ -48,31 +49,10 @@ export default function MedicineInventory() {
                 console.error("Error fetching inventory:", err)
                 setLoading(false)
             })
-    }, [searchQuery])
+    }, [searchQuery, activeFilter])
 
-    // Filter Logic
-    const filteredInventory = useMemo(() => {
-        return inventory.filter(item => {
-            // Search filter
-            const matchesSearch = searchQuery === '' ||
-                item.medicineName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                item.genericName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                (item.dosageForm && item.dosageForm.toLowerCase().includes(searchQuery.toLowerCase())) ||
-                item.manufacturer.toLowerCase().includes(searchQuery.toLowerCase());
-
-            if (!matchesSearch) return false;
-
-            // Metric card filter
-            if (activeFilter === 'All' || activeFilter === 'Total Medicines') return true;
-            if (activeFilter === 'In Stock') return item.status === 'In Stock';
-            if (activeFilter === 'Low Stock') return item.status === 'Low Stock';
-            if (activeFilter === 'Out of Stock') return item.status === 'Out of Stock';
-            if (activeFilter === 'Expired') return item.status === 'Expired';
-            if (activeFilter === 'Expiring Soon') return item.status === 'Expiring Soon';
-            if (activeFilter === 'Deactivated Medicines') return item.status === 'Deactivated';
-            return true;
-        })
-    }, [inventory, activeFilter, searchQuery])
+    // Use inventory directly (filtering is now done on backend)
+    const filteredInventory = inventory;
 
     const metricCards = [
         { title: 'Total Medicines', value: metrics.totalMedicines || 0 },
@@ -166,11 +146,11 @@ export default function MedicineInventory() {
                                             <td className="px-6 py-6 border-b border-gray-50 font-bold text-gray-900">{item.price}</td>
                                             <td className="px-6 py-6 border-b border-gray-50">
                                                 <span className={`inline-flex items-center justify-center px-4 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider w-full text-center border-2 ${item.status === 'In Stock' ? 'bg-green-50 text-green-700 border-green-100' :
-                                                        item.status === 'Low Stock' ? 'bg-orange-50 text-orange-700 border-orange-100' :
-                                                            item.status === 'Out of Stock' ? 'bg-red-50 text-red-700 border-red-100' :
-                                                                item.status === 'Expired' ? 'bg-purple-100 text-purple-700 border-purple-200' :
-                                                                    item.status === 'Expiring Soon' ? 'bg-yellow-50 text-yellow-700 border-yellow-100' :
-                                                                        'bg-gray-100 text-gray-700 border-gray-200'
+                                                    item.status === 'Low Stock' ? 'bg-orange-50 text-orange-700 border-orange-100' :
+                                                        item.status === 'Out of Stock' ? 'bg-red-50 text-red-700 border-red-100' :
+                                                            item.status === 'Expired' ? 'bg-purple-100 text-purple-700 border-purple-200' :
+                                                                item.status === 'Expiring Soon' ? 'bg-yellow-50 text-yellow-700 border-yellow-100' :
+                                                                    'bg-gray-100 text-gray-700 border-gray-200'
                                                     }`}>
                                                     {item.status}
                                                 </span>

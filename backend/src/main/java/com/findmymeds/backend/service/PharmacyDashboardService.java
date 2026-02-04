@@ -34,8 +34,8 @@ public class PharmacyDashboardService {
                                 ReservationStatus.PENDING);
 
                 long outOfStock = inventoryRepository.countOutOfStock(pharmacyId);
-
-                long expiringSoon = 0; // placeholder for future logic
+                long expiringSoon = 0;
+                long inStock = inventoryRepository.countInStock(pharmacyId);
 
                 // Providing 0 or dummy for missing fields to match the 7-arg constructor of
                 // DashboardMetricsDTO
@@ -43,7 +43,7 @@ public class PharmacyDashboardService {
                                 todayReservations,
                                 0, // completedToday
                                 0, // rejectedToday
-                                0, // inStockMedicines
+                                inStock,
                                 pendingOrders,
                                 outOfStock,
                                 expiringSoon);
