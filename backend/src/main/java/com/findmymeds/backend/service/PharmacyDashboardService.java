@@ -31,11 +31,6 @@ public class PharmacyDashboardService {
                                 pharmacyId,
                                 ReservationStatus.PENDING);
 
-<<<<<<< HEAD
-                long outOfStock = inventoryRepository.countOutOfStock(pharmacyId);
-                long expiringSoon = 0;
-                long inStock = inventoryRepository.countInStock(pharmacyId);
-=======
                 long completedToday = reservationRepository.countByPharmacyIdAndStatus(
                                 pharmacyId,
                                 ReservationStatus.COLLECTED);
@@ -45,29 +40,23 @@ public class PharmacyDashboardService {
                                 ReservationStatus.CANCELLED);
 
                 // Inventory metrics from PharmacyInventoryRepository
-                long totalMedicines = pharmacyInventoryRepository.countByPharmacyId(pharmacyId);
-                long inStock = pharmacyInventoryRepository.countInStock(pharmacyId);
-                long lowStock = pharmacyInventoryRepository.countLowStock(pharmacyId);
-                long outOfStock = pharmacyInventoryRepository.countOutOfStock(pharmacyId);
-
                 LocalDate today = LocalDate.now();
                 LocalDate thirtyDaysFromNow = today.plusDays(30);
+
+                long totalMedicines = pharmacyInventoryRepository.countByPharmacyId(pharmacyId);
+                long inStock = pharmacyInventoryRepository.countInStock(pharmacyId, thirtyDaysFromNow);
+                long lowStock = pharmacyInventoryRepository.countLowStock(pharmacyId, thirtyDaysFromNow);
+                long outOfStock = pharmacyInventoryRepository.countOutOfStock(pharmacyId, thirtyDaysFromNow);
                 long expiringSoon = pharmacyInventoryRepository.countExpiringSoon(pharmacyId, today, thirtyDaysFromNow);
 
                 // Calculate total revenue (sum of completed order amounts) - default to 0 for
                 // now
                 double totalRevenue = reservationRepository.calculateTotalRevenueByPharmacyId(pharmacyId);
->>>>>>> origin
 
                 return new DashboardMetricsDto(
                                 todayReservations,
-<<<<<<< HEAD
-                                0, // completedToday
-                                0, // rejectedToday
-=======
                                 completedToday,
                                 rejectedToday,
->>>>>>> origin
                                 inStock,
                                 pendingOrders,
                                 outOfStock,
