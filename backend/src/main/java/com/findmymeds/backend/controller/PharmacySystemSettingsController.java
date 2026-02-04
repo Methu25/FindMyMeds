@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/pharmacy/settings")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:5173") // Standard Vite port
 public class PharmacySystemSettingsController {
 
     private final PharmacySystemSettingsService pharmacySystemSettingsService;

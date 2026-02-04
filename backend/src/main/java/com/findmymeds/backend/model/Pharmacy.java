@@ -33,6 +33,15 @@ public class Pharmacy {
     @Column(name = "phone")
     private String phone;
 
+    @Column(name = "registration_no")
+    private String registrationNo;
+
+    @Column(name = "nic")
+    private String nic;
+
+    @Column(name = "district")
+    private String district;
+
     @Column(name = "address")
     private String address;
 
@@ -58,6 +67,17 @@ public class Pharmacy {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+    @Column(name = "rating")
+    private Double rating;
+
+    @Column(name = "reviews")
+    private Integer reviews;
+
+    @Column(name = "badge")
+    private String badge;
+
     @Transient
     private Double distance;
+   // Optional, for UI purposes
+
 }

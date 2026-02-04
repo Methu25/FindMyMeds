@@ -217,7 +217,7 @@ export default function MedicineDetails() {
                                 </thead>
                                 <tbody className="divide-y divide-gray-50">
                                     <tr>
-                                        <td className="px-8 py-6 font-bold text-gray-700">{medicine.batchNumber || 'B-001'}</td>
+                                        <td className="px-8 py-6 font-bold text-gray-700">{medicine.batchNumber || 'N/A'}</td>
                                         <td className="px-8 py-6 font-bold text-gray-900">{medicine.availableQuantity}</td>
                                         <td className="px-8 py-6 text-gray-600">{medicine.expiryDate ? new Date(medicine.expiryDate).toLocaleDateString() : 'N/A'}</td>
                                         <td className="px-8 py-6">

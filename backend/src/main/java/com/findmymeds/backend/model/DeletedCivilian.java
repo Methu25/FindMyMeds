@@ -2,12 +2,14 @@ package com.findmymeds.backend.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+
 import java.time.LocalDateTime;
 
 @Data
 @Entity
 @Table(name = "deleted_civilians")
 public class DeletedCivilian {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,9 +26,9 @@ public class DeletedCivilian {
     @Column(name = "masked_nic")
     private String maskedNic;
 
+    @Column(name = "history_log", columnDefinition = "TEXT")
+    private String historyLog;
+
     @Column(name = "deletion_date")
     private LocalDateTime deletionDate = LocalDateTime.now();
-
-    @Column(columnDefinition = "TEXT")
-    private String history_log; // JSON or text dump of key history
 }

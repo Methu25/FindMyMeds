@@ -1,4 +1,3 @@
-import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import AdminLayout from './components/admin/AdminLayout';
 
@@ -24,7 +23,11 @@ import MedicineInventory from './pages/pharmacy/MedicineInventory';
 import PharmacyMedicineDetails from './pages/pharmacy/MedicineDetails';
 import PharmacyNotificationCenter from './pages/pharmacy/NotificationCenter';
 import PharmacyNotificationDetails from './pages/pharmacy/NotificationDetails';
-import AdminCenter from './pages/pharmacy/AdminCenter.jsx'; // This was originally here, keeping it.
+import AdminCenter from './pages/pharmacy/AdminCenter.jsx';
+import PharmacySystemSettings from './pages/pharmacy/SystemSettings';
+import PharmacyAddMedicine from './pages/pharmacy/AddMedicine';
+import PharmacyCurrentReservations from './pages/pharmacy/CurrentReservations';
+import PharmacyReservationHistory from './pages/pharmacy/ReservationHistory';
 
 // Civilian Pages 
 import CivilianLayout from './components/civilian/CivilianLayout';
@@ -76,15 +79,20 @@ function App() {
             <Routes>
               <Route index element={<PharmacyDashboard />} />
               <Route path="inventory" element={<MedicineInventory />} />
+              <Route path="inventory/add" element={<PharmacyAddMedicine />} />
               <Route path="medicines/:id" element={<PharmacyMedicineDetails />} />
               <Route path="notifications" element={<PharmacyNotificationCenter />} />
               <Route path="notifications/:id" element={<PharmacyNotificationDetails />} />
               <Route path="admin-center" element={<AdminCenter />} />
-              <Route path="settings" element={<div className="p-8">Pharmacy Settings Placeholder</div>} /> {/* SystemSettings moved to admin, so this is a placeholder now */}
-              <Route path="current-reservations" element={<div className="p-8">Current Reservations Placeholder</div>} />
-              <Route path="reservation-history" element={<div className="p-8">Reservation History Placeholder</div>} />
-            </Routes>
-          </NotificationProvider>
+              <Route path="settings" element={<PharmacySystemSettings />} />
+              <Route path="current-reservations" element={<PharmacyCurrentReservations />} />
+              <Route path="reservation-history" element={<PharmacyReservationHistory />} />
+              {/* stock-management routes back to inventory as per user request */}
+              <Route path="stock-management" element={<MedicineInventory />} />
+              <Route path="reports" element={<div className="p-20 text-center"><h2 className="text-2xl font-bold text-gray-400">Reports Module Coming Soon</h2></div>} />
+              <Route path="profile" element={<div className="p-20 text-center"><h2 className="text-2xl font-bold text-gray-400">Pharmacy Profile Coming Soon</h2></div>} />
+            </Routes >
+          </NotificationProvider >
         } />
 
         {/* Civilian Routes (Master) */}
@@ -94,8 +102,8 @@ function App() {
           <Route path="find-pharmacy" element={<FindPharmacy />} />
           <Route path="reservation" element={<ReservationPage />} />
         </Route>
-      </Routes>
-    </BrowserRouter>
+      </Routes >
+    </BrowserRouter >
   );
 }
 

@@ -32,4 +32,8 @@ public class CivilianReservationService {
     public List<Reservation> getAllReservations() {
         return reservationRepository.findAll();
     }
+
+    public List<Reservation> getReservationsByCivilian(Long civilianId) {
+        return reservationRepository.findByCivilianId(civilianId);
+    }
 }
