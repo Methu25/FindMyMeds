@@ -28,6 +28,7 @@ import PharmacySystemSettings from './pages/pharmacy/SystemSettings';
 import PharmacyAddMedicine from './pages/pharmacy/AddMedicine';
 import PharmacyCurrentReservations from './pages/pharmacy/CurrentReservations';
 import PharmacyReservationHistory from './pages/pharmacy/ReservationHistory';
+import PharmacyReportPage from './pages/pharmacy/PharmacyReportPage';
 
 // Civilian Pages 
 import CivilianLayout from './components/civilian/CivilianLayout';
@@ -89,7 +90,7 @@ function App() {
               <Route path="reservation-history" element={<PharmacyReservationHistory />} />
               {/* stock-management routes back to inventory as per user request */}
               <Route path="stock-management" element={<MedicineInventory />} />
-              <Route path="reports" element={<div className="p-20 text-center"><h2 className="text-2xl font-bold text-gray-400">Reports Module Coming Soon</h2></div>} />
+              <Route path="reports" element={<PharmacyReportPage />} />
               <Route path="profile" element={<div className="p-20 text-center"><h2 className="text-2xl font-bold text-gray-400">Pharmacy Profile Coming Soon</h2></div>} />
             </Routes >
           </NotificationProvider >
