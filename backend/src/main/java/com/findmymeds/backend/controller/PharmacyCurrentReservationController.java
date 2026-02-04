@@ -25,8 +25,14 @@ public class PharmacyCurrentReservationController {
 
     @GetMapping
     @PreAuthorize("hasRole('PHARMACY')")
-    public ResponseEntity<List<ReservationDTO>> getCurrentReservations(@RequestParam String status,
-            @RequestParam int page, @RequestParam int size) {
+    public ResponseEntity<List<ReservationDTO>> getCurrentReservations(
+            @RequestParam(required = false) String status,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        if (status == null) {
+            // Frontend call without params -> return all current
+            return ResponseEntity.ok(reservationService.getAllCurrentReservations(1L)); // Mock pharmacy ID 1L
+        }
         return ResponseEntity.ok(reservationService.getCurrentReservationsByStatus(status, page, size));
     }
 

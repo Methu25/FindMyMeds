@@ -25,8 +25,13 @@ public class PharmacyReservationHistoryController {
 
     @GetMapping
     @PreAuthorize("hasRole('PHARMACY')")
-    public ResponseEntity<List<ReservationDTO>> getReservationHistory(@RequestParam String type, @RequestParam int page,
-            @RequestParam int size) {
+    public ResponseEntity<List<ReservationDTO>> getReservationHistory(
+            @RequestParam(required = false) String type,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        if (type == null) {
+            return ResponseEntity.ok(reservationHistoryService.getAllHistory(1L));
+        }
         return ResponseEntity.ok(reservationHistoryService.getReservationHistoryByType(type, page, size));
     }
 
