@@ -27,4 +27,11 @@ public class SecurityConfig {
                 );
         return http.build();
     }
+
+    protected void configure(HttpSecurity http) throws Exception {
+        http.cors().and().csrf().disable() // disable CSRF for dev
+                .authorizeRequests()
+                .anyRequest().authenticated(); // or permitAll() if you want
+    }
+
 }

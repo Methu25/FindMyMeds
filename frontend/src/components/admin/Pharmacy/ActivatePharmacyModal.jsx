@@ -1,35 +1,38 @@
-// src/components/modals/ActivatePharmacyModal.jsx
 import React, { useState } from "react";
-import { activatePharmacy } from "../../../Service/admin/pharmacyService";
+import { activatePharmacy } from "../../../Service/Admin/PharmacyService";
 
-const ActivatePharmacyModal = ({ isOpen, onClose, pharmacyId, onSuccess }) => {
+const ActivatePharmacyModal = ({ open, pharmacy, onClose, refresh }) => {
   const [loading, setLoading] = useState(false);
 
+  if (!open || !pharmacy) return null;
+
   const handleActivate = async () => {
+    setLoading(true);
     try {
-      setLoading(true);
-      await activatePharmacy(pharmacyId);
-      onSuccess && onSuccess();
+      await activatePharmacy(pharmacy.id);
+      refresh(); // Refresh the table
       onClose();
-    } catch (error) {
-      alert(error.message);
+    } catch (err) {
+      console.error("Failed to activate pharmacy", err);
     } finally {
       setLoading(false);
     }
   };
 
-  if (!isOpen) return null;
-
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-6 w-96 shadow-lg">
-        <h2 className="text-lg font-bold mb-4">Activate Pharmacy</h2>
-        <p className="mb-4">Do you want to reactivate this pharmacy? It will become active again.</p>
+    <div className="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center z-50">
+      <div className="bg-white rounded-xl p-6 w-96">
+        <h2 className="text-xl font-bold mb-4">Activate Pharmacy</h2>
+        <p className="mb-4">
+          Are you sure you want to activate <span className="font-semibold">{pharmacy.name}</span>?
+        </p>
         <div className="flex justify-end gap-3">
-          <button className="px-4 py-2 rounded bg-gray-200" onClick={onClose}>Cancel</button>
-          <button
-            className="px-4 py-2 rounded bg-green-500 text-white"
-            onClick={handleActivate}
+          <button onClick={onClose} className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300">
+            Cancel
+          </button>
+          <button 
+            onClick={handleActivate} 
+            className="px-4 py-2 rounded bg-green-500 text-white hover:bg-green-600"
             disabled={loading}
           >
             {loading ? "Activating..." : "Activate"}
