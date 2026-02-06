@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/admin/pharmacies")
-@CrossOrigin(origins = "http://localhost:5180")
+@CrossOrigin(origins = "http://localhost:5173")
 public class AdminPharmacyController {
 
     @Autowired

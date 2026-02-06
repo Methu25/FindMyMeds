@@ -1,9 +1,7 @@
-// src/services/Admin/PharmacyService.jsx
+// src/Service/Admin/PharmacyService.jsx
 
-// Use full backend URL to avoid proxy issues during development
 const API_BASE = "http://localhost:8080/api/admin/pharmacies";
 
-// helper function to handle responses
 async function handleResponse(response) {
   if (!response.ok) {
     const error = await response.json().catch(() => ({ message: "Unknown error" }));
@@ -12,29 +10,26 @@ async function handleResponse(response) {
   return response.json();
 }
 
-// --- PHARMACY LIST ---
+/* ================================
+   PHARMACY CRUD
+================================ */
+
 export async function getPharmacies(status = null, type = null) {
   let url = `${API_BASE}`;
   const params = new URLSearchParams();
   if (status) params.append("status", status);
   if (type) params.append("type", type);
   if ([...params].length) url += `?${params.toString()}`;
+
   const response = await fetch(url, { method: "GET" });
   return handleResponse(response);
 }
 
-// --- SINGLE PHARMACY DETAILS ---
 export async function getPharmacyDetails(pharmacyId) {
   const response = await fetch(`${API_BASE}/${pharmacyId}`, { method: "GET" });
   return handleResponse(response);
 }
 
-export async function getPharmacyProfile(pharmacyId) {
-  const response = await fetch(`${API_BASE}/${pharmacyId}/profile`, { method: "GET" });
-  return handleResponse(response);
-}
-
-// --- CREATE / UPDATE PHARMACY ---
 export async function createPharmacy(pharmacy) {
   const response = await fetch(`${API_BASE}`, {
     method: "POST",
@@ -53,50 +48,35 @@ export async function updatePharmacy(pharmacyId, pharmacy) {
   return handleResponse(response);
 }
 
-// --- PHARMACY INVENTORY ---
-export async function getInventory(pharmacyId) {
-  const response = await fetch(`${API_BASE}/${pharmacyId}/inventory`, { method: "GET" });
-  return handleResponse(response);
-}
+/* ================================
+   PHARMACY ACTIONS (Fixed for 400 Errors)
+================================ */
 
-export async function addInventory(pharmacyId, item) {
-  const response = await fetch(`${API_BASE}/${pharmacyId}/inventory`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(item),
-  });
-  return handleResponse(response);
-}
-
-export async function updateInventory(pharmacyId, inventoryId, item) {
-  const response = await fetch(`${API_BASE}/${pharmacyId}/inventory/${inventoryId}`, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(item),
-  });
-  return handleResponse(response);
-}
-
-export async function deleteInventory(pharmacyId, inventoryId) {
-  const response = await fetch(`${API_BASE}/${pharmacyId}/inventory/${inventoryId}`, {
-    method: "DELETE",
-  });
-  return handleResponse(response);
-}
-
-// --- PHARMACY ACTIONS ---
 export async function activatePharmacy(pharmacyId) {
-  const response = await fetch(`${API_BASE}/${pharmacyId}/activate`, { method: "PATCH" });
+  // Added headers and empty body to satisfy server-side validation
+  const response = await fetch(`${API_BASE}/${pharmacyId}/activate`, { 
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({}) 
+  });
   return handleResponse(response);
 }
 
 export async function suspendPharmacy(pharmacyId) {
-  const response = await fetch(`${API_BASE}/${pharmacyId}/suspend`, { method: "PATCH" });
+  const response = await fetch(`${API_BASE}/${pharmacyId}/suspend`, { 
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({}) 
+  });
   return handleResponse(response);
 }
 
 export async function removePharmacy(pharmacyId) {
-  const response = await fetch(`${API_BASE}/${pharmacyId}/remove`, { method: "PATCH" });
+  const response = await fetch(`${API_BASE}/${pharmacyId}/remove`, { 
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({}) 
+  });
   return handleResponse(response);
 }
 
@@ -109,8 +89,24 @@ export async function rejectPharmacy(pharmacyId, reason) {
   return handleResponse(response);
 }
 
+/* ================================
+   PHARMACY LINKED DATA
+================================ */
 
-// --- PHARMACY REPORTS ---
+export const getPharmacyInventory = async (pharmacyId) => {
+  const response = await fetch(`${API_BASE}/${pharmacyId}/inventory`, { method: "GET" });
+  return handleResponse(response);
+};
+
+export const getPharmacyReservations = async (pharmacyId) => {
+  const response = await fetch(`${API_BASE}/${pharmacyId}/reservations`, { method: "GET" });
+  return handleResponse(response);
+};
+
+/* ================================
+   REPORTS
+================================ */
+
 export async function getReports(pharmacyId) {
   const response = await fetch(`${API_BASE}/${pharmacyId}/reports`, { method: "GET" });
   return handleResponse(response);
@@ -125,7 +121,10 @@ export async function updateReportStatus(reportId, status) {
   return handleResponse(response);
 }
 
-// --- NOTIFICATIONS ---
+/* ================================
+   NOTIFICATIONS
+================================ */
+
 export async function getNotifications() {
   const response = await fetch(`${API_BASE.replace("/pharmacies", "/notifications")}`, { method: "GET" });
   return handleResponse(response);
