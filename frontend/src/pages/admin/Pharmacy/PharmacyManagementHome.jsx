@@ -1,61 +1,73 @@
 import { useEffect, useState } from "react";
-/* 1. Added Plus and FileText for the QuickAction icons if needed */
-import { Activity, CheckCircle, Clock, AlertTriangle, Search, Bell, Plus, FileText } from "lucide-react";
+/* Icons */
+import { Activity, CheckCircle, Clock, AlertTriangle, Search } from "lucide-react";
 
-/* ===== Components ===== */
+/* Components */
 import MetricCard from "../../../components/admin/Pharmacy/MetricCard";
 import NotificationPanel from "../../../components/admin/Pharmacy/NotificationPanel";
 import PharmacyTable from "../../../components/admin/Pharmacy/PharmacyTable";
 import PharmacyTypeCard from "../../../components/admin/Pharmacy/PharmacyTypeCard";
 import QuickActionPanel from "../../../components/admin/Pharmacy/QuickActionPanel";
 
-/* ===== Modals & Services ===== */
+/* Modals & Services */
 import ActivatePharmacyModal from "../../../components/admin/Pharmacy/ActivatePharmacyModal";
 import RejectPharmacyModal from "../../../components/admin/Pharmacy/RejectPharmacyModal";
 import RemovePharmacyModal from "../../../components/admin/Pharmacy/RemovePharmacyModal";
 import SuspendPharmacyModal from "../../../components/admin/Pharmacy/SuspendPharmacyModal";
-import { getPharmacies } from "../../../Service/admin/pharmacyService";
+import { getPharmacies } from "../../../Service/Admin/PharmacyService";
 
 const PharmacyManagementHome = () => {
   /* =======================
-      STATE & LOGIC
+        STATE
   ======================= */
   const [pharmacies, setPharmacies] = useState([]);
   const [selectedPharmacy, setSelectedPharmacy] = useState(null);
   const [loading, setLoading] = useState(false);
   const [notifications, setNotifications] = useState([]);
-  
-  const [activeFilter, setActiveFilter] = useState('ACTIVE');
+
+  const [activeFilter, setActiveFilter] = useState("ACTIVE");
   const [searchTerm, setSearchTerm] = useState("");
 
-  /* ===== Modal States ===== */
+  /* Modal States */
   const [openActivate, setOpenActivate] = useState(false);
   const [openReject, setOpenReject] = useState(false);
   const [openRemove, setOpenRemove] = useState(false);
   const [openSuspend, setOpenSuspend] = useState(false);
 
+  /* =======================
+        EFFECTS
+  ======================= */
   useEffect(() => {
     loadPharmacies();
-    
-    // LOGIC: Simulating fetching notifications, then filtering for top 5 unread
+
+    // TEMP Notifications
     const rawNotifications = [
       { id: 1, message: "Pharmacy verification pending for 'City Meds'", isRead: false, date: new Date() },
       { id: 2, message: "License expiration warning: 'HealthPlus'", isRead: false, date: new Date() },
       { id: 3, message: "New user registration: Admin 'Yash'", isRead: true, date: new Date() },
     ];
 
-    const latestUnread = rawNotifications
-      .filter(note => !note.isRead) // Logic to get unread
-      .slice(0, 5); // Take top 5
-      
-    setNotifications(latestUnread);
+    setNotifications(rawNotifications.filter(n => !n.isRead).slice(0, 5));
   }, []);
 
+  /* =======================
+        LOAD PHARMACIES
+  ======================= */
   const loadPharmacies = async () => {
     setLoading(true);
     try {
       const response = await getPharmacies();
-      setPharmacies(response.data || []);
+      // MAP backend fields to frontend expected fields
+      const mapped = (response || []).map(p => ({
+        pharmacy_id: p.id,
+        pharmacy_name: p.name,
+        pharmacy_type: p.pharmacyType,
+        status: p.status,
+        address: p.address,
+        contact_number: p.phone,
+        location: p.address, // for search
+      }));
+      setPharmacies(mapped);
     } catch (error) {
       console.error("Failed to load pharmacies", error);
     } finally {
@@ -64,9 +76,10 @@ const PharmacyManagementHome = () => {
   };
 
   /* =======================
-      HANDLERS
+        HANDLERS
   ======================= */
   const handleFilterClick = (filterId) => setActiveFilter(filterId);
+
   const handleActivate = (p) => { setSelectedPharmacy(p); setOpenActivate(true); };
   const handleReject = (p) => { setSelectedPharmacy(p); setOpenReject(true); };
   const handleRemove = (p) => { setSelectedPharmacy(p); setOpenRemove(true); };
@@ -77,23 +90,26 @@ const PharmacyManagementHome = () => {
   };
 
   /* =======================
-      FILTERING LOGIC
+        FILTERED PHARMACIES
   ======================= */
   const filteredPharmacies = pharmacies.filter(p => {
     const matchesSearch = p.pharmacy_name?.toLowerCase().includes(searchTerm.toLowerCase()) || 
                           p.location?.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = activeFilter === 'TOTAL' ? true : (p.status === activeFilter || p.pharmacy_type === activeFilter);
+    const matchesCategory = activeFilter === "TOTAL" 
+      ? true 
+      : (p.status === activeFilter || p.pharmacy_type === activeFilter);
     return matchesSearch && matchesCategory;
   });
 
-  const pharmacyTypes = ["COMMUNITY", "HOSPITAL", "CLINICAL", "COMPOUNDING", "ONLINE", "SPECIALTY", "INDUSTRIAL", "GOVERNMENT", "VETERINARY"];
+  /* Pharmacy types and quick actions */
+  const pharmacyTypes = ["RETAIL", "HOSPITAL", "CLINICAL", "COMPOUNDING", "ONLINE", "SPECIALTY", "INDUSTRIAL", "GOVERNMENT", "VETERINARY"];
   const actions = [{ label: "Add New Pharmacy", onClick: () => {} }, { label: "Generate Report", onClick: () => {} }];
 
   return (
     <div className="flex w-full min-h-screen bg-slate-50">
       <div className="flex-1 p-8 pt-4 space-y-4 overflow-y-auto">
 
-        {/* 1. EPIC HEADER */}
+        {/* Header */}
         <div className="relative p-8 rounded-[2rem] bg-white border border-slate-100 shadow-sm overflow-hidden group">
           <div className="absolute right-0 top-0 w-64 h-64 bg-[#2FA4A9]/5 rounded-full blur-3xl -mr-20 -mt-20"></div>
           <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -109,22 +125,22 @@ const PharmacyManagementHome = () => {
           </div>
         </div>
 
-        {/* 2. METRICS */}
+        {/* Metric Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <MetricCard title="Total" count={pharmacies.length} icon={Activity} isActive={activeFilter === 'TOTAL'} onClick={() => handleFilterClick('TOTAL')} />
-          <MetricCard title="Active" count={pharmacies.filter(p => p.status === 'ACTIVE').length} icon={CheckCircle} color="#10B981" isActive={activeFilter === 'ACTIVE'} onClick={() => handleFilterClick('ACTIVE')} />
-          <MetricCard title="Pending" count={pharmacies.filter(p => p.status === 'PENDING').length} icon={Clock} color="#F59E0B" isActive={activeFilter === 'PENDING'} onClick={() => handleFilterClick('PENDING')} />
-          <MetricCard title="Suspended" count={pharmacies.filter(p => p.status === 'SUSPENDED').length} icon={AlertTriangle} color="#EF4444" isActive={activeFilter === 'SUSPENDED'} onClick={() => handleFilterClick('SUSPENDED')} />
+          <MetricCard title="Total" count={pharmacies.length} icon={Activity} isActive={activeFilter === "TOTAL"} onClick={() => handleFilterClick("TOTAL")} />
+          <MetricCard title="Active" count={pharmacies.filter(p => p.status === "ACTIVE").length} icon={CheckCircle} color="#10B981" isActive={activeFilter === "ACTIVE"} onClick={() => handleFilterClick("ACTIVE")} />
+          <MetricCard title="Suspended" count={pharmacies.filter(p => p.status === "SUSPENDED").length} icon={AlertTriangle} color="#EF4444" isActive={activeFilter === "SUSPENDED"} onClick={() => handleFilterClick("SUSPENDED")} />
+          <MetricCard title="Pending" count={pharmacies.filter(p => p.status === "PENDING").length} icon={Clock} color="#F59E0B" isActive={activeFilter === "PENDING"} onClick={() => handleFilterClick("PENDING")} />
         </div>
 
-        {/* 3. TYPE FILTERS */}
+        {/* Pharmacy Type Filters */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {pharmacyTypes.map((t) => (
             <PharmacyTypeCard key={t} type={t} count={pharmacies.filter(p => p.pharmacy_type === t).length} isActive={activeFilter === t} onClick={() => handleFilterClick(t)} />
           ))}
         </div>
 
-        {/* 4. SEARCH BAR & TABLE */}
+        {/* Search & Table */}
         <div className="pt-6 border-t border-slate-200 space-y-6">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <h2 className="text-xl font-black text-slate-800 capitalize">{activeFilter.toLowerCase()} Pharmacies</h2>
@@ -139,17 +155,26 @@ const PharmacyManagementHome = () => {
               />
             </div>
           </div>
-          <PharmacyTable pharmacies={filteredPharmacies} loading={loading} onView={handleView} onActivate={handleActivate} onReject={handleReject} onRemove={handleRemove} onSuspend={handleSuspend} />
+
+          <PharmacyTable 
+            pharmacies={filteredPharmacies} 
+            loading={loading} 
+            onView={handleView} 
+            onActivate={handleActivate} 
+            onReject={handleReject} 
+            onRemove={handleRemove} 
+            onSuspend={handleSuspend} 
+          />
         </div>
 
-        {/* MODALS */}
+        {/* Modals */}
         <ActivatePharmacyModal open={openActivate} pharmacy={selectedPharmacy} onClose={() => setOpenActivate(false)} refresh={loadPharmacies} />
         <RejectPharmacyModal open={openReject} pharmacy={selectedPharmacy} onClose={() => setOpenReject(false)} refresh={loadPharmacies} />
         <RemovePharmacyModal open={openRemove} pharmacy={selectedPharmacy} onClose={() => setOpenRemove(false)} refresh={loadPharmacies} />
         <SuspendPharmacyModal open={openSuspend} pharmacy={selectedPharmacy} onClose={() => setOpenSuspend(false)} refresh={loadPharmacies} />
       </div>
 
-      {/* 5. SLIM SIDEBAR (Updated width and padding) */}
+      {/* Sidebar */}
       <div className="hidden xl:flex flex-col gap-6 w-[260px] p-6 border-l bg-white h-screen sticky top-0 overflow-y-auto">
         <NotificationPanel notifications={notifications} />
         <QuickActionPanel actions={actions} />
