@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { activatePharmacy } from "../../../Service/Admin/PharmacyService";
 
-const ActivatePharmacyModal = ({ open, pharmacy, onClose, refresh }) => {
+const ActivatePharmacyModal = ({ open, pharmacy, onClose, refresh, onSuccess }) => {
   const [loading, setLoading] = useState(false);
 
   // If modal isn't open or data isn't passed, don't show anything
@@ -24,14 +24,18 @@ const ActivatePharmacyModal = ({ open, pharmacy, onClose, refresh }) => {
       console.log(`Activating pharmacy with ID: ${id}`);
       await activatePharmacy(id);
       
-      // 3. Close the modal on success
-      onClose();
-
-      // 4. Refresh the details page so the "Activate" button disappears 
+      // 3. Refresh the details page so the "Activate" button disappears
       // and "Suspend" appears (Status changes to ACTIVE)
       if (refresh) {
-        await refresh(); 
+        await refresh();
       }
+
+      if (onSuccess) {
+        onSuccess(id, pharmacy);
+      }
+
+      // 4. Close the modal on success
+      onClose();
       
     } catch (err) {
       console.error("Activation request failed:", err);

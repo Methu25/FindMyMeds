@@ -12,9 +12,10 @@ import SuspendPharmacyModal from "../../../components/admin/Pharmacy/SuspendPhar
 import RemovePharmacyModal from "../../../components/admin/Pharmacy/RemovePharmacyModal";
 
 /* Service */
+import { getPharmacyDetails } from "../../../Service/Admin/PharmacyService";
 
 const AdminPharmacyDetails = () => {
-  const { id } = useParams();
+  const { pharmacyId } = useParams();
   const navigate = useNavigate();
   
   const [pharmacy, setPharmacy] = useState(null);
@@ -27,17 +28,18 @@ const AdminPharmacyDetails = () => {
   const fetchDetails = async () => {
     setLoading(true);
     try {
-      // Logic: In production, use getPharmacyById(id)
-      setPharmacy({
-        pharmacy_id: id,
-        pharmacy_name: "City Meds Pharmacy",
-        pharmacy_type: "Hospital Pharmacy",
-        status: "SUSPENDED", 
-        location: "No 45, Galle Road, Colombo 03",
-        contact: "+94 11 234 5678",
-        email: "info@citymeds.lk",
-        license_no: "REG-2024-00192"
-      });
+      const data = await getPharmacyDetails(pharmacyId);
+      const mapped = {
+        pharmacy_id: data?.id ?? data?.pharmacy_id ?? pharmacyId,
+        pharmacy_name: data?.name ?? data?.pharmacy_name ?? "Unknown Pharmacy",
+        pharmacy_type: data?.pharmacyType ?? data?.pharmacy_type ?? "UNKNOWN",
+        status: data?.status ?? "UNKNOWN",
+        location: data?.address ?? data?.location ?? "",
+        contact: data?.phone ?? data?.contact ?? data?.contact_number ?? "",
+        email: data?.email ?? "",
+        license_no: data?.licenseNo ?? data?.license_no ?? "",
+      };
+      setPharmacy(mapped);
     } catch (error) {
       console.error("Fetch Error:", error);
     } finally {
@@ -47,7 +49,7 @@ const AdminPharmacyDetails = () => {
 
   useEffect(() => {
     fetchDetails();
-  }, [id]);
+  }, [pharmacyId]);
 
   if (loading) return <div className="p-8 text-center font-bold text-slate-400">Loading Pharmacy Registry...</div>;
   if (!pharmacy) return <div className="p-8 text-center text-rose-500 font-bold">Pharmacy not found.</div>;
@@ -65,32 +67,34 @@ const AdminPharmacyDetails = () => {
           Back to Registry
         </button>
         
-        <div className="flex gap-3">
-          <button 
-            onClick={() => setOpenRemove(true)}
-            className="px-6 py-2 bg-rose-50 text-rose-500 rounded-xl font-black text-[10px] uppercase tracking-widest border border-rose-100 hover:bg-rose-500 hover:text-white transition-all shadow-sm"
-          >
-            Remove Pharmacy
-          </button>
-
-          {pharmacy.status === "ACTIVE" && (
+        {pharmacy.status !== "REMOVED" && (
+          <div className="flex gap-3">
             <button 
-              onClick={() => setOpenSuspend(true)}
-              className="px-6 py-2 bg-amber-50 text-amber-500 rounded-xl font-black text-[10px] uppercase tracking-widest border border-amber-100 hover:bg-amber-500 hover:text-white transition-all shadow-sm"
+              onClick={() => setOpenRemove(true)}
+              className="px-6 py-2 bg-rose-50 text-rose-500 rounded-xl font-black text-[10px] uppercase tracking-widest border border-rose-100 hover:bg-rose-500 hover:text-white transition-all shadow-sm"
             >
-              Suspend
+              Remove Pharmacy
             </button>
-          )}
 
-          {pharmacy.status === "SUSPENDED" && (
-            <button 
-              onClick={() => setOpenActivate(true)}
-              className="px-6 py-2 bg-[#2FA4A9] text-white rounded-xl font-black text-[10px] uppercase tracking-widest shadow-lg shadow-[#2FA4A9]/20 hover:scale-105 transition-all"
-            >
-              Activate
-            </button>
-          )}
-        </div>
+            {pharmacy.status === "ACTIVE" && (
+              <button 
+                onClick={() => setOpenSuspend(true)}
+                className="px-6 py-2 bg-amber-50 text-amber-500 rounded-xl font-black text-[10px] uppercase tracking-widest border border-amber-100 hover:bg-amber-500 hover:text-white transition-all shadow-sm"
+              >
+                Suspend
+              </button>
+            )}
+
+            {pharmacy.status === "SUSPENDED" && (
+              <button 
+                onClick={() => setOpenActivate(true)}
+                className="px-6 py-2 bg-[#2FA4A9] text-white rounded-xl font-black text-[10px] uppercase tracking-widest shadow-lg shadow-[#2FA4A9]/20 hover:scale-105 transition-all"
+              >
+                Activate
+              </button>
+            )}
+          </div>
+        )}
       </div>
 
       {/* 2. MAIN CONTENT GRID */}
@@ -131,13 +135,13 @@ const AdminPharmacyDetails = () => {
               icon={<Package />} 
               title="Stock Inventory" 
               description="Manage medicine availability, pricing, and stock alerts." 
-              onClick={() => navigate(`/admin/pharmacies/${id}/inventory`)}
+              onClick={() => navigate(`/admin/pharmacies/${pharmacyId}/inventory`)}
             />
             <LinkedCard 
               icon={<CalendarCheck />} 
               title="User Reservations" 
               description="View active orders, pickup status, and history." 
-              onClick={() => navigate(`/admin/pharmacies/${id}/reservations`)}
+              onClick={() => navigate(`/admin/pharmacies/${pharmacyId}/reservations`)}
             />
           </div>
         </div>
@@ -160,7 +164,13 @@ const AdminPharmacyDetails = () => {
       </div>
 
       {/* 4. MODALS */}
-      <ActivatePharmacyModal open={openActivate} pharmacy={pharmacy} onClose={() => setOpenActivate(false)} refresh={fetchDetails} />
+      <ActivatePharmacyModal
+        open={openActivate}
+        pharmacy={pharmacy}
+        onClose={() => setOpenActivate(false)}
+        refresh={fetchDetails}
+        onSuccess={() => setPharmacy((prev) => (prev ? { ...prev, status: "ACTIVE" } : prev))}
+      />
       <SuspendPharmacyModal open={openSuspend} pharmacy={pharmacy} onClose={() => setOpenSuspend(false)} refresh={fetchDetails} />
       <RemovePharmacyModal open={openRemove} pharmacy={pharmacy} onClose={() => { setOpenRemove(false); navigate('/admin/pharmacies'); }} />
     </div>
