@@ -31,6 +31,12 @@ public class AdminPharmacyController {
         return pharmacyService.getPharmacyById(id);
     }
 
+    // 🔹 REJECTED DETAILS PAGE – get rejected pharmacy
+    @GetMapping("/rejected/{id}")
+    public Pharmacy getRejectedPharmacyById(@PathVariable Long id) {
+        return pharmacyService.getRejectedPharmacyById(id);
+    }
+
     // 🔹 CREATE PHARMACY (pharmacyType REQUIRED)
     @PostMapping
     public Pharmacy createPharmacy(@RequestBody Pharmacy pharmacy) {

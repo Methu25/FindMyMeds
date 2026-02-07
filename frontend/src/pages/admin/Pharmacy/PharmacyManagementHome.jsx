@@ -105,7 +105,7 @@ const PharmacyManagementHome = () => {
 
   /* Pharmacy types and quick actions */
   const pharmacyTypes = ["RETAIL", "HOSPITAL", "CLINICAL", "COMPOUNDING", "ONLINE", "SPECIALTY", "INDUSTRIAL", "GOVERNMENT", "VETERINARY"];
-  const actions = [{ label: "Add New Pharmacy", onClick: () => {} }, { label: "Generate Report", onClick: () => {} }];
+  const actions = [{ label: "Reports and Inquries", onClick: () => navigate('/admin/reports') }, { label: "Rejected Pharmacies", onClick: () => navigate('/admin/pharmacy/rejected') }];
 
   return (
     <div className="flex w-full min-h-screen bg-slate-50 font-['Inter']">

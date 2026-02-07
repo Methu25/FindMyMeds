@@ -48,5 +48,11 @@ export const adminService = {
     // 7. Delete Admin (Remove Button)
     deleteAdmin: async (id) => {
         await axios.delete(`${API_URL}/admins/${id}`, getAuthHeader());
+    },
+
+    // 8. Get Rejected Pharmacy (Details)
+    getRejectedPharmacyById: async (id) => {
+        const response = await axios.get(`${API_URL}/admin/pharmacies/rejected/${id}`, getAuthHeader());
+        return response.data;
     }
 };

@@ -3,6 +3,7 @@ package com.findmymeds.backend.controller;
 import com.findmymeds.backend.model.PharmacyReport;
 import com.findmymeds.backend.model.enums.ReportStatus;
 import com.findmymeds.backend.service.AdminPharmacyReportService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,6 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/admin/pharmacy-reports")
+@CrossOrigin(origins = "http://localhost:5173")
 public class AdminPharmacyReportController {
 
     @Autowired
