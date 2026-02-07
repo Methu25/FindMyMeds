@@ -114,9 +114,10 @@ const PharmacyManagementHome = () => {
         {/* Metric Cards */}
         <section className="space-y-3">
           <h2 className="text-xs font-black uppercase tracking-[0.3em] text-slate-400">Overview</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
           <MetricCard title="Total" count={pharmacies.length} icon={Activity} isActive={activeFilter === "TOTAL"} onClick={() => handleFilterClick("TOTAL")} />
           <MetricCard title="Active" count={pharmacies.filter(p => p.status === "ACTIVE").length} icon={CheckCircle} color="#10B981" isActive={activeFilter === "ACTIVE"} onClick={() => handleFilterClick("ACTIVE")} />
+          <MetricCard title="Pending" count={pharmacies.filter(p => p.status === "PENDING").length} icon={Clock} color="#3B82F6" isActive={activeFilter === "PENDING"} onClick={() => handleFilterClick("PENDING")} />
           <MetricCard title="Suspended" count={pharmacies.filter(p => p.status === "SUSPENDED").length} icon={AlertTriangle} color="#F59E0B" isActive={activeFilter === "SUSPENDED"} onClick={() => handleFilterClick("SUSPENDED")} />
           <MetricCard title="Removed" count={pharmacies.filter(p => p.status === "REMOVED").length} icon={Clock} color="#EF4444" isActive={activeFilter === "REMOVED"} onClick={() => handleFilterClick("REMOVED")} />
           </div>
@@ -174,8 +175,8 @@ const PharmacyManagementHome = () => {
 
       {/* Sidebar */}
       <div className="hidden xl:flex flex-col gap-6 w-[260px] p-6 bg-white h-screen sticky top-0 overflow-y-auto">
-        <NotificationPanel notifications={notifications} />
         <QuickActionPanel actions={actions} />
+        <NotificationPanel notifications={notifications} />
       </div>
     </div>
   );
