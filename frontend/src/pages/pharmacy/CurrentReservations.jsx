@@ -1,156 +1,173 @@
-import { useState, useEffect } from 'react'
-import Layout from '../../components/pharmacy/Layout'
-import MetricCard from '../../components/pharmacy/MetricCard'
+import React, { useState, useEffect } from 'react';
+import Layout from '../../components/pharmacy/Layout';
+import { Clock, CheckCircle2, XCircle, Package, User, Calendar, ChevronRight, AlertCircle } from 'lucide-react';
 
 export default function CurrentReservations() {
-  const [activeStatus, setActiveStatus] = useState('PENDING')
-  const [reservations, setReservations] = useState([])
-  const [counts, setCounts] = useState([0, 0, 0, 0, 0, 0])
-  const [loading, setLoading] = useState(true)
+  const [reservations, setReservations] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const statusCards = [
-    { status: 'PENDING', label: 'Pending', color: 'bg-yellow-500', index: 0 },
-    { status: 'CONFIRMED', label: 'Confirmed', color: 'bg-blue-500', index: 1 },
-    { status: 'ONGOING', label: 'Ongoing', color: 'bg-purple-500', index: 2 },
-    { status: 'READY', label: 'Ready', color: 'bg-orange-500', index: 3 },
-    { status: 'COLLECTED', label: 'Collected', color: 'bg-green-500', index: 4 },
-    { status: 'CANCELLED', label: 'Cancelled', color: 'bg-red-500', index: 5 },
-  ]
-
-  const getHeaders = () => {
-    const token = localStorage.getItem('token')
-    return {
-      'Authorization': `Bearer ${token}`
-    }
-  }
-
-  const fetchCounts = async () => {
-    try {
-      const response = await fetch('http://localhost:8080/api/pharmacy/reservations/current/counts', {
-        headers: getHeaders()
-      })
-      if (response.ok) {
-        const data = await response.json()
-        setCounts(data)
-      }
-    } catch (error) {
-      console.error('Failed to fetch counts:', error)
-    }
-  }
+  useEffect(() => {
+    fetchReservations();
+  }, []);
 
   const fetchReservations = async () => {
-    setLoading(true)
     try {
-      const response = await fetch(`http://localhost:8080/api/pharmacy/reservations/current?status=${activeStatus}&page=0&size=10`, {
-        headers: getHeaders()
-      })
+      const token = localStorage.getItem('token');
+      const response = await fetch('http://localhost:8080/api/pharmacy/reservations/current', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
       if (response.ok) {
-        const data = await response.json()
-        setReservations(data)
+        const data = await response.json();
+        setReservations(data);
       }
     } catch (error) {
-      console.error('Failed to fetch reservations:', error)
+      console.error('Error fetching reservations:', error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
-  useEffect(() => {
-    fetchCounts()
-  }, [])
-
-  useEffect(() => {
-    fetchReservations()
-  }, [activeStatus])
-
-  const handleUpdateStatus = async (id, newStatus) => {
+  const updateStatus = async (id, status) => {
     try {
-      const response = await fetch(`http://localhost:8080/api/pharmacy/reservations/current/${id}/status?status=${newStatus}`, {
-        method: 'PUT',
-        headers: getHeaders()
-      })
+      const token = localStorage.getItem('token');
+      const response = await fetch(`http://localhost:8080/api/pharmacy/reservations/current/${id}/status?status=${status}`, {
+        method: 'PATCH',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
       if (response.ok) {
-        fetchCounts()
-        fetchReservations()
+        fetchReservations();
       }
     } catch (error) {
-      console.error('Failed to update status:', error)
+      console.error('Error updating status:', error);
     }
-  }
+  };
 
   return (
     <Layout title="Current Reservations">
-      <div className="max-w-8xl mx-auto">
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 mb-16">
-          {statusCards.map((card) => (
-            <MetricCard
-              key={card.status}
-              title={card.label}
-              value={counts[card.index] || 0}
-              onClick={() => setActiveStatus(card.status)}
-            />
-          ))}
-        </div>
+      <div className="space-y-6 animate-in fade-in duration-500">
+        {loading ? (
+          <div className="flex items-center justify-center h-64">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+          </div>
+        ) : reservations.length === 0 ? (
+          <div className="bg-white rounded-3xl p-20 text-center shadow-sm border border-gray-100">
+            <div className="bg-gray-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 text-gray-300">
+              <Clock size={40} />
+            </div>
+            <h3 className="text-xl font-bold text-gray-800">No active reservations</h3>
+            <p className="text-gray-500 mt-2">New reservations from customers will appear here.</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 gap-4">
+            {reservations.map((res) => (
+              <ReservationCard
+                key={res.id}
+                reservation={res}
+                onStatusUpdate={updateStatus}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    </Layout>
+  );
+}
 
-        <div className="bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden">
-          <div className="p-12 border-b border-gray-200 bg-gradient-to-r from-teal-500/10 to-teal-600/5">
-            <h2 className="text-4xl font-bold text-gray-800">{activeStatus} Reservations</h2>
+function ReservationCard({ reservation, onStatusUpdate }) {
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'PENDING': return 'bg-yellow-100 text-yellow-700 border-yellow-200';
+      case 'CONFIRMED': return 'bg-blue-100 text-blue-700 border-blue-200';
+      case 'READY': return 'bg-teal-100 text-teal-700 border-teal-200';
+      default: return 'bg-gray-100 text-gray-700 border-gray-200';
+    }
+  };
+
+  return (
+    <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-all group">
+      <div className="flex flex-col lg:flex-row justify-between gap-6">
+        <div className="flex-1 space-y-4">
+          <div className="flex items-center justify-between lg:justify-start lg:gap-4">
+            <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">Order #{reservation.id.substring(0, 8)}</span>
+            <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider border ${getStatusColor(reservation.status)}`}>
+              {reservation.status}
+            </span>
           </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gray-50 sticky top-0">
-                <tr>
-                  <th className="px-10 py-8 text-left text-xl font-bold text-gray-700">Reservation Code</th>
-                  <th className="px-10 py-8 text-left text-xl font-bold text-gray-700">Customer Name</th>
-                  <th className="px-10 py-8 text-left text-xl font-bold text-gray-700">Pickup Date</th>
-                  <th className="px-10 py-8 text-left text-xl font-bold text-gray-700">Total Amount</th>
-                  <th className="px-10 py-8 text-left text-xl font-bold text-gray-700">Status</th>
-                  <th className="px-10 py-8 text-left text-xl font-bold text-gray-700">Action</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                {loading ? (
-                  <tr><td colSpan="6" className="text-center py-20 text-2xl text-gray-500">Loading...</td></tr>
-                ) : reservations.length === 0 ? (
-                  <tr><td colSpan="6" className="text-center py-20 text-2xl text-gray-500">No reservations found.</td></tr>
-                ) : (
-                  reservations.map((res) => (
-                    <tr key={res.id} className="hover:bg-gray-50 transition-all duration-300 even:bg-gray-50/50">
-                      <td className="px-10 py-8 font-bold text-lg">{res.reservationCode}</td>
-                      <td className="px-10 py-8 font-semibold">{res.civilianName}</td>
-                      <td className="px-10 py-8">{res.pickupDate}</td>
-                      <td className="px-10 py-8 font-bold text-xl text-green-600">Rs. {res.totalAmount}</td>
-                      <td className="px-10 py-8">
-                        <span className="bg-yellow-500 text-white px-6 py-3 rounded-full font-bold shadow-md">
-                          {res.status}
-                        </span>
-                      </td>
-                      <td className="px-10 py-8 space-x-4">
-                        {activeStatus === 'PENDING' && (
-                          <>
-                            <button onClick={() => handleUpdateStatus(res.id, 'CONFIRMED')} className="bg-teal-600 hover:bg-teal-700 text-white font-bold px-8 py-4 rounded-xl">Confirm</button>
-                            <button onClick={() => handleUpdateStatus(res.id, 'CANCELLED')} className="bg-red-600 hover:bg-red-700 text-white font-bold px-8 py-4 rounded-xl">Reject</button>
-                          </>
-                        )}
-                        {activeStatus === 'CONFIRMED' && (
-                          <button onClick={() => handleUpdateStatus(res.id, 'ONGOING')} className="bg-purple-600 hover:bg-purple-700 text-white font-bold px-8 py-4 rounded-xl">Mark Ongoing</button>
-                        )}
-                        {activeStatus === 'ONGOING' && (
-                          <button onClick={() => handleUpdateStatus(res.id, 'READY')} className="bg-orange-600 hover:bg-orange-700 text-white font-bold px-8 py-4 rounded-xl">Mark Ready</button>
-                        )}
-                        {activeStatus === 'READY' && (
-                          <button onClick={() => handleUpdateStatus(res.id, 'COLLECTED')} className="bg-green-600 hover:bg-green-700 text-white font-bold px-8 py-4 rounded-xl">Mark Collected</button>
-                        )}
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
+          <div className="flex items-start gap-4">
+            <div className="bg-gray-50 p-3 rounded-2xl text-gray-400 group-hover:bg-primary/10 group-hover:text-primary transition-colors">
+              <User size={24} />
+            </div>
+            <div>
+              <h4 className="text-lg font-bold text-gray-800">{reservation.civilian?.name || 'Unknown Patient'}</h4>
+              <p className="text-sm text-gray-500 flex items-center gap-1.5">
+                <Calendar size={14} /> Registered: {new Date(reservation.reservationDate).toLocaleString()}
+              </p>
+              <p className="text-sm text-gray-500 flex items-center gap-1.5">
+                <Clock size={14} /> Preferred Pickup: {reservation.timeframe}
+              </p>
+            </div>
+          </div>
+
+          <div className="bg-gray-50/50 rounded-2xl p-4 border border-gray-100">
+            <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-3">Reserved Items</p>
+            <ul className="space-y-2">
+              {reservation.items?.map((item, idx) => (
+                <li key={idx} className="flex justify-between items-center text-sm">
+                  <span className="font-medium text-gray-700">{item.medicine?.medicineName}</span>
+                  <span className="font-bold text-primary">x{item.quantity}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        <div className="flex flex-col justify-between lg:items-end gap-6 pt-4 lg:pt-0 border-t lg:border-t-0 lg:border-l border-gray-50 lg:pl-8">
+          <div className="lg:text-right">
+            <p className="text-[10px] font-black uppercase tracking-widest text-gray-400">Total Bill</p>
+            <h3 className="text-3xl font-black text-gray-900">LKR {reservation.totalAmount?.toLocaleString()}</h3>
+          </div>
+
+          <div className="flex flex-wrap gap-2 justify-end">
+            {reservation.status === 'PENDING' && (
+              <button
+                onClick={() => onStatusUpdate(reservation.id, 'CONFIRMED')}
+                className="px-5 py-2.5 rounded-xl bg-primary text-white text-sm font-bold shadow-lg shadow-primary/20 hover:scale-105 transition"
+              >
+                Confirm Order
+              </button>
+            )}
+            {reservation.status === 'CONFIRMED' && (
+              <button
+                onClick={() => onStatusUpdate(reservation.id, 'READY')}
+                className="px-5 py-2.5 rounded-xl bg-teal-500 text-white text-sm font-bold shadow-lg shadow-teal-500/20 hover:scale-105 transition"
+              >
+                Mark as Ready
+              </button>
+            )}
+            {reservation.status === 'READY' && (
+              <button
+                onClick={() => onStatusUpdate(reservation.id, 'COLLECTED')}
+                className="px-5 py-2.5 rounded-xl bg-green-500 text-white text-sm font-bold shadow-lg shadow-green-500/20 hover:scale-105 transition"
+              >
+                Mark as Collected
+              </button>
+            )}
+            {(reservation.status === 'PENDING' || reservation.status === 'CONFIRMED') && (
+              <button
+                onClick={() => onStatusUpdate(reservation.id, 'CANCELLED')}
+                className="px-5 py-2.5 rounded-xl border-2 border-red-50 text-red-500 text-sm font-bold hover:bg-red-50 transition"
+              >
+                Reject Order
+              </button>
+            )}
           </div>
         </div>
       </div>
-    </Layout>
-  )
+    </div>
+  );
 }

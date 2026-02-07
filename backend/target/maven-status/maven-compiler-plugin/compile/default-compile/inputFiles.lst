@@ -1,175 +1,181 @@
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\config\SecurityConfig.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\controller\AdminCivilianAppealController.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\controller\AdminCivilianController.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\controller\AdminCivilianReportController.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\controller\AdminCivilianVivoController.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\controller\AdminController.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\controller\AdminDashboardController.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\controller\AdminMedicineController.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\controller\AdminNotificationController.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\controller\AdminPharmacyController.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\controller\AdminPharmacyInventoryController.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\controller\AdminPharmacyProfileController.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\controller\AdminPharmacyReportController.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\controller\AdminProfileController.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\controller\AdminReportController.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\controller\CivilianAppealController.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\controller\CivilianController.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\controller\CivilianPharmacyController.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\controller\CivilianReservationController.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\controller\NotificationController.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\controller\PharmacyAdminCenterController.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\controller\PharmacyCurrentReservationController.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\controller\PharmacyMedicineInventoryController.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\controller\PharmacyNotificationController.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\controller\PharmacyReservationHistoryController.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\controller\PharmacySystemSettingsController.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\AdminAppealDetailsDTO.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\AdminAppealHistoryItemDTO.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\AdminAppealRejectRequestDTO.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\AdminChartCountDTO.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\AdminChartTimePointDTO.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\AdminCivilianDetailsDTO.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\AdminCivilianMetricCardDTO.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\AdminCivilianReportDetailsDTO.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\AdminCivilianReportMetricsDTO.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\AdminCivilianReportRejectDTO.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\AdminCivilianReportRespondDTO.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\AdminCivilianReportRowDTO.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\AdminCivilianTableRowDTO.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\AdminCivilianTempBanRequestDTO.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\AdminCivilianVivoDTO.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\AdminDashboardStatsDTO.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\AdminNotificationMetricsDTO.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\AdminNotificationResponseDTO.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\AdminOverviewAdminDTO.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\AdminOverviewSuperDTO.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\AdminPendingAlertsDTO.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\AdminPermanentBanRequestDTO.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\AdminProfileDTO.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\AdminSystemOverviewDTO.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\AdminVivoAppealDTO.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\AdminVivoHistoryDTO.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\AdminVivoReservationDTO.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\CivilianSubmitAppealRequestDTO.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\DashboardMetricsDto.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\MedicineDetailDTO.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\MedicineInventoryDTO.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\MedicineInventoryMetricsDTO.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\NotificationCategoryCountDTO.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\NotificationDTO.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\PharmacyProfileDto.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\ReportRequestDto.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\ReservationDTO.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\ReservationItemDTO.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\SystemSettingsDto.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\FindMyMedsApplication.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\Admin.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\AdminActionLog.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\AdminActivityLog.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\AdminMetricsResponse.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\AdminNotFoundException.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\AdminReportInquiry.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\AdminResponse.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\Civilian.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\CivilianAppeal.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\CivilianHistory.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\CivilianProfile.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\CivilianReport.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\CivilianReportLog.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\CreateAdminRequest.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\CreateReportRequest.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\DeletedCivilian.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\DuplicateEmailException.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\enums\AccountStatus.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\enums\AdminStatus.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\enums\AppealStatus.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\enums\BanType.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\enums\CivilianActionType.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\enums\Gender.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\enums\IssueCategory.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\enums\NotificationType.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\enums\PharmacyStatus.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\enums\PharmacyType.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\enums\Priority.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\enums\ReportCategory.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\enums\ReportPriority.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\enums\ReportStatus.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\enums\ReportType.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\enums\ReservationStatus.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\enums\Role.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\enums\UserType.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\GlobalExceptionHandler.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\Medicine.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\Notification.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\Pharmacy.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\PharmacyInventory.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\PharmacyProfile.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\PharmacyReport.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\PharmacySystemSettings.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\ReportMetricsResponse.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\ReportResponse.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\Reservation.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\ReservationItem.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\RuleRegulation.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\SystemCleanupLog.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\UpdateAdminEmailRequest.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\UpdateReportStatusRequest.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\repository\AdminActionLogRepository.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\repository\AdminPharmacyInventoryRepository.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\repository\AdminPharmacyProfileRepository.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\repository\AdminPharmacyReportRepository.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\repository\AdminPharmacyRepository.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\repository\AdminReportRepository.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\repository\AdminRepository.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\repository\CivilianAppealRepository.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\repository\CivilianHistoryRepository.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\repository\CivilianPharmacyRepository.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\repository\CivilianReportLogRepository.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\repository\CivilianReportRepository.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\repository\CivilianRepository.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\repository\CivilianReservationRepository.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\repository\DeletedCivilianRepository.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\repository\InventoryRepository.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\repository\MedicineRepository.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\repository\NotificationRepository.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\repository\PharmacyInventoryRepository.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\repository\PharmacyProfileRepository.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\repository\PharmacyReportRepository.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\repository\PharmacyRepository.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\repository\PharmacySystemSettingsRepository.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\repository\projection\ReservationCountByDate.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\repository\ReservationRepository.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\scheduler\CivilianEnforcementScheduler.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\scheduler\CivilianReportCleanupScheduler.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\service\AdminDashboardService.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\service\AdminMedicineService.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\service\AdminNotificationService.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\service\AdminPharmacyInventoryService.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\service\AdminPharmacyProfileService.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\service\AdminPharmacyReportService.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\service\AdminPharmacyService.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\service\AdminReportService.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\service\AdminService.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\service\CivilianAppealAdminService.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\service\CivilianAppealQueryService.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\service\CivilianAppealService.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\service\CivilianArchiveService.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\service\CivilianBanService.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\service\CivilianHistoryLogger.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\service\CivilianPharmacyService.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\service\CivilianQueryService.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\service\CivilianReportAdminService.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\service\CivilianReservationService.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\service\CivilianRules.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\service\CivilianVivoService.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\service\NotificationService.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\service\PharmacyAdminCenterService.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\service\PharmacyCurrentReservationService.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\service\PharmacyDashboardService.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\service\PharmacyMedicineInventoryService.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\service\PharmacyNotificationService.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\service\PharmacyReservationHistoryService.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\service\PharmacyService.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\service\PharmacySystemSettingsService.java
-C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\service\ReportCleanupService.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\config\SecurityConfig.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\controller\AdminCivilianAppealController.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\controller\AdminCivilianController.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\controller\AdminCivilianReportController.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\controller\AdminCivilianVivoController.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\controller\AdminController.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\controller\AdminDashboardController.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\controller\AdminMedicineController.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\controller\AdminNotificationController.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\controller\AdminPharmacyController.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\controller\AdminPharmacyInventoryController.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\controller\AdminPharmacyProfileController.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\controller\AdminPharmacyReportController.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\controller\AdminProfileController.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\controller\AdminReportController.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\controller\CivilianAppealController.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\controller\CivilianController.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\controller\CivilianPharmacyController.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\controller\CivilianReservationController.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\controller\NotificationController.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\controller\PharmacyAdminCenterController.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\controller\PharmacyCurrentReservationController.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\controller\PharmacyDashboardController.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\controller\PharmacyMedicineInventoryController.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\controller\PharmacyNotificationController.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\controller\PharmacyProfileController.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\controller\PharmacyReservationHistoryController.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\controller\PharmacySystemSettingsController.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\AdminAppealDetailsDTO.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\AdminAppealHistoryItemDTO.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\AdminAppealRejectRequestDTO.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\AdminChartCountDTO.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\AdminChartTimePointDTO.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\AdminCivilianDetailsDTO.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\AdminCivilianMetricCardDTO.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\AdminCivilianReportDetailsDTO.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\AdminCivilianReportMetricsDTO.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\AdminCivilianReportRejectDTO.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\AdminCivilianReportRespondDTO.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\AdminCivilianReportRowDTO.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\AdminCivilianTableRowDTO.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\AdminCivilianTempBanRequestDTO.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\AdminCivilianVivoDTO.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\AdminDashboardStatsDTO.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\AdminNotificationMetricsDTO.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\AdminNotificationResponseDTO.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\AdminOverviewAdminDTO.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\AdminOverviewSuperDTO.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\AdminPendingAlertsDTO.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\AdminPermanentBanRequestDTO.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\AdminProfileDTO.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\AdminSystemOverviewDTO.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\AdminVivoAppealDTO.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\AdminVivoHistoryDTO.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\AdminVivoReservationDTO.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\CivilianDTO.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\CivilianSubmitAppealRequestDTO.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\DashboardMetricsDto.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\MedicineDetailDTO.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\MedicineDTO.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\MedicineInventoryDTO.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\MedicineInventoryMetricsDTO.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\NotificationCategoryCountDTO.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\NotificationDTO.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\PharmacyProfileDto.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\PharmacyReportDTO.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\ReportRequestDto.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\ReservationDTO.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\ReservationItemDTO.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\dto\SystemSettingsDto.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\FindMyMedsApplication.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\Admin.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\AdminActionLog.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\AdminActivityLog.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\AdminMetricsResponse.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\AdminNotFoundException.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\AdminReportInquiry.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\AdminResponse.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\Civilian.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\CivilianAppeal.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\CivilianHistory.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\CivilianProfile.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\CivilianReport.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\CivilianReportLog.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\CreateAdminRequest.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\CreateReportRequest.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\DeletedCivilian.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\DuplicateEmailException.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\enums\AccountStatus.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\enums\AdminStatus.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\enums\AppealStatus.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\enums\BanType.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\enums\CivilianActionType.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\enums\Gender.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\enums\IssueCategory.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\enums\NotificationType.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\enums\PharmacyStatus.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\enums\PharmacyType.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\enums\Priority.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\enums\ReportCategory.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\enums\ReportPriority.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\enums\ReportStatus.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\enums\ReportType.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\enums\ReservationStatus.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\enums\Role.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\enums\UserType.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\GlobalExceptionHandler.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\Medicine.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\Notification.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\Pharmacy.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\PharmacyInventory.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\PharmacyProfile.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\PharmacyReport.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\PharmacySystemSettings.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\ReportMetricsResponse.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\ReportResponse.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\Reservation.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\ReservationItem.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\RuleRegulation.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\SystemCleanupLog.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\UpdateAdminEmailRequest.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\model\UpdateReportStatusRequest.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\repository\AdminActionLogRepository.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\repository\AdminPharmacyInventoryRepository.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\repository\AdminPharmacyProfileRepository.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\repository\AdminPharmacyReportRepository.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\repository\AdminPharmacyRepository.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\repository\AdminReportRepository.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\repository\AdminRepository.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\repository\CivilianAppealRepository.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\repository\CivilianHistoryRepository.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\repository\CivilianPharmacyRepository.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\repository\CivilianReportLogRepository.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\repository\CivilianReportRepository.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\repository\CivilianRepository.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\repository\CivilianReservationRepository.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\repository\DeletedCivilianRepository.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\repository\InventoryRepository.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\repository\MedicineRepository.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\repository\NotificationRepository.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\repository\PharmacyInventoryRepository.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\repository\PharmacyProfileRepository.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\repository\PharmacyReportRepository.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\repository\PharmacyRepository.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\repository\PharmacySystemSettingsRepository.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\repository\projection\ReservationCountByDate.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\repository\ReservationRepository.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\scheduler\CivilianEnforcementScheduler.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\scheduler\CivilianReportCleanupScheduler.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\service\AdminDashboardService.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\service\AdminMedicineService.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\service\AdminNotificationService.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\service\AdminPharmacyInventoryService.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\service\AdminPharmacyProfileService.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\service\AdminPharmacyReportService.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\service\AdminPharmacyService.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\service\AdminReportService.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\service\AdminService.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\service\CivilianAppealAdminService.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\service\CivilianAppealQueryService.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\service\CivilianAppealService.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\service\CivilianArchiveService.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\service\CivilianBanService.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\service\CivilianHistoryLogger.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\service\CivilianPharmacyService.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\service\CivilianQueryService.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\service\CivilianReportAdminService.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\service\CivilianReservationService.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\service\CivilianRules.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\service\CivilianVivoService.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\service\NotificationService.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\service\PharmacyAdminCenterService.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\service\PharmacyCurrentReservationService.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\service\PharmacyDashboardService.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\service\PharmacyMedicineInventoryService.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\service\PharmacyNotificationService.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\service\PharmacyProfileService.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\service\PharmacyReservationHistoryService.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\service\PharmacyService.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\service\PharmacySystemSettingsService.java
+C:\Users\EX BOOK\Desktop\FindMyMeds\backend\src\main\java\com\findmymeds\backend\service\ReportCleanupService.java

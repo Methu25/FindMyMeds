@@ -38,8 +38,54 @@ public class PharmacyReservationHistoryService {
         return convertToDTO(reservation);
     }
 
+    public List<ReservationDTO> getAllHistory(Long pharmacyId) {
+        List<com.findmymeds.backend.model.enums.ReservationStatus> historyStatuses = List.of(
+                com.findmymeds.backend.model.enums.ReservationStatus.COLLECTED,
+                com.findmymeds.backend.model.enums.ReservationStatus.CANCELLED,
+                com.findmymeds.backend.model.enums.ReservationStatus.EXPIRED);
+        return reservationRepository.findAll().stream()
+                .filter(r -> r.getPharmacy() != null && r.getPharmacy().getId().equals(pharmacyId))
+                .filter(r -> historyStatuses.contains(r.getStatus()))
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
     private ReservationDTO convertToDTO(Reservation reservation) {
-        // Conversion logic here
-        return new ReservationDTO(); // Placeholder
+        ReservationDTO dto = new ReservationDTO();
+        dto.setId(reservation.getId());
+        dto.setStatus(reservation.getStatus().name());
+        dto.setReservationDate(reservation.getReservationDate());
+        dto.setTimeframe(reservation.getTimeframe());
+        dto.setTotalAmount(reservation.getTotalAmount());
+        dto.setPrescriptionImageUrl(reservation.getPrescriptionImageUrl());
+        dto.setNote(reservation.getNote());
+
+        if (reservation.getCivilian() != null) {
+            com.findmymeds.backend.dto.CivilianDTO civDto = new com.findmymeds.backend.dto.CivilianDTO();
+            civDto.setId(reservation.getCivilian().getId());
+            civDto.setName(reservation.getCivilian().getFullName());
+            civDto.setEmail(reservation.getCivilian().getEmail());
+            civDto.setPhone(reservation.getCivilian().getPhone());
+            dto.setCivilian(civDto);
+        }
+
+        if (reservation.getItems() != null) {
+            dto.setItems(reservation.getItems().stream().map(item -> {
+                com.findmymeds.backend.dto.ReservationItemDTO itemDto = new com.findmymeds.backend.dto.ReservationItemDTO();
+                itemDto.setId(item.getId());
+                itemDto.setQuantity(item.getQuantity());
+                itemDto.setPrice(item.getPrice());
+
+                if (item.getMedicine() != null) {
+                    com.findmymeds.backend.dto.MedicineDTO medDto = new com.findmymeds.backend.dto.MedicineDTO();
+                    medDto.setId(item.getMedicine().getId());
+                    medDto.setMedicineName(item.getMedicine().getMedicineName());
+                    medDto.setBrand(item.getMedicine().getManufacturer());
+                    itemDto.setMedicine(medDto);
+                }
+                return itemDto;
+            }).collect(Collectors.toList()));
+        }
+        return dto;
     }
 }

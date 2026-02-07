@@ -47,8 +47,70 @@ public class PharmacyCurrentReservationService {
         return convertToDTO(reservation);
     }
 
+    public List<ReservationDTO> getAllCurrentReservations(Long pharmacyId) {
+        // Fetch all reservations for the pharmacy that are NOT cancelled or
+        // collected/expired if that's what "current" means.
+        // Or simply fetch PENDING, CONFIRMED, READY, ONGOING.
+        List<com.findmymeds.backend.model.enums.ReservationStatus> activeStatuses = List.of(
+                com.findmymeds.backend.model.enums.ReservationStatus.PENDING,
+                com.findmymeds.backend.model.enums.ReservationStatus.CONFIRMED,
+                com.findmymeds.backend.model.enums.ReservationStatus.ONGOING,
+                com.findmymeds.backend.model.enums.ReservationStatus.READY);
+
+        // This is inefficient if we have many, but matches the "mock" simple list
+        // behavior.
+        // We should filters in DB. Ideally add findByPharmacyIdAndStatusIn...
+        return reservationRepository.findAll().stream()
+                .filter(r -> r.getPharmacy() != null && r.getPharmacy().getId().equals(pharmacyId))
+                .filter(r -> activeStatuses.contains(r.getStatus()))
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
     private ReservationDTO convertToDTO(Reservation reservation) {
-        // Conversion logic here
-        return new ReservationDTO(); // Placeholder
+        ReservationDTO dto = new ReservationDTO();
+        dto.setId(reservation.getId());
+        dto.setStatus(reservation.getStatus().name());
+        dto.setReservationDate(reservation.getReservationDate());
+        dto.setTimeframe(reservation.getTimeframe());
+        dto.setTotalAmount(reservation.getTotalAmount());
+        dto.setPrescriptionImageUrl(reservation.getPrescriptionImageUrl());
+        dto.setNote(reservation.getNote());
+
+        if (reservation.getCivilian() != null) {
+            com.findmymeds.backend.dto.CivilianDTO civDto = new com.findmymeds.backend.dto.CivilianDTO();
+            civDto.setId(reservation.getCivilian().getId());
+            civDto.setName(reservation.getCivilian().getFullName()); // Assuming fullName exists
+            civDto.setEmail(reservation.getCivilian().getEmail());
+            civDto.setPhone(reservation.getCivilian().getPhone());
+            dto.setCivilian(civDto);
+        }
+
+        // Mapping items is skipped for brevity but should be done if frontend needs
+        // them.
+        // CurrentReservations.jsx uses item.medicine.medicineName
+        // So we need to map items too!
+        if (reservation.getItems() != null) {
+            dto.setItems(reservation.getItems().stream().map(item -> {
+                com.findmymeds.backend.dto.ReservationItemDTO itemDto = new com.findmymeds.backend.dto.ReservationItemDTO();
+                itemDto.setId(item.getId());
+                itemDto.setQuantity(item.getQuantity());
+                itemDto.setPrice(item.getPrice());
+
+                if (item.getMedicine() != null) {
+                    com.findmymeds.backend.dto.MedicineDTO medDto = new com.findmymeds.backend.dto.MedicineDTO();
+                    medDto.setId(item.getMedicine().getId());
+                    medDto.setMedicineName(item.getMedicine().getMedicineName());
+                    medDto.setBrand(item.getMedicine().getManufacturer()); // Manufacturer as brand? Or should I use
+                                                                           // manufacturer? DTO has brand. Med has
+                                                                           // manufacturer.
+                    // medDto.setPrice(item.getMedicine().getPrice());
+                    itemDto.setMedicine(medDto);
+                }
+                return itemDto;
+            }).collect(Collectors.toList()));
+        }
+
+        return dto;
     }
 }
