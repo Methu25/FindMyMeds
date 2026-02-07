@@ -17,6 +17,7 @@ import AdminProfilePage from './pages/admin/AdminProfilePage';
 import SystemSettings from './pages/admin/SystemSettings'; // Moved to admin
 import PharmacyManagementHome from './pages/admin/Pharmacy/PharmacyManagementHome'; // Imported PharmacyManagementHome
 import AdminPharmacyDetails from "./pages/admin/Pharmacy/AdminPharmacyDetails";
+import AdminPharmacyReview from "./pages/admin/Pharmacy/AdminPharmacyReview";
 
 // Pharmacy Pages 
 import PharmacyDashboard from './pages/pharmacy/Dashboard';
@@ -49,6 +50,8 @@ function App() {
   path="/admin/pharmacies/:pharmacyId"
   element={<AdminPharmacyDetails />}
 />
+
+        <Route path="/admin/pharmacy-review/:pharmacyId" element={<AdminPharmacyReview />} />
 
 
           {/* When visiting /admin -> go to /admin/dashboard */}

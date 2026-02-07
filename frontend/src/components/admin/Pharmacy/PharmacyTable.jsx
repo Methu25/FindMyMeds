@@ -93,11 +93,15 @@ const PharmacyTable = ({ pharmacies = [], loading }) => {
                   <td className="px-4 py-2 text-center">
                     <button
                       onClick={() =>
-                        navigate(`/admin/pharmacies/${pharmacy.pharmacy_id}`)
+                        navigate(
+                          pharmacy.status === "PENDING"
+                            ? `/admin/pharmacy-review/${pharmacy.pharmacy_id}`
+                            : `/admin/pharmacies/${pharmacy.pharmacy_id}`
+                        )
                       }
                       className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-[11px] font-black uppercase tracking-widest text-white bg-gradient-to-r from-cyan-500 via-teal-500 to-emerald-500 shadow-lg shadow-emerald-500/20 ring-1 ring-white/10 hover:shadow-emerald-500/40 hover:scale-[1.02] transition"
                     >
-                      View / Manage
+                      {pharmacy.status === "PENDING" ? "Review" : "View / Manage"}
                     </button>
                   </td>
                 </tr>
