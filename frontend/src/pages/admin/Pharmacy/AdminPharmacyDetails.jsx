@@ -10,7 +10,6 @@ import {
 import ActivatePharmacyModal from "../../../components/admin/Pharmacy/ActivatePharmacyModal";
 import SuspendPharmacyModal from "../../../components/admin/Pharmacy/SuspendPharmacyModal";
 import RemovePharmacyModal from "../../../components/admin/Pharmacy/RemovePharmacyModal";
-import RejectPharmacyModal from "../../../components/admin/Pharmacy/RejectPharmacyModal";
 
 /* Service */
 import { getPharmacyDetails } from "../../../Service/Admin/PharmacyService";
@@ -25,7 +24,6 @@ const AdminPharmacyDetails = () => {
   const [openActivate, setOpenActivate] = useState(false);
   const [openSuspend, setOpenSuspend] = useState(false);
   const [openRemove, setOpenRemove] = useState(false);
-  const [openReject, setOpenReject] = useState(false);
 
   const fetchDetails = async () => {
     setLoading(true);
@@ -69,20 +67,32 @@ const AdminPharmacyDetails = () => {
           Back to Registry
         </button>
         
-        {pharmacy.status === "PENDING" && (
+        {pharmacy.status !== "REMOVED" && (
           <div className="flex gap-3">
             <button 
-              onClick={() => setOpenReject(true)}
+              onClick={() => setOpenRemove(true)}
               className="px-6 py-2 bg-rose-50 text-rose-500 rounded-xl font-black text-[10px] uppercase tracking-widest border border-rose-100 hover:bg-rose-500 hover:text-white transition-all shadow-sm"
             >
-              Reject
+              Remove Pharmacy
             </button>
-            <button 
-              onClick={() => setOpenActivate(true)}
-              className="px-6 py-2 bg-[#2FA4A9] text-white rounded-xl font-black text-[10px] uppercase tracking-widest shadow-lg shadow-[#2FA4A9]/20 hover:scale-105 transition-all"
-            >
-              Approve
-            </button>
+
+            {pharmacy.status === "ACTIVE" && (
+              <button 
+                onClick={() => setOpenSuspend(true)}
+                className="px-6 py-2 bg-amber-50 text-amber-500 rounded-xl font-black text-[10px] uppercase tracking-widest border border-amber-100 hover:bg-amber-500 hover:text-white transition-all shadow-sm"
+              >
+                Suspend
+              </button>
+            )}
+
+            {pharmacy.status === "SUSPENDED" && (
+              <button 
+                onClick={() => setOpenActivate(true)}
+                className="px-6 py-2 bg-[#2FA4A9] text-white rounded-xl font-black text-[10px] uppercase tracking-widest shadow-lg shadow-[#2FA4A9]/20 hover:scale-105 transition-all"
+              >
+                Activate
+              </button>
+            )}
           </div>
         )}
       </div>
@@ -161,7 +171,6 @@ const AdminPharmacyDetails = () => {
         refresh={fetchDetails}
         onSuccess={() => setPharmacy((prev) => (prev ? { ...prev, status: "ACTIVE" } : prev))}
       />
-      <RejectPharmacyModal open={openReject} pharmacy={pharmacy} onClose={() => setOpenReject(false)} refresh={fetchDetails} />
       <SuspendPharmacyModal open={openSuspend} pharmacy={pharmacy} onClose={() => setOpenSuspend(false)} refresh={fetchDetails} />
       <RemovePharmacyModal open={openRemove} pharmacy={pharmacy} onClose={() => { setOpenRemove(false); navigate('/admin/pharmacies'); }} />
     </div>
