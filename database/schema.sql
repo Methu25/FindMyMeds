@@ -25,6 +25,23 @@ CREATE TABLE civilian_profiles (
     FOREIGN KEY (civilian_id) REFERENCES civilians(id)
 );
 
+CREATE TABLE pharmacy (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    pharmacy_name VARCHAR(255),
+    license_number VARCHAR(255) UNIQUE,
+    owner_name VARCHAR(255),
+    email VARCHAR(255),
+    phone VARCHAR(255),
+    address TEXT,
+    latitude DOUBLE,
+    longitude DOUBLE,
+    operating_hours VARCHAR(255),
+    status ENUM('PENDING','ACTIVE','SUSPENDED','REJECTED','REMOVED'),
+    is_deleted BOOLEAN DEFAULT FALSE,
+    deleted_at DATETIME,
+    created_at DATETIME
+);
+
 CREATE TABLE reservations (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     reservation_code VARCHAR(255) UNIQUE,
@@ -37,8 +54,32 @@ CREATE TABLE reservations (
     total_amount DECIMAL(10, 2),
     created_at DATETIME,
     status_changed_at DATETIME,
-    FOREIGN KEY (civilian_id) REFERENCES civilians(id)
-    -- Foreign key for pharmacy_id added after pharmacies table creation
+    FOREIGN KEY (civilian_id) REFERENCES civilians(id),
+    FOREIGN KEY (pharmacy_id) REFERENCES pharmacy(id)
+);
+
+CREATE TABLE medicine (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    medicine_name VARCHAR(255),
+    generic_name VARCHAR(255),
+    active_ingredients TEXT,
+    type ENUM('TABLET', 'CAPSULE', 'SYRUP', 'INJECTION', 'OINTMENT', 'CREAM', 'DROPS', 'INHALER', 'OTHER', 'SUSPENSION', 'CREAM_OINTMENT'),
+    manufacturer VARCHAR(255),
+    country_of_manufacture VARCHAR(255),
+    registration_number VARCHAR(255),
+    image_url VARCHAR(255),
+    dosage_form VARCHAR(255),
+    strength VARCHAR(255),
+    storage_instructions TEXT,
+    notes TEXT,
+    description TEXT,
+    price DOUBLE,
+    requires_prescription BOOLEAN DEFAULT FALSE,
+    status ENUM('ACTIVE', 'INACTIVE', 'OUT_OF_STOCK', 'DISCONTINUED'),
+    approval_status ENUM('APPROVED', 'PENDING', 'REJECTED') DEFAULT 'PENDING',
+    removed BOOLEAN DEFAULT FALSE,
+    created_at DATETIME,
+    last_updated DATETIME
 );
 
 CREATE TABLE reservation_items (
@@ -47,156 +88,58 @@ CREATE TABLE reservation_items (
     medicine_id BIGINT,
     quantity INT,
     unit_price DECIMAL(10, 2),
-    FOREIGN KEY (reservation_id) REFERENCES reservations(id)
-    -- Foreign key for medicine_id added after medicines table creation
-);
-
-CREATE TABLE civilian_reports_inquiries (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    reference_code VARCHAR(255),
-    civilian_id BIGINT,
-    type ENUM('REPORT', 'INQUIRY'),
-    issue_category ENUM('TECHNICAL', 'SERVICE', 'PAYMENT', 'OTHER'),
-    priority ENUM('LOW', 'MEDIUM', 'HIGH'),
-    title VARCHAR(255),
-    description TEXT,
-    attachment_path VARCHAR(255),
-    status ENUM('PENDING', 'IN_PROGRESS', 'RESOLVED', 'REJECTED'),
-    created_at DATETIME,
-    status_changed_at DATETIME,
-    FOREIGN KEY (civilian_id) REFERENCES civilians(id)
-);
-
-CREATE TABLE civilian_appeals (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    civilian_id BIGINT,
-    ban_type ENUM('TEMPORARY', 'PERMANENT'),
-    appeal_reason TEXT,
-    attachment VARCHAR(255),
-    status ENUM('PENDING', 'APPROVED', 'REJECTED'),
-    created_at DATETIME,
-    resolved_at DATETIME,
-    FOREIGN KEY (civilian_id) REFERENCES civilians(id)
-);
-
--- PHARMACY TABLES
-
-CREATE TABLE pharmacies (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    pharmacy_name VARCHAR(255),
-    license_number VARCHAR(255) UNIQUE,
-    owner_name VARCHAR(255),
-    email VARCHAR(255),
-    phone VARCHAR(255),
-    address TEXT,
-    latitude DOUBLE,
-    longitude DOUBLE;
-    operating_hours VARCHAR(255),
-    status ENUM('PENDING','ACTIVE','SUSPENDED','REJECTED','REMOVED'),
-    is_deleted BOOLEAN DEFAULT FALSE,
-    deleted_at DATETIME,
-    created_at DATETIME
-);
-
-CREATE TABLE pharmacy_profiles (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    pharmacy_id BIGINT,
-    logo_path VARCHAR(255),
-    license_document VARCHAR(255),
-    verified BOOLEAN,
-    created_at DATETIME,
-    FOREIGN KEY (pharmacy_id) REFERENCES pharmacies(id)
+    FOREIGN KEY (reservation_id) REFERENCES reservations(id),
+    FOREIGN KEY (medicine_id) REFERENCES medicine(id)
 );
 
 CREATE TABLE pharmacy_inventory (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     pharmacy_id BIGINT,
     medicine_id BIGINT,
-    available_quantity INT,
-    price DECIMAL(10, 2),
+    available_quantity INT NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
+    batch_number VARCHAR(255),
+    expiry_date DATE,
     last_updated DATETIME,
-    FOREIGN KEY (pharmacy_id) REFERENCES pharmacies(id)
-    -- Foreign key for medicine_id added after medicines table creation
-);
-
-CREATE TABLE pharmacy_reports_inquiries (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    pharmacy_id BIGINT,
-    type ENUM('REPORT', 'INQUIRY'),
-    issue_category ENUM('TECHNICAL', 'SERVICE', 'PAYMENT', 'OTHER'),
-    priority ENUM('LOW', 'MEDIUM', 'HIGH'),
-    title VARCHAR(255),
-    description TEXT,
-    attachment VARCHAR(255),
-    status ENUM('PENDING', 'IN_PROGRESS', 'RESOLVED', 'REJECTED'),
-    created_at DATETIME,
-    status_changed_at DATETIME,
-    FOREIGN KEY (pharmacy_id) REFERENCES pharmacies(id)
-);
-
--- ADMIN TABLES
-
-CREATE TABLE admins (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    full_name VARCHAR(255),
-    email VARCHAR(255) UNIQUE,
-    role ENUM('ADMIN', 'SUPER_ADMIN'),
-    password_hash VARCHAR(255),
-    created_at DATETIME
-);
-
-CREATE TABLE admin_actions_log (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    admin_id BIGINT,
-    action_type VARCHAR(255),
-    target_table VARCHAR(255),
-    target_id BIGINT,
-    description TEXT,
-    created_at DATETIME,
-    FOREIGN KEY (admin_id) REFERENCES admins(id)
-);
-
--- SHARED TABLES
-
-CREATE TABLE medicines (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    medicine_name VARCHAR(255),
-    generic_name VARCHAR(255),
-    dosage_form VARCHAR(255),
-    strength VARCHAR(255),
-    description TEXT,
-    created_at DATETIME
+    FOREIGN KEY (pharmacy_id) REFERENCES pharmacy(id),
+    FOREIGN KEY (medicine_id) REFERENCES medicine(id)
 );
 
 CREATE TABLE notifications (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     user_type ENUM('CIVILIAN', 'PHARMACY', 'ADMIN'),
     user_id BIGINT,
-    notification_type ENUM('RESERVATION', 'APPEAL', 'REPORT', 'ACCOUNT', 'SYSTEM'),
+    notification_type ENUM('RESERVATION', 'APPEAL', 'REPORT', 'ACCOUNT', 'SYSTEM', 'PHARMACY', 'MEDICINE', 'ADMIN', 'CIVILIAN'),
     title VARCHAR(255),
     message TEXT,
     is_read BOOLEAN DEFAULT FALSE,
+    target_role ENUM('ADMIN', 'SUPER_ADMIN'),
+    related_entity_id BIGINT,
+    priority ENUM('CRITICAL', 'WARNING', 'INFO'),
+    read_at DATETIME,
     created_at DATETIME
 );
 
-CREATE TABLE rules_regulations (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    title VARCHAR(255),
-    content TEXT,
-    active BOOLEAN,
-    created_at DATETIME
-);
+-- SAMPLE DATA
 
-CREATE TABLE system_cleanup_logs (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    table_name VARCHAR(255),
-    record_id BIGINT,
-    deleted_at DATETIME,
-    reason VARCHAR(255)
-);
+INSERT INTO pharmacy (id, pharmacy_name, license_number, owner_name, email, phone, address, status, created_at)
+VALUES (1, 'City Health Pharmacy', 'PH-12345', 'John Doe', 'city.health@example.com', '011-2345678', '123 Main St, Colombo', 'ACTIVE', NOW());
 
--- ADDING REMAINING CONSTRAINTS
+INSERT INTO medicine (id, medicine_name, generic_name, manufacturer, dosage_form, strength, requires_prescription, status, approval_status, created_at)
+VALUES 
+(1, 'Paracetamol', 'Acetaminophen', 'GSK', 'Tablet', '500mg', FALSE, 'ACTIVE', 'APPROVED', NOW()),
+(2, 'Amoxicillin', 'Amoxicillin', 'AstraZeneca', 'Capsule', '250mg', TRUE, 'ACTIVE', 'APPROVED', NOW()),
+(3, 'Insulin', 'Insulin Glargine', 'Sanofi', 'Injection', '100 units/ml', TRUE, 'ACTIVE', 'APPROVED', NOW());
 
-ALTER TABLE reservations ADD FOREIGN KEY (pharmacy_id) REFERENCES pharmacies(id);
-ALTER TABLE reservation_items ADD FOREIGN KEY (medicine_id) REFERENCES medicines(id);
-ALTER TABLE pharmacy_inventory ADD FOREIGN KEY (medicine_id) REFERENCES medicines(id);
+INSERT INTO pharmacy_inventory (pharmacy_id, medicine_id, available_quantity, price, batch_number, expiry_date, last_updated)
+VALUES 
+(1, 1, 150, 5.00, 'B123', '2026-12-31', NOW()),
+(1, 2, 8, 25.00, 'B456', '2025-06-30', NOW()),
+(1, 3, 0, 1500.00, 'B789', '2025-01-01', NOW());
+
+INSERT INTO notifications (user_type, user_id, notification_type, title, message, is_read, priority, created_at)
+VALUES 
+('PHARMACY', 1, 'MEDICINE', 'Low Stock Alert', 'Medicine Amoxicillin is running low (8 left).', FALSE, 'WARNING', NOW()),
+('PHARMACY', 1, 'MEDICINE', 'Out of Stock Alert', 'Medicine Insulin is out of stock!', FALSE, 'CRITICAL', NOW()),
+('PHARMACY', 1, 'SYSTEM', 'Welcome', 'Welcome to the FindMyMeds Pharmacy Panel.', TRUE, 'INFO', DATE_SUB(NOW(), INTERVAL 1 DAY));
+

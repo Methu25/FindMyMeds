@@ -2,8 +2,6 @@ package com.findmymeds.backend.controller;
 
 import com.findmymeds.backend.dto.*;
 import com.findmymeds.backend.service.AdminDashboardService;
-
-
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,19 +16,15 @@ public class AdminDashboardController {
         this.adminDashboardService = adminDashboardService;
     }
 
-
-
     @GetMapping("/stats")
     public AdminDashboardStatsDTO getDashboardStats() {
         return adminDashboardService.getDashboardStats();
     }
 
-
     @GetMapping("/alerts")
     public AdminPendingAlertsDTO getPendingAlerts() {
         return adminDashboardService.getPendingAlerts();
     }
-
 
     @GetMapping("/notifications/recent")
     public List<AdminNotificationResponseDTO> getRecentUnreadNotifications() {
@@ -54,8 +48,7 @@ public class AdminDashboardController {
 
     @GetMapping("/charts/reservations")
     public List<AdminChartTimePointDTO> getReservationChart(
-            @RequestParam(defaultValue = "30") int days
-    ) {
+            @RequestParam(defaultValue = "30") int days) {
         return adminDashboardService.getReservationVolumeChart(days);
     }
 
@@ -73,6 +66,4 @@ public class AdminDashboardController {
     public AdminNotificationMetricsDTO getNotificationMetrics() {
         return adminDashboardService.getNotificationMetrics();
     }
-
-
 }

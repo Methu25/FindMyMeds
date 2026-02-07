@@ -10,23 +10,19 @@ import com.findmymeds.backend.model.enums.Priority;
 import com.findmymeds.backend.model.enums.UserType;
 import com.findmymeds.backend.repository.MedicineRepository;
 import com.findmymeds.backend.repository.PharmacyInventoryRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class PharmacyMedicineInventoryService {
 
-    @Autowired
-    private PharmacyInventoryRepository inventoryRepository;
-
-    @Autowired
-    private MedicineRepository medicineRepository;
-
-    @Autowired
-    private PharmacyNotificationService notificationService;
+    private final PharmacyInventoryRepository inventoryRepository;
+    private final MedicineRepository medicineRepository;
+    private final PharmacyNotificationService notificationService;
 
     private Long getCurrentPharmacyId() {
         return 1L; // Hardcoded for development
@@ -39,9 +35,9 @@ public class PharmacyMedicineInventoryService {
 
         return MedicineInventoryMetricsDTO.builder()
                 .totalMedicines(inventoryRepository.countByPharmacyId(pharmacyId))
-                .inStock(inventoryRepository.countInStock(pharmacyId))
-                .lowStock(inventoryRepository.countLowStock(pharmacyId))
-                .outOfStock(inventoryRepository.countOutOfStock(pharmacyId))
+                .inStock(inventoryRepository.countInStock(pharmacyId, thirtyDaysLater))
+                .lowStock(inventoryRepository.countLowStock(pharmacyId, thirtyDaysLater))
+                .outOfStock(inventoryRepository.countOutOfStock(pharmacyId, thirtyDaysLater))
                 .expired(inventoryRepository.countExpired(pharmacyId, today))
                 .expiringSoon(inventoryRepository.countExpiringSoon(pharmacyId, today, thirtyDaysLater))
                 .deactivated(inventoryRepository.countDeactivated(pharmacyId))
@@ -50,22 +46,43 @@ public class PharmacyMedicineInventoryService {
 
     public Page<MedicineInventoryDTO> getInventory(String filter, String search, int page, int size) {
         Long pharmacyId = getCurrentPharmacyId();
-        Pageable pageable = PageRequest.of(page, size);
+        // Fetch all matching records to allow filtering in memory for derived status
+        // In a real production app with millions of records, this would use a
+        // Specification or native query to handle filtering at the database level.
+        Pageable pageable = Pageable.unpaged();
         Page<PharmacyInventory> inventoryPage = inventoryRepository.findByPharmacyIdAndSearch(pharmacyId, search,
                 pageable);
 
-        return inventoryPage.map(this::mapToDTO);
+        java.util.List<MedicineInventoryDTO> allDtos = inventoryPage.getContent().stream()
+                .map(this::mapToDTO)
+                .filter(dto -> {
+                    if (filter == null || filter.equals("All") || filter.equals("Total Medicines") || filter.isEmpty())
+                        return true;
+                    return dto.getStatus().equalsIgnoreCase(filter.replace(" Medicines", ""));
+                })
+                .collect(java.util.stream.Collectors.toList());
+
+        long offset = (long) page * size;
+        int start = (int) Math.min(offset, (long) allDtos.size());
+        int end = (int) Math.min(offset + size, (long) allDtos.size());
+
+        java.util.List<MedicineInventoryDTO> pagedList = new java.util.ArrayList<>(allDtos.subList(start, end));
+
+        return new org.springframework.data.domain.PageImpl<>(
+                pagedList,
+                PageRequest.of(page, size),
+                allDtos.size());
     }
 
-    public MedicineDetailDTO getMedicineDetails(@org.springframework.lang.NonNull Long medicineId) {
-        PharmacyInventory inventory = inventoryRepository.findById(medicineId)
+    public MedicineDetailDTO getMedicineDetails(Long medicineId) {
+        PharmacyInventory inventory = inventoryRepository.findById(java.util.Objects.requireNonNull(medicineId))
                 .orElseThrow(() -> new RuntimeException("Inventory item not found with id: " + medicineId));
 
         return mapToDetailDTO(inventory);
     }
 
-    public void updateStock(@org.springframework.lang.NonNull Long inventoryId, Integer newQuantity) {
-        PharmacyInventory inventory = inventoryRepository.findById(inventoryId)
+    public void updateStock(Long inventoryId, Integer newQuantity) {
+        PharmacyInventory inventory = inventoryRepository.findById(java.util.Objects.requireNonNull(inventoryId))
                 .orElseThrow(() -> new RuntimeException("Inventory not found"));
 
         inventory.setAvailableQuantity(newQuantity);
@@ -74,16 +91,16 @@ public class PharmacyMedicineInventoryService {
         checkStockAndNotify(inventory);
     }
 
-    public void updatePrice(@org.springframework.lang.NonNull Long inventoryId, java.math.BigDecimal newPrice) {
-        PharmacyInventory inventory = inventoryRepository.findById(inventoryId)
+    public void updatePrice(Long inventoryId, java.math.BigDecimal newPrice) {
+        PharmacyInventory inventory = inventoryRepository.findById(java.util.Objects.requireNonNull(inventoryId))
                 .orElseThrow(() -> new RuntimeException("Inventory not found"));
 
         inventory.setPrice(newPrice);
         inventoryRepository.save(inventory);
     }
 
-    public void deactivateMedicine(@org.springframework.lang.NonNull Long inventoryId) {
-        PharmacyInventory inventory = inventoryRepository.findById(inventoryId)
+    public void deactivateMedicine(Long inventoryId) {
+        PharmacyInventory inventory = inventoryRepository.findById(java.util.Objects.requireNonNull(inventoryId))
                 .orElseThrow(() -> new RuntimeException("Inventory not found"));
 
         Medicine medicine = inventory.getMedicine();
@@ -91,12 +108,12 @@ public class PharmacyMedicineInventoryService {
         medicineRepository.save(medicine);
     }
 
-    public void deleteFromInventory(@org.springframework.lang.NonNull Long inventoryId) {
-        inventoryRepository.deleteById(inventoryId);
+    public void deleteFromInventory(Long inventoryId) {
+        inventoryRepository.deleteById(java.util.Objects.requireNonNull(inventoryId));
     }
 
-    public void activateMedicine(@org.springframework.lang.NonNull Long inventoryId) {
-        PharmacyInventory inventory = inventoryRepository.findById(inventoryId)
+    public void activateMedicine(Long inventoryId) {
+        PharmacyInventory inventory = inventoryRepository.findById(java.util.Objects.requireNonNull(inventoryId))
                 .orElseThrow(() -> new RuntimeException("Inventory not found"));
         Medicine medicine = inventory.getMedicine();
         medicine.setStatus(Medicine.MedicineStatus.ACTIVE);
@@ -137,8 +154,8 @@ public class PharmacyMedicineInventoryService {
         inventoryRepository.save(inventory);
     }
 
-    public void updateInventory(@org.springframework.lang.NonNull Long inventoryId, MedicineInventoryDTO dto) {
-        PharmacyInventory inventory = inventoryRepository.findById(inventoryId)
+    public void updateInventory(Long inventoryId, MedicineInventoryDTO dto) {
+        PharmacyInventory inventory = inventoryRepository.findById(java.util.Objects.requireNonNull(inventoryId))
                 .orElseThrow(() -> new RuntimeException("Inventory not found"));
 
         inventory.setAvailableQuantity(dto.getStockQuantity());

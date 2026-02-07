@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@SuppressWarnings("null")
 public class AdminService {
 
     private final AdminRepository adminRepository;
@@ -30,13 +31,13 @@ public class AdminService {
                 .collect(Collectors.toList());
     }
 
-    public AdminResponse getAdminById(@org.springframework.lang.NonNull Long id) {
+    public AdminResponse getAdminById(Long id) {
         Admin admin = adminRepository.findById(id)
                 .orElseThrow(() -> new AdminNotFoundException("Admin not found with id: " + id));
         return mapToResponse(admin);
     }
 
-    public Optional<Admin> getAdminEntityById(@org.springframework.lang.NonNull Long id) {
+    public Optional<Admin> getAdminEntityById(Long id) {
         return adminRepository.findById(id);
     }
 
@@ -54,7 +55,7 @@ public class AdminService {
 
     @Transactional
     public AdminResponse createAdmin(CreateAdminRequest request,
-                                     @org.springframework.lang.NonNull Long currentAdminId) {
+            Long currentAdminId) {
         if (adminRepository.existsByEmail(request.getEmail())) {
             throw new DuplicateEmailException("Email already exists: " + request.getEmail());
         }
@@ -75,9 +76,10 @@ public class AdminService {
     }
 
     @Transactional
-    public AdminResponse updateAdminEmail(@org.springframework.lang.NonNull Long adminId,
-                                          UpdateAdminEmailRequest request,
-                                          @org.springframework.lang.NonNull Long currentAdminId) {
+
+    public AdminResponse updateAdminEmail(Long adminId,
+            UpdateAdminEmailRequest request,
+            Long currentAdminId) {
         Admin admin = adminRepository.findById(adminId)
                 .orElseThrow(() -> new AdminNotFoundException("Admin not found with id: " + adminId));
 
@@ -98,7 +100,7 @@ public class AdminService {
 
     // --- NEW METHOD ADDED HERE ---
     @Transactional
-    public void updateAdminStatus(@org.springframework.lang.NonNull Long adminId, AdminStatus status) {
+    public void updateAdminStatus(Long adminId, AdminStatus status) {
         Admin admin = adminRepository.findById(adminId)
                 .orElseThrow(() -> new AdminNotFoundException("Admin not found with id: " + adminId));
 
@@ -107,16 +109,15 @@ public class AdminService {
 
         // Fetch current user automatically for logging
         String currentEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        adminRepository.findByEmail(currentEmail).ifPresent(currentAdmin ->
-                logAction(currentAdmin.getId(), "UPDATE_STATUS", "admins", adminId,
-                        "Updated status to " + status)
-        );
+        adminRepository.findByEmail(currentEmail)
+                .ifPresent(currentAdmin -> logAction(currentAdmin.getId(), "UPDATE_STATUS", "admins", adminId,
+                        "Updated status to " + status));
     }
     // -----------------------------
 
     @Transactional
-    public void deleteAdmin(@org.springframework.lang.NonNull Long adminId,
-                            @org.springframework.lang.NonNull Long currentAdminId) {
+    public void deleteAdmin(Long adminId,
+            Long currentAdminId) {
         Admin admin = adminRepository.findById(adminId)
                 .orElseThrow(() -> new AdminNotFoundException("Admin not found with id: " + adminId));
 
@@ -131,8 +132,8 @@ public class AdminService {
                 "Deleted admin: " + adminName);
     }
 
-    private void logAction(@org.springframework.lang.NonNull Long adminId, String actionType, String targetTable,
-                           Long targetId, String description) {
+    private void logAction(Long adminId, String actionType, String targetTable,
+            Long targetId, String description) {
         AdminActionLog log = new AdminActionLog();
 
         Admin admin = adminRepository.getReferenceById(adminId);
@@ -162,7 +163,6 @@ public class AdminService {
 
         return new AdminProfileDTO(
                 admin.getFullName(),
-                admin.getRole()
-        );
+                admin.getRole());
     }
 }

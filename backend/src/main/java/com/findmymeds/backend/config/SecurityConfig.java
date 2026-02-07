@@ -23,6 +23,11 @@ public class SecurityConfig {
     private final AuthenticationProvider authenticationProvider;
 
     @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
@@ -59,6 +64,10 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 );
 
-        return http.build();
+    protected void configure(HttpSecurity http) throws Exception {
+        http.cors().and().csrf().disable() // disable CSRF for dev
+                .authorizeRequests()
+                .anyRequest().authenticated(); // or permitAll() if you want
     }
+
 }

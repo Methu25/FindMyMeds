@@ -1,4 +1,3 @@
-import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import AdminLayout from './components/admin/AdminLayout';
 
@@ -7,21 +6,30 @@ import Home from './pages/Home';
 
 // Admin Pages 
 import AdminDashboard from './pages/admin/AdminDashboard';
-import AdminCenter from './pages/pharmacy/AdminCenter.jsx';
-import SystemSettings from './pages/pharmacy/SystemSettings.jsx';
-import MedicineRegistry from './pages/admin/MedicineRegistry';
-import AddMedicine from './pages/admin/AddMedicine';
-import MedicineDetails from './pages/admin/MedicineDetails';
-import NotificationCenter from './pages/admin/NotificationCenter';
-import NotificationDetails from './pages/admin/NotificationDetails';
-import ProfilePage from './pages/admin/ProfilePage';
+import AdminManagement from './pages/admin/AdminManagement';
 import CivilianManagement from './pages/admin/CivilianManagement';
+import AdminMedicineRegistry from './pages/admin/AdminMedicineRegistry';
+import AdminAddMedicine from './pages/admin/AdminAddMedicine';
+import AdminMedicineDetails from './pages/admin/AdminMedicineDetails';
+import AdminNotificationCenter from './pages/admin/AdminNotificationCenter';
+import AdminNotificationDetails from './pages/admin/AdminNotificationDetails';
+import AdminProfilePage from './pages/admin/AdminProfilePage';
+import SystemSettings from './pages/admin/SystemSettings'; // Moved to admin
+import PharmacyManagementHome from './pages/admin/Pharmacy/PharmacyManagementHome'; // Imported PharmacyManagementHome
 
 // Pharmacy Pages 
+import PharmacyDashboard from './pages/pharmacy/Dashboard';
 import MedicineInventory from './pages/pharmacy/MedicineInventory';
 import PharmacyMedicineDetails from './pages/pharmacy/MedicineDetails';
 import PharmacyNotificationCenter from './pages/pharmacy/NotificationCenter';
 import PharmacyNotificationDetails from './pages/pharmacy/NotificationDetails';
+import AdminCenter from './pages/pharmacy/AdminCenter.jsx';
+import PharmacySystemSettings from './pages/pharmacy/SystemSettings';
+import PharmacyAddMedicine from './pages/pharmacy/AddMedicine';
+import PharmacyCurrentReservations from './pages/pharmacy/CurrentReservations';
+import PharmacyReservationHistory from './pages/pharmacy/ReservationHistory';
+import PharmacyReportPage from './pages/pharmacy/PharmacyReportPage';
+import PharmacyProfile from './pages/pharmacy/PharmacyProfile';
 
 // Civilian Pages 
 import CivilianLayout from './components/civilian/CivilianLayout';
@@ -45,43 +53,48 @@ function App() {
           <Route index element={<Navigate to="dashboard" replace />} />
 
           <Route path="dashboard" element={<AdminDashboard />} />
-          <Route path="admin-center" element={<AdminCenter />} />
+          <Route path="administrators" element={<AdminManagement />} />
           <Route path="settings" element={<SystemSettings />} />
 
           {/* Medicines */}
-          <Route path="medicines" element={<MedicineRegistry />} />
-          <Route path="medicines/add" element={<AddMedicine />} />
-          <Route path="medicines/:id" element={<MedicineDetails />} />
+          <Route path="medicines" element={<AdminMedicineRegistry />} />
+          <Route path="medicines/add" element={<AdminAddMedicine />} />
+          <Route path="medicines/:id" element={<AdminMedicineDetails />} />
 
           {/* Pharmacies placeholder */}
-          <Route path="pharmacies" element={<div className="p-4">Pharmacy Management Placeholder</div>} />
+          <Route path="pharmacies" element={<PharmacyManagementHome />} />
 
           {/* Civilians */}
           <Route path="civilians" element={<CivilianManagement />} />
 
           {/* Notifications */}
-          <Route path="notifications" element={<NotificationCenter />} />
-          <Route path="notifications/:id" element={<NotificationDetails />} />
+          <Route path="notifications" element={<AdminNotificationCenter />} />
+          <Route path="notifications/:id" element={<AdminNotificationDetails />} />
 
           {/* Profile */}
-          <Route path="profile" element={<ProfilePage />} />
+          <Route path="profile" element={<AdminProfilePage />} />
         </Route>
 
         {/* Pharmacy Routes */}
         <Route path="/pharmacy/*" element={
           <NotificationProvider>
             <Routes>
-              <Route index element={<AdminDashboard />} />
+              <Route index element={<PharmacyDashboard />} />
               <Route path="inventory" element={<MedicineInventory />} />
+              <Route path="inventory/add" element={<PharmacyAddMedicine />} />
               <Route path="medicines/:id" element={<PharmacyMedicineDetails />} />
               <Route path="notifications" element={<PharmacyNotificationCenter />} />
               <Route path="notifications/:id" element={<PharmacyNotificationDetails />} />
               <Route path="admin-center" element={<AdminCenter />} />
-              <Route path="settings" element={<SystemSettings />} />
-              <Route path="current-reservations" element={<div className="p-8">Current Reservations Placeholder</div>} />
-              <Route path="reservation-history" element={<div className="p-8">Reservation History Placeholder</div>} />
-            </Routes>
-          </NotificationProvider>
+              <Route path="settings" element={<PharmacySystemSettings />} />
+              <Route path="current-reservations" element={<PharmacyCurrentReservations />} />
+              <Route path="reservation-history" element={<PharmacyReservationHistory />} />
+              {/* stock-management routes back to inventory as per user request */}
+              <Route path="stock-management" element={<MedicineInventory />} />
+              <Route path="reports" element={<PharmacyReportPage />} />
+              <Route path="profile" element={<PharmacyProfile />} />
+            </Routes >
+          </NotificationProvider >
         } />
 
         {/* Civilian Routes (Master) */}
@@ -91,8 +104,8 @@ function App() {
           <Route path="find-pharmacy" element={<FindPharmacy />} />
           <Route path="reservation" element={<ReservationPage />} />
         </Route>
-      </Routes>
-    </BrowserRouter>
+      </Routes >
+    </BrowserRouter >
   );
 }
 

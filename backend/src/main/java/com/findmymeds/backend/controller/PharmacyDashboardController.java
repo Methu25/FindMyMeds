@@ -4,23 +4,19 @@ import com.findmymeds.backend.dto.DashboardMetricsDto;
 import com.findmymeds.backend.service.PharmacyDashboardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/pharmacy/dashboard")
 @RequiredArgsConstructor
+@CrossOrigin(origins = { "http://localhost:5173", "http://localhost:5174" }, allowCredentials = "true")
 public class PharmacyDashboardController {
 
     private final PharmacyDashboardService pharmacyDashboardService;
 
     @GetMapping("/metrics")
     public ResponseEntity<DashboardMetricsDto> getMetrics() {
-        // In a real secure app, we extract pharmacyId from JWT token.
-        // For now, hardcoding ID 1 or assuming Auth util usage (mocked).
-        // Long pharmacyId = getAuthenticatedPharmacyId();
-        Long pharmacyId = 1L; // Mock ID
+        Long pharmacyId = 1L; // Mock ID for now, usually from Auth Context
         return ResponseEntity.ok(pharmacyDashboardService.getMetrics(pharmacyId));
     }
 }
