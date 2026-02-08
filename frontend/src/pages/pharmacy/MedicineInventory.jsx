@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Layout from '../../components/pharmacy/Layout'
 import MetricCard from '../../components/pharmacy/MetricCard'
+import { Pill, CheckCircle2, AlertTriangle, PackageX, Skull, CalendarClock, CircleOff } from 'lucide-react'
 
 export default function MedicineInventory() {
     const navigate = useNavigate()
@@ -55,13 +56,13 @@ export default function MedicineInventory() {
     const filteredInventory = inventory;
 
     const metricCards = [
-        { title: 'Total Medicines', value: metrics.totalMedicines || 0 },
-        { title: 'In Stock', value: metrics.inStock || 0 },
-        { title: 'Low Stock', value: metrics.lowStock || 0 },
-        { title: 'Out of Stock', value: metrics.outOfStock || 0 },
-        { title: 'Expired', value: metrics.expired || 0 },
-        { title: 'Expiring Soon', value: metrics.expiringSoon || 0 },
-        { title: 'Deactivated Medicines', value: metrics.deactivated || 0 },
+        { title: 'Total Medicines', value: metrics.totalMedicines || 0, icon: Pill, colorScheme: 'teal', subtext: 'In Stock' },
+        { title: 'In Stock', value: metrics.inStock || 0, icon: CheckCircle2, colorScheme: 'blue', subtext: 'In Stock' },
+        { title: 'Low Stock', value: metrics.lowStock || 0, icon: AlertTriangle, colorScheme: 'orange', subtext: 'In Stock' },
+        { title: 'Out of Stock', value: metrics.outOfStock || 0, icon: PackageX, colorScheme: 'purple', subtext: 'Expired' },
+        { title: 'Expired', value: metrics.expired || 0, icon: Skull, colorScheme: 'red', subtext: 'Expired' },
+        { title: 'Expiring Soon', value: metrics.expiringSoon || 0, icon: CalendarClock, colorScheme: 'yellow', subtext: '(33 days)' },
+        { title: 'Deactivated', value: metrics.deactivated || 0, icon: CircleOff, colorScheme: 'gray', subtext: 'Inactive' },
     ]
 
     return (
@@ -74,6 +75,9 @@ export default function MedicineInventory() {
                             key={card.title}
                             title={card.title}
                             value={card.value}
+                            icon={card.icon}
+                            colorScheme={card.colorScheme}
+                            subtext={card.subtext}
                             onClick={() => setActiveFilter(card.title)}
                             isActive={activeFilter === card.title}
                         />
