@@ -1,36 +1,65 @@
 package com.findmymeds.backend.controller;
 
 import com.findmymeds.backend.model.CivilianNotification;
+import com.findmymeds.backend.model.enums.CivilianNotificationType;
 import com.findmymeds.backend.service.CivilianNotificationService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/civilian/notifications")
-@CrossOrigin
+@RequestMapping("/api/notification")
 public class CivilianNotificationController {
+    private final CivilianNotificationService service;
 
-    @Autowired
-    private CivilianNotificationService service;
+    public CivilianNotificationController(CivilianNotificationService service) {
+        this.service = service;
+    }
 
-    // TEMP until login is added
-    private static final Integer LOGGED_CIVILIAN_ID = 1;
-
+    // GET /api/notification?userId=1
     @GetMapping
-    public List<CivilianNotification> getAll() {
-        return service.getAllNotifications(Long.valueOf(LOGGED_CIVILIAN_ID));
+    public List<CivilianNotification> getAll(
+            @RequestParam Integer userId
+    ) {
+        return service.getAll(userId);
     }
 
+    // GET /api/notification/type
+    @GetMapping("/type")
+    public List<CivilianNotification> getByType(
+            @RequestParam Integer userId,
+            @RequestParam CivilianNotificationType type
+    ) {
+        return service.getByType(userId, type);
+    }
+
+    // GET /api/notification/read-status
+    @GetMapping("/read-status")
+    public List<CivilianNotification> getByReadStatus(
+            @RequestParam Integer userId,
+            @RequestParam Boolean isRead
+    ) {
+        return service.getByReadStatus(userId, isRead);
+    }
+
+    // GET /api/notification/{id}
     @GetMapping("/{id}")
-    public CivilianNotification getOne(@PathVariable Integer id) {
-        return service.getNotificationById(Long.valueOf(id), LOGGED_CIVILIAN_ID);
+    public CivilianNotification getOne(
+            @PathVariable Integer id,
+            @RequestParam Integer userId
+    ) {
+        return service.getOne(id, userId);
     }
 
+    // PUT /api/notification/{id}/read
     @PutMapping("/{id}/read")
-    public void markAsRead(@PathVariable Integer id) {
-        service.markAsRead(id, LOGGED_CIVILIAN_ID);
+    public void markAsRead(
+            @PathVariable Integer id,
+            @RequestParam Integer userId
+    ) {
+        service.markAsRead(id, userId);
     }
+
+
 }
 
