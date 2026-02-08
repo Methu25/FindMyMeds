@@ -7,11 +7,12 @@ import com.findmymeds.backend.service.AdminPharmacyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/admin/pharmacies")
-@CrossOrigin(origins = "http://localhost:5180")
+@CrossOrigin(origins = "http://localhost:5173")
 public class AdminPharmacyController {
 
     @Autowired
@@ -29,6 +30,12 @@ public class AdminPharmacyController {
     @GetMapping("/{id}")
     public Pharmacy getPharmacyById(@PathVariable Long id) {
         return pharmacyService.getPharmacyById(id);
+    }
+
+    // 🔹 REJECTED DETAILS PAGE – get rejected pharmacy
+    @GetMapping("/rejected/{id}")
+    public Pharmacy getRejectedPharmacyById(@PathVariable Long id) {
+        return pharmacyService.getRejectedPharmacyById(id);
     }
 
     // 🔹 CREATE PHARMACY (pharmacyType REQUIRED)
@@ -61,5 +68,13 @@ public class AdminPharmacyController {
     @PatchMapping("/{id}/remove")
     public Pharmacy removePharmacy(@PathVariable Long id) {
         return pharmacyService.updatePharmacyStatus(id, PharmacyStatus.REMOVED);
+    }
+
+    // 🔹 ANY → REJECTED
+    @PatchMapping("/{id}/reject")
+    public Pharmacy rejectPharmacy(
+            @PathVariable Long id,
+            @RequestBody(required = false) Map<String, String> body) {
+        return pharmacyService.updatePharmacyStatus(id, PharmacyStatus.REJECTED);
     }
 }

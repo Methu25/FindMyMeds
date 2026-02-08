@@ -1,5 +1,6 @@
 package com.findmymeds.backend.controller;
 
+import com.findmymeds.backend.dto.PharmacyProfileDto;
 import com.findmymeds.backend.dto.PharmacyReportDTO;
 import com.findmymeds.backend.dto.ReportRequestDto;
 import com.findmymeds.backend.service.PharmacyAdminCenterService;
@@ -16,6 +17,12 @@ import java.util.List;
 public class PharmacyAdminCenterController {
 
     private final PharmacyAdminCenterService pharmacyAdminCenterService;
+
+    @GetMapping("/admin/profile")
+    public ResponseEntity<PharmacyProfileDto> getProfile() {
+        Long pharmacyId = 1L; // Mock ID
+        return ResponseEntity.ok(pharmacyAdminCenterService.getProfile(pharmacyId));
+    }
 
     @PostMapping("/reports")
     public ResponseEntity<Void> submitReport(@RequestBody ReportRequestDto report) {
