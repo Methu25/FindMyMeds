@@ -30,8 +30,7 @@ public class AdminCivilianReportController {
             @RequestParam(required = false) ReportStatus status,
             @RequestParam(required = false) String search,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
-    ) {
+            @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
         return reportService.list(type, status, search, pageable);
     }
@@ -59,6 +58,6 @@ public class AdminCivilianReportController {
 
     @PostMapping("/{id}/respond")
     public void respond(@PathVariable Long id, @RequestBody AdminCivilianReportRespondDTO req) {
-        reportService.respond(id, req.getMessage());
+        reportService.respond(id, req.getMessage(), req.getAttachmentPath());
     }
 }

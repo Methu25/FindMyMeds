@@ -36,7 +36,7 @@ CREATE TABLE pharmacy (
     latitude DOUBLE,
     longitude DOUBLE,
     operating_hours VARCHAR(255),
-    status ENUM('PENDING','ACTIVE','SUSPENDED','REJECTED','REMOVED'),
+        status VARCHAR(20),
     is_deleted BOOLEAN DEFAULT FALSE,
     deleted_at DATETIME,
     created_at DATETIME

@@ -4,10 +4,9 @@ import com.findmymeds.backend.dto.AdminCivilianReportDetailsDTO;
 import com.findmymeds.backend.dto.AdminCivilianReportMetricsDTO;
 import com.findmymeds.backend.dto.AdminCivilianReportRowDTO;
 import com.findmymeds.backend.model.CivilianReport;
-import com.findmymeds.backend.model.CivilianReportLog;
 import com.findmymeds.backend.model.enums.ReportStatus;
 import com.findmymeds.backend.model.enums.ReportType;
-import com.findmymeds.backend.repository.CivilianReportLogRepository;
+
 import com.findmymeds.backend.repository.CivilianReportRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -35,7 +34,8 @@ public class CivilianReportAdminService {
     }
 
     @Transactional(readOnly = true)
-    public Page<AdminCivilianReportRowDTO> list(ReportType type, ReportStatus status, String search, Pageable pageable) {
+    public Page<AdminCivilianReportRowDTO> list(ReportType type, ReportStatus status, String search,
+            Pageable pageable) {
         return reportRepository.search(type, status, search, pageable)
                 .map(r -> AdminCivilianReportRowDTO.builder()
                         .id(r.getId())
@@ -54,6 +54,9 @@ public class CivilianReportAdminService {
 
     @Transactional(readOnly = true)
     public AdminCivilianReportDetailsDTO getDetails(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("ID cannot be null");
+        }
         CivilianReport r = reportRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Report not found: " + id));
 
@@ -75,23 +78,6 @@ public class CivilianReportAdminService {
                 .build();
     }
 
-    private final CivilianReportLogRepository logRepository;
-
-    private void logAction(CivilianReport report,
-                           ReportStatus status,
-                           Long adminId,
-                           String message) {
-
-        CivilianReportLog log = new CivilianReportLog();
-        log.setReport(report);
-        log.setAction(status);
-        log.setActionByAdminId(adminId);
-        log.setMessage(message);
-
-        logRepository.save(log);
-    }
-
-
     @Transactional
     public void markInProgress(Long id) {
         CivilianReport r = getEntity(id);
@@ -105,6 +91,7 @@ public class CivilianReportAdminService {
         CivilianReport r = getEntity(id);
         r.setStatus(ReportStatus.RESOLVED);
         r.setStatusChangedAt(LocalDateTime.now());
+        r.setResolvedAt(LocalDateTime.now());
         reportRepository.save(r);
     }
 
@@ -113,18 +100,25 @@ public class CivilianReportAdminService {
         CivilianReport r = getEntity(id);
         r.setStatus(ReportStatus.REJECTED);
         r.setStatusChangedAt(LocalDateTime.now());
+        r.setRejectedAt(LocalDateTime.now());
         reportRepository.save(r);
     }
 
-    // For now this just changes statusChangedAt; later we can store admin replies in a message table
+    // For now this just changes statusChangedAt; later we can store admin replies
+    // in a message table
     @Transactional
-    public void respond(Long id, String message) {
+    public void respond(Long id, String message, String attachmentPath) {
         CivilianReport r = getEntity(id);
+        r.setAdminResponse(message);
+        r.setAdminResponseAttachment(attachmentPath);
         r.setStatusChangedAt(LocalDateTime.now());
         reportRepository.save(r);
     }
 
     private CivilianReport getEntity(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("ID cannot be null");
+        }
         return reportRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Report not found: " + id));
     }

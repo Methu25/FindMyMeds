@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 /* Icons */
 import { Activity, CheckCircle, Clock, AlertTriangle, Search } from "lucide-react";
 
@@ -17,6 +18,7 @@ import SuspendPharmacyModal from "../../../components/admin/Pharmacy/SuspendPhar
 import { getPharmacies } from "../../../Service/Admin/PharmacyService";
 
 const PharmacyManagementHome = () => {
+  const navigate = useNavigate();
   /* =======================
         STATE
   ======================= */
@@ -103,42 +105,33 @@ const PharmacyManagementHome = () => {
 
   /* Pharmacy types and quick actions */
   const pharmacyTypes = ["RETAIL", "HOSPITAL", "CLINICAL", "COMPOUNDING", "ONLINE", "SPECIALTY", "INDUSTRIAL", "GOVERNMENT", "VETERINARY"];
-  const actions = [{ label: "Add New Pharmacy", onClick: () => {} }, { label: "Generate Report", onClick: () => {} }];
+  const actions = [{ label: "Reports and Inquries", onClick: () => navigate('/admin/reports') }, { label: "Rejected Pharmacies", onClick: () => navigate('/admin/pharmacy/rejected') }];
 
   return (
-    <div className="flex w-full min-h-screen bg-slate-50">
-      <div className="flex-1 p-8 pt-4 space-y-4 overflow-y-auto">
-
-        {/* Header */}
-        <div className="relative p-8 rounded-[2rem] bg-white border border-slate-100 shadow-sm overflow-hidden group">
-          <div className="absolute right-0 top-0 w-64 h-64 bg-[#2FA4A9]/5 rounded-full blur-3xl -mr-20 -mt-20"></div>
-          <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-[#2FA4A9] shadow-lg shadow-[#2FA4A9]/20">
-                <Activity size={26} className="text-white" />
-              </div>
-              <div>
-                <h1 className="text-3xl font-[1000] text-[#2FA4A9] tracking-tight uppercase leading-none">Pharmacy Management</h1>
-                <p className="text-sm text-slate-500 font-medium mt-2">Monitor, verify, and manage registered pharmacies</p>
-              </div>
-            </div>
-          </div>
-        </div>
+    <div className="flex w-full min-h-screen bg-slate-50 font-['Inter']">
+      <div className="flex-1 p-8 pt-6 space-y-8 overflow-y-auto">
 
         {/* Metric Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <section className="space-y-3">
+          <h2 className="text-xs font-black uppercase tracking-[0.3em] text-slate-400">Overview</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
           <MetricCard title="Total" count={pharmacies.length} icon={Activity} isActive={activeFilter === "TOTAL"} onClick={() => handleFilterClick("TOTAL")} />
           <MetricCard title="Active" count={pharmacies.filter(p => p.status === "ACTIVE").length} icon={CheckCircle} color="#10B981" isActive={activeFilter === "ACTIVE"} onClick={() => handleFilterClick("ACTIVE")} />
-          <MetricCard title="Suspended" count={pharmacies.filter(p => p.status === "SUSPENDED").length} icon={AlertTriangle} color="#EF4444" isActive={activeFilter === "SUSPENDED"} onClick={() => handleFilterClick("SUSPENDED")} />
-          <MetricCard title="Pending" count={pharmacies.filter(p => p.status === "PENDING").length} icon={Clock} color="#F59E0B" isActive={activeFilter === "PENDING"} onClick={() => handleFilterClick("PENDING")} />
-        </div>
+          <MetricCard title="Pending" count={pharmacies.filter(p => p.status === "PENDING").length} icon={Clock} color="#3B82F6" isActive={activeFilter === "PENDING"} onClick={() => handleFilterClick("PENDING")} />
+          <MetricCard title="Suspended" count={pharmacies.filter(p => p.status === "SUSPENDED").length} icon={AlertTriangle} color="#F59E0B" isActive={activeFilter === "SUSPENDED"} onClick={() => handleFilterClick("SUSPENDED")} />
+          <MetricCard title="Removed" count={pharmacies.filter(p => p.status === "REMOVED").length} icon={Clock} color="#EF4444" isActive={activeFilter === "REMOVED"} onClick={() => handleFilterClick("REMOVED")} />
+          </div>
+        </section>
 
         {/* Pharmacy Type Filters */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {pharmacyTypes.map((t) => (
-            <PharmacyTypeCard key={t} type={t} count={pharmacies.filter(p => p.pharmacy_type === t).length} isActive={activeFilter === t} onClick={() => handleFilterClick(t)} />
-          ))}
-        </div>
+        <section className="space-y-3">
+          <h2 className="text-xs font-black uppercase tracking-[0.3em] text-slate-400">Types</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {pharmacyTypes.map((t) => (
+              <PharmacyTypeCard key={t} type={t} count={pharmacies.filter(p => p.pharmacy_type === t).length} isActive={activeFilter === t} onClick={() => handleFilterClick(t)} />
+            ))}
+          </div>
+        </section>
 
         {/* Search & Table */}
         <div className="pt-6 border-t border-slate-200 space-y-6">
@@ -168,16 +161,22 @@ const PharmacyManagementHome = () => {
         </div>
 
         {/* Modals */}
-        <ActivatePharmacyModal open={openActivate} pharmacy={selectedPharmacy} onClose={() => setOpenActivate(false)} refresh={loadPharmacies} />
+        <ActivatePharmacyModal
+          open={openActivate}
+          pharmacy={selectedPharmacy}
+          onClose={() => setOpenActivate(false)}
+          refresh={loadPharmacies}
+          onSuccess={(updatedId) => navigate(`/admin/pharmacies/${updatedId}`)}
+        />
         <RejectPharmacyModal open={openReject} pharmacy={selectedPharmacy} onClose={() => setOpenReject(false)} refresh={loadPharmacies} />
         <RemovePharmacyModal open={openRemove} pharmacy={selectedPharmacy} onClose={() => setOpenRemove(false)} refresh={loadPharmacies} />
         <SuspendPharmacyModal open={openSuspend} pharmacy={selectedPharmacy} onClose={() => setOpenSuspend(false)} refresh={loadPharmacies} />
       </div>
 
       {/* Sidebar */}
-      <div className="hidden xl:flex flex-col gap-6 w-[260px] p-6 border-l bg-white h-screen sticky top-0 overflow-y-auto">
-        <NotificationPanel notifications={notifications} />
+      <div className="hidden xl:flex flex-col gap-6 w-[220px] ml-auto p-4 bg-white h-screen sticky top-0 overflow-y-auto">
         <QuickActionPanel actions={actions} />
+        <NotificationPanel notifications={notifications} />
       </div>
     </div>
   );

@@ -60,4 +60,25 @@ public interface ReservationRepository extends JpaRepository<Reservation, String
         long countByStatus(ReservationStatus status);
 
         List<Reservation> findByStatus(ReservationStatus status, Pageable pageable);
+
+        @Query("""
+                            SELECT function('date', r.reservationDate) as date, COALESCE(SUM(r.totalAmount), 0) as revenue
+                            FROM Reservation r
+                            WHERE r.pharmacy.id = :pharmacyId AND r.status = 'COLLECTED' AND r.reservationDate >= :since
+                            GROUP BY function('date', r.reservationDate)
+                            ORDER BY function('date', r.reservationDate)
+                        """)
+        List<Object[]> findDailyRevenue(@Param("pharmacyId") Long pharmacyId, @Param("since") LocalDateTime since);
+
+        @Query("""
+                            SELECT r.status, COUNT(r)
+                            FROM Reservation r
+                            WHERE r.pharmacy.id = :pharmacyId
+                            GROUP BY r.status
+                        """)
+        List<Object[]> countReservationsByStatus(@Param("pharmacyId") Long pharmacyId);
+
+        long countByCivilianId(Long civilianId);
+
+        long countByCivilianIdAndStatus(Long civilianId, ReservationStatus status);
 }

@@ -17,6 +17,9 @@ public class PharmacyProfileService {
     private final PharmacyProfileRepository pharmacyProfileRepository;
 
     public PharmacyProfileDto getProfile(Long pharmacyId) {
+        if (pharmacyId == null) {
+            throw new IllegalArgumentException("Pharmacy ID cannot be null");
+        }
         Pharmacy pharmacy = pharmacyRepository.findById(pharmacyId)
                 .orElseThrow(() -> new RuntimeException("Pharmacy not found"));
 
@@ -54,6 +57,9 @@ public class PharmacyProfileService {
 
     @Transactional
     public void updateProfile(Long pharmacyId, PharmacyProfileDto dto) {
+        if (pharmacyId == null) {
+            throw new IllegalArgumentException("Pharmacy ID cannot be null");
+        }
         Pharmacy pharmacy = pharmacyRepository.findById(pharmacyId)
                 .orElseThrow(() -> new RuntimeException("Pharmacy not found"));
 
