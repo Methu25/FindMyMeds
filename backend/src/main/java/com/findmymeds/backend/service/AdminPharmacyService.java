@@ -40,6 +40,15 @@ public class AdminPharmacyService {
                 .orElseThrow(() -> new RuntimeException("Pharmacy not found"));
     }
 
+    // 🔹 Get rejected pharmacy by ID (rejected details page)
+    public Pharmacy getRejectedPharmacyById(Long id) {
+        Pharmacy pharmacy = getPharmacyById(id);
+        if (pharmacy.getStatus() != PharmacyStatus.REJECTED) {
+            throw new RuntimeException("Pharmacy is not rejected");
+        }
+        return pharmacy;
+    }
+
     // 🔹 Create pharmacy (pharmacyType REQUIRED)
     public Pharmacy createPharmacy(Pharmacy pharmacy) {
         if (pharmacy.getPharmacyType() == null) {
@@ -76,8 +85,9 @@ public class AdminPharmacyService {
 
         // Only allow transitions to ACTIVE, SUSPENDED, REMOVED
         if (status == PharmacyStatus.ACTIVE ||
-            status == PharmacyStatus.SUSPENDED ||
-            status == PharmacyStatus.REMOVED) {
+                status == PharmacyStatus.SUSPENDED ||
+                status == PharmacyStatus.REJECTED ||
+                status == PharmacyStatus.REMOVED) {
             pharmacy.setStatus(status);
             return pharmacyRepository.save(pharmacy);
         } else {

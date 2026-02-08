@@ -1,5 +1,5 @@
 package com.findmymeds.backend.model.enums;
 
 public enum Priority {
-    CRITICAL, HIGH, WARNING, MEDIUM, LOW
+    CRITICAL, HIGH, WARNING, MEDIUM, LOW, INFO
 }
