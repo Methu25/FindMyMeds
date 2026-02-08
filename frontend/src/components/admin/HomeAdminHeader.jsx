@@ -8,7 +8,7 @@ const HomeAdminHeader = ({ title, userName = "Chetto", role = "Super Admin" }) =
   const derivedTitle = useMemo(() => {
     const path = location.pathname;
     if (path.startsWith('/admin/pharmacy/rejected/')) return 'Rejected Pharmacy';
-    if (path === '/admin/pharmacies/rejected') return 'Rejected Pharmacies';
+    if (path === '/admin/pharmacy/rejected') return 'Rejected Pharmacies';
     if (path.startsWith('/admin/pharmacies/')) return 'Pharmacy Details';
     if (path === '/admin/pharmacies') return 'Pharmacies';
     if (path.startsWith('/admin/pharmacy-review/')) return 'Pharmacy Review';

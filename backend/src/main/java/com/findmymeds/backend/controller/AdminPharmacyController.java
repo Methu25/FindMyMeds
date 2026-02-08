@@ -7,6 +7,7 @@ import com.findmymeds.backend.service.AdminPharmacyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 import java.util.List;
 
 @RestController
@@ -67,5 +68,13 @@ public class AdminPharmacyController {
     @PatchMapping("/{id}/remove")
     public Pharmacy removePharmacy(@PathVariable Long id) {
         return pharmacyService.updatePharmacyStatus(id, PharmacyStatus.REMOVED);
+    }
+
+    // 🔹 ANY → REJECTED
+    @PatchMapping("/{id}/reject")
+    public Pharmacy rejectPharmacy(
+            @PathVariable Long id,
+            @RequestBody(required = false) Map<String, String> body) {
+        return pharmacyService.updatePharmacyStatus(id, PharmacyStatus.REJECTED);
     }
 }

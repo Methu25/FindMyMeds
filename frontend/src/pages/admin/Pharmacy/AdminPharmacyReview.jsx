@@ -56,7 +56,7 @@ const AdminPharmacyReview = () => {
   const handleAfterAction = (type) => {
     if (type === 'REJECT') {
       // Move to the rejected pharmacies list (Create this route in App.jsx later)
-      navigate('/admin/rejected-pharmacies');
+      navigate('/admin/pharmacy/rejected');
     } else {
       // If approved/forwarded, go back to the main queue
       navigate('/admin/pharmacy-approvals');
