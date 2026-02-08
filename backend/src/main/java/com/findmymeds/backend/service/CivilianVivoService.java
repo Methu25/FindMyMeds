@@ -28,6 +28,9 @@ public class CivilianVivoService {
 
     @Transactional(readOnly = true)
     public AdminCivilianVivoDTO getVivo(Long civilianId) {
+        if (civilianId == null) {
+            throw new IllegalArgumentException("Civilian ID cannot be null");
+        }
         Civilian c = civilianRepository.findById(civilianId)
                 .orElseThrow(() -> new IllegalArgumentException("Civilian not found: " + civilianId));
 
@@ -79,6 +82,9 @@ public class CivilianVivoService {
 
     @Transactional
     public void disableLogin(Long civilianId, Long adminId) {
+        if (civilianId == null) {
+            throw new IllegalArgumentException("Civilian ID cannot be null");
+        }
         Civilian c = civilianRepository.findById(civilianId)
                 .orElseThrow(() -> new IllegalArgumentException("Civilian not found: " + civilianId));
 
@@ -94,6 +100,9 @@ public class CivilianVivoService {
      */
     @Transactional
     public void anonymize(Long civilianId, Long adminId) {
+        if (civilianId == null) {
+            throw new IllegalArgumentException("Civilian ID cannot be null");
+        }
         Civilian c = civilianRepository.findById(civilianId)
                 .orElseThrow(() -> new IllegalArgumentException("Civilian not found: " + civilianId));
 
@@ -151,12 +160,18 @@ public class CivilianVivoService {
                 .build();
     }
 
-    private int nz(Integer v) { return v == null ? 0 : v; }
-    private String nvl(String a, String b) { return (a == null || a.isBlank()) ? b : a; }
+    private int nz(Integer v) {
+        return v == null ? 0 : v;
+    }
+
+    private String nvl(String a, String b) {
+        return (a == null || a.isBlank()) ? b : a;
+    }
 
     // ---- masking helpers (simple + readable) ----
     private String maskEmail(String email) {
-        if (email == null || !email.contains("@")) return "***@***";
+        if (email == null || !email.contains("@"))
+            return "***@***";
         String[] parts = email.split("@", 2);
         String user = parts[0];
         String domain = parts[1];
@@ -165,7 +180,8 @@ public class CivilianVivoService {
     }
 
     private String maskName(String name) {
-        if (name == null || name.isBlank()) return "*****";
+        if (name == null || name.isBlank())
+            return "*****";
         String[] parts = name.trim().split("\\s+");
         String first = parts[0];
         String firstMasked = first.charAt(0) + "***";
@@ -173,15 +189,19 @@ public class CivilianVivoService {
     }
 
     private String maskPhone(String phone) {
-        if (phone == null || phone.isBlank()) return "***";
+        if (phone == null || phone.isBlank())
+            return "***";
         String p = phone.replaceAll("\\s+", "");
-        if (p.length() <= 2) return "**";
+        if (p.length() <= 2)
+            return "**";
         return "***" + p.substring(p.length() - 2);
     }
 
     private String maskNic(String nic) {
-        if (nic == null || nic.isBlank()) return "***";
-        if (nic.length() <= 3) return "***";
+        if (nic == null || nic.isBlank())
+            return "***";
+        if (nic.length() <= 3)
+            return "***";
         return nic.substring(0, 3) + "******";
     }
 }

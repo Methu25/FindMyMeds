@@ -13,7 +13,6 @@ import com.findmymeds.backend.repository.PharmacyReportRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -58,6 +57,9 @@ public class PharmacyAdminCenterService {
     }
 
     public void submitReport(Long pharmacyId, ReportRequestDto request) {
+        if (pharmacyId == null) {
+            throw new IllegalArgumentException("Pharmacy ID cannot be null");
+        }
         Pharmacy pharmacy = pharmacyRepository.getReferenceById(pharmacyId);
         PharmacyReport report = new PharmacyReport();
         report.setPharmacy(pharmacy);

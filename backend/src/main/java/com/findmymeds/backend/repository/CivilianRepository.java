@@ -14,39 +14,41 @@ import java.util.List;
 @Repository
 public interface CivilianRepository extends JpaRepository<Civilian, Long> {
 
-    long countByAccountStatus(AccountStatus status);
+  long countByAccountStatus(AccountStatus status);
 
-    @Query("""
-        SELECT c FROM Civilian c
-        WHERE (:status IS NULL OR c.accountStatus = :status)
-          AND (
-            :search IS NULL OR :search = '' OR
-            LOWER(c.fullName) LIKE LOWER(CONCAT('%', :search, '%')) OR
-            LOWER(c.email) LIKE LOWER(CONCAT('%', :search, '%')) OR
-            LOWER(c.nicNumber) LIKE LOWER(CONCAT('%', :search, '%'))
-          )
-    """)
-    Page<Civilian> search(@Param("status") AccountStatus status,
-                          @Param("search") String search,
-                          Pageable pageable);
+  boolean existsByEmail(String email);
 
-    List<Civilian> findByAccountStatus(AccountStatus status);
+  @Query("""
+          SELECT c FROM Civilian c
+          WHERE (:status IS NULL OR c.accountStatus = :status)
+            AND (
+              :search IS NULL OR :search = '' OR
+              LOWER(c.fullName) LIKE LOWER(CONCAT('%', :search, '%')) OR
+              LOWER(c.email) LIKE LOWER(CONCAT('%', :search, '%')) OR
+              LOWER(c.nicNumber) LIKE LOWER(CONCAT('%', :search, '%'))
+            )
+      """)
+  Page<Civilian> search(@Param("status") AccountStatus status,
+      @Param("search") String search,
+      Pageable pageable);
 
-    @Query("""
-        SELECT c FROM Civilian c
-        WHERE c.accountStatus = :status
-          AND c.banDate IS NOT NULL
-          AND c.banDate < :cutoff
-    """)
-    List<Civilian> findTempBannedBefore(@Param("status") AccountStatus status,
-                                        @Param("cutoff") LocalDateTime cutoff);
+  List<Civilian> findByAccountStatus(AccountStatus status);
 
-    @Query("""
-        SELECT c FROM Civilian c
-        WHERE c.accountStatus = :status
-          AND c.permanentBanDate IS NOT NULL
-          AND c.permanentBanDate < :cutoff
-    """)
-    List<Civilian> findPermanentBannedBefore(@Param("status") AccountStatus status,
-                                             @Param("cutoff") LocalDateTime cutoff);
+  @Query("""
+          SELECT c FROM Civilian c
+          WHERE c.accountStatus = :status
+            AND c.banDate IS NOT NULL
+            AND c.banDate < :cutoff
+      """)
+  List<Civilian> findTempBannedBefore(@Param("status") AccountStatus status,
+      @Param("cutoff") LocalDateTime cutoff);
+
+  @Query("""
+          SELECT c FROM Civilian c
+          WHERE c.accountStatus = :status
+            AND c.permanentBanDate IS NOT NULL
+            AND c.permanentBanDate < :cutoff
+      """)
+  List<Civilian> findPermanentBannedBefore(@Param("status") AccountStatus status,
+      @Param("cutoff") LocalDateTime cutoff);
 }

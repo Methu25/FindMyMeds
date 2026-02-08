@@ -34,6 +34,9 @@ public class AdminAppealDetailsDTO {
     private Integer remainingAppeals; // MAX_APPEALS - appealCount
     private String accountStatus;
 
+    private Long totalReservations;
+    private Long uncollectedOrders;
+
     // History timeline
     private List<AdminAppealHistoryItemDTO> history;
 }
