@@ -1,5 +1,5 @@
 package com.findmymeds.backend.model.enums;
 
 public enum PharmacyStatus {
-    PENDING, ACTIVE, SUSPENDED, REMOVED
+    ACTIVE, SUSPENDED, PENDING, REJECTED, REMOVED
 }

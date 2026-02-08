@@ -57,7 +57,7 @@ public class Pharmacy {
     private String operatingHours;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status")
+    @Column(name = "status", columnDefinition = "varchar(20)")
     private PharmacyStatus status;
 
     @Column(name = "is_deleted")
@@ -79,12 +79,11 @@ public class Pharmacy {
     private String badge;
 
     @Enumerated(EnumType.STRING)
-@Column(name = "pharmacy_type", nullable = false)
-private PharmacyType pharmacyType;
-
+    @Column(name = "pharmacy_type", nullable = false)
+    private PharmacyType pharmacyType;
 
     @Transient
     private Double distance;
-   // Optional, for UI purposes
+    // Optional, for UI purposes
 
 }

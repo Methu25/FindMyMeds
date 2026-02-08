@@ -16,6 +16,12 @@ import AdminNotificationDetails from './pages/admin/AdminNotificationDetails';
 import AdminProfilePage from './pages/admin/AdminProfilePage';
 import SystemSettings from './pages/admin/SystemSettings'; // Moved to admin
 import PharmacyManagementHome from './pages/admin/Pharmacy/PharmacyManagementHome'; // Imported PharmacyManagementHome
+import AdminPharmacyDetails from "./pages/admin/Pharmacy/AdminPharmacyDetails";
+import AdminPharmacyReview from "./pages/admin/Pharmacy/AdminPharmacyReview";
+import AdminPharmacyReports from "./pages/admin/Pharmacy/AdminPharmacyReports";
+import AdminReportDetails from "./pages/admin/Pharmacy/AdminReportDetails";
+import RejectedPharmacyTable from "./pages/admin/Pharmacy/RejectedPharmacyTable";
+import RejectedPharmacyDetails from "./pages/admin/Pharmacy/RejectedPharmacyDetails";
 
 // Pharmacy Pages 
 import PharmacyDashboard from './pages/pharmacy/Dashboard';
@@ -48,6 +54,25 @@ function App() {
 
         {/*  Admin Routes */}
         <Route path="/admin" element={<AdminLayout />}>
+        <Route
+  path="/admin/pharmacies/:pharmacyId"
+  element={<AdminPharmacyDetails />}
+/>
+{/* Pharmacy Reports & Inquiries Routes */}
+<Route 
+  path="/admin/reports" 
+  element={<AdminPharmacyReports />} 
+/>
+
+<Route 
+  path="/admin/reports/:reportId" 
+  element={<AdminReportDetails />} 
+/>
+<Route path="/admin/pharmacy/rejected" element={<RejectedPharmacyTable />} />
+<Route path="/admin/pharmacy/rejected/:id" element={<RejectedPharmacyDetails />} />
+
+        <Route path="/admin/pharmacy-review/:pharmacyId" element={<AdminPharmacyReview />} />
+
 
           {/* When visiting /admin -> go to /admin/dashboard */}
           <Route index element={<Navigate to="dashboard" replace />} />

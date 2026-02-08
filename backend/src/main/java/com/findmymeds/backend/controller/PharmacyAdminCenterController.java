@@ -18,7 +18,7 @@ public class PharmacyAdminCenterController {
 
     private final PharmacyAdminCenterService pharmacyAdminCenterService;
 
-    @GetMapping("/profile")
+    @GetMapping("/admin/profile")
     public ResponseEntity<PharmacyProfileDto> getProfile() {
         Long pharmacyId = 1L; // Mock ID
         return ResponseEntity.ok(pharmacyAdminCenterService.getProfile(pharmacyId));
