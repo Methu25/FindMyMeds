@@ -33,8 +33,7 @@ public class AdminCivilianController {
             @RequestParam(required = false) AccountStatus status,
             @RequestParam(required = false) String search,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
-    ) {
+            @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
         return queryService.getTable(status, search, pageable);
     }
@@ -46,15 +45,15 @@ public class AdminCivilianController {
 
     @PostMapping("/{id}/temp-ban")
     public void tempBan(@PathVariable Long id,
-                        @RequestBody AdminCivilianTempBanRequestDTO req,
-                        @RequestParam Long adminId) {
+            @RequestBody AdminCivilianTempBanRequestDTO req,
+            @RequestParam Long adminId) {
         banService.tempBan(id, req.getReason(), adminId);
     }
 
     @PostMapping("/{id}/permanent-ban")
     public void permanentBan(@PathVariable Long id,
-                             @RequestBody AdminPermanentBanRequestDTO req,
-                             @RequestParam Long adminId) {
+            @RequestBody AdminPermanentBanRequestDTO req,
+            @RequestParam Long adminId) {
         banService.permanentBan(id, req.getReason(), adminId);
     }
 }

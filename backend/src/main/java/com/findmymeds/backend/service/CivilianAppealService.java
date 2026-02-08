@@ -22,6 +22,9 @@ public class CivilianAppealService {
 
     @Transactional
     public CivilianAppeal submitAppeal(Long civilianId, String reason, String attachment) {
+        if (civilianId == null) {
+            throw new IllegalArgumentException("Civilian ID cannot be null");
+        }
         Civilian c = civilianRepository.findById(civilianId)
                 .orElseThrow(() -> new IllegalArgumentException("Civilian not found: " + civilianId));
 
@@ -65,7 +68,8 @@ public class CivilianAppealService {
 
         CivilianAppeal saved = appealRepository.save(appeal);
 
-        // We don't have APPEAL_SUBMITTED in your enum (and DB enum column), so we log a safe action:
+        // We don't have APPEAL_SUBMITTED in your enum (and DB enum column), so we log a
+        // safe action:
         historyLogger.log(c, CivilianActionType.VIEW_VIVO, null, "Appeal submitted (recorded in civilian_appeals)");
 
         return saved;

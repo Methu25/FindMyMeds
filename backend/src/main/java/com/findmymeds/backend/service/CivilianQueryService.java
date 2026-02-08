@@ -53,6 +53,9 @@ public class CivilianQueryService {
 
     @Transactional(readOnly = true)
     public AdminCivilianDetailsDTO getDetails(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("ID cannot be null");
+        }
         Civilian c = civilianRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Civilian not found: " + id));
 

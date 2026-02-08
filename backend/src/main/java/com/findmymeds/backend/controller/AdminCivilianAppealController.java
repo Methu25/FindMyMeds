@@ -3,7 +3,7 @@ package com.findmymeds.backend.controller;
 import com.findmymeds.backend.dto.AdminAppealRejectRequestDTO;
 import com.findmymeds.backend.service.CivilianAppealAdminService;
 import com.findmymeds.backend.dto.AdminAppealDetailsDTO;
-import com.findmymeds.backend.dto.AdminAppealRejectRequestDTO;
+
 import com.findmymeds.backend.service.CivilianAppealQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +15,11 @@ public class AdminCivilianAppealController {
 
     private final CivilianAppealAdminService appealAdminService;
     private final CivilianAppealQueryService appealQueryService;
+
+    @GetMapping("/latest-by-civilian")
+    public AdminAppealDetailsDTO getLatestAppeal(@RequestParam Long civilianId) {
+        return appealQueryService.getLatestAppeal(civilianId);
+    }
 
     @GetMapping("/{appealId}")
     public AdminAppealDetailsDTO getAppeal(@PathVariable Long appealId) {
@@ -28,8 +33,8 @@ public class AdminCivilianAppealController {
 
     @PostMapping("/{appealId}/reject")
     public void reject(@PathVariable Long appealId,
-                       @RequestParam Long adminId,
-                       @RequestBody AdminAppealRejectRequestDTO request) {
+            @RequestParam Long adminId,
+            @RequestBody AdminAppealRejectRequestDTO request) {
         appealAdminService.reject(appealId, adminId, request.getReason());
     }
 }

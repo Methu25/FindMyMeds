@@ -66,142 +66,139 @@ export default function CivilianDetails() {
                     <ChevronLeft size={24} />
                 </button>
                 <div>
-                    <h1 className="text-2xl font-bold text-slate-800">Civilian Profile</h1>
-                    <p className="text-slate-400 text-sm">Manage account status and view history</p>
+                    <h1 className="text-2xl font-bold text-slate-800">Civilian Account Details</h1>
+                    <p className="text-slate-400 text-sm">Review civilian account status and history</p>
                 </div>
             </div>
 
             {/* Main Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-8 space-y-8">
 
-                {/* Left Column: Profile Card */}
-                <div className="space-y-6">
-                    <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 text-center relative overflow-hidden">
-                        <div className={`absolute top-0 left-0 w-full h-2 ${civilian.accountStatus === 'ACTIVE' ? 'bg-emerald-500' :
-                                civilian.accountStatus === 'TEMP_BANNED' ? 'bg-orange-500' : 'bg-rose-500'
-                            }`} />
-
-                        <div className="w-24 h-24 bg-slate-100 rounded-full mx-auto mb-4 flex items-center justify-center text-slate-300">
-                            <User size={48} />
-                        </div>
-                        <h2 className="text-xl font-bold text-slate-800">{civilian.fullName}</h2>
-                        <p className="text-slate-500 text-sm mb-4">NIC: {civilian.nicNumber}</p>
-
-                        <StatusBadge status={civilian.accountStatus} />
-
-                        <div className="mt-8 space-y-3 text-left">
-                            <div className="flex items-center gap-3 text-sm text-slate-600">
-                                <Mail size={16} className="text-slate-400" />
-                                <span className="truncate">{civilian.email}</span>
-                            </div>
-                            <div className="flex items-center gap-3 text-sm text-slate-600">
-                                <Phone size={16} className="text-slate-400" />
-                                <span>{civilian.phone}</span>
-                            </div>
-                        </div>
-
-                        {/* Actions */}
-                        {civilian.accountStatus !== 'PERMANENT_BANNED' && (
-                            <div className="grid grid-cols-2 gap-3 mt-8">
-                                {civilian.accountStatus === 'ACTIVE' && (
-                                    <button
-                                        onClick={() => { setBanType('TEMP'); setShowBanModal(true); }}
-                                        className="py-2.5 px-4 bg-orange-50 text-orange-600 text-xs font-bold rounded-xl border border-orange-100 hover:bg-orange-100 transition-colors"
-                                    >
-                                        Temp Ban
-                                    </button>
-                                )}
-                                <button
-                                    onClick={() => { setBanType('PERMANENT'); setShowBanModal(true); }}
-                                    className={`py-2.5 px-4 bg-rose-50 text-rose-600 text-xs font-bold rounded-xl border border-rose-100 hover:bg-rose-100 transition-colors ${civilian.accountStatus !== 'ACTIVE' ? 'col-span-2' : ''}`}
-                                >
-                                    Permanent Ban
-                                </button>
-                            </div>
-                        )}
+                {/* 1. Account Overview */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-12">
+                    <div>
+                        <p className="text-xs text-slate-400 font-bold uppercase mb-1">Civilian ID</p>
+                        <p className="text-lg text-slate-800 font-bold">CIV-{civilian.id}</p>
                     </div>
-
-                    {/* Metrics Summary */}
-                    <div className="grid grid-cols-2 gap-4">
-                        <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-100 text-center">
-                            <span className="text-3xl font-bold text-slate-700">{civilian.tempBanCount}</span>
-                            <p className="text-xs text-slate-400 uppercase font-bold mt-1">Temp Bans</p>
-                        </div>
-                        <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-100 text-center">
-                            <span className="text-3xl font-bold text-blue-600">{civilian.appealCount}</span>
-                            <p className="text-xs text-slate-400 uppercase font-bold mt-1">Appeals</p>
-                        </div>
+                    <div>
+                        <p className="text-xs text-slate-400 font-bold uppercase mb-1">Full Name</p>
+                        <p className="text-lg text-slate-800 font-bold">{civilian.fullName}</p>
+                    </div>
+                    <div>
+                        <p className="text-xs text-slate-400 font-bold uppercase mb-1">Email</p>
+                        <p className="text-base text-slate-800 font-medium">{civilian.email}</p>
+                    </div>
+                    <div>
+                        <p className="text-xs text-slate-400 font-bold uppercase mb-1">Contact Number</p>
+                        <p className="text-base text-slate-800 font-medium">{civilian.phone}</p>
+                    </div>
+                    <div>
+                        <p className="text-xs text-slate-400 font-bold uppercase mb-1">Account Status</p>
+                        <div className="mt-1"><StatusBadge status={civilian.accountStatus} /></div>
+                    </div>
+                    <div>
+                        <p className="text-xs text-slate-400 font-bold uppercase mb-1">Temporary Ban Count</p>
+                        <p className="text-base text-slate-800 font-medium">{civilian.tempBanCount}</p>
+                    </div>
+                    <div>
+                        <p className="text-xs text-slate-400 font-bold uppercase mb-1">Appeal Count</p>
+                        <p className="text-base text-slate-800 font-medium">{civilian.appealCount}</p>
                     </div>
                 </div>
 
-                {/* Right Column: History & Details */}
-                <div className="lg:col-span-2 space-y-6">
+                <hr className="border-slate-100" />
 
-                    {/* Active Ban Info (if any) */}
-                    {(civilian.accountStatus === 'TEMP_BANNED' || civilian.accountStatus === 'PERMANENT_BANNED') && (
-                        <div className="bg-red-50/50 border border-red-100 rounded-2xl p-6">
-                            <h3 className="text-sm font-bold text-red-800 uppercase tracking-wide mb-4 flex items-center gap-2">
-                                <AlertTriangle size={16} /> Current Ban Details
-                            </h3>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div>
-                                    <p className="text-xs text-slate-400 font-bold uppercase mb-1">Reason</p>
-                                    <p className="text-sm text-slate-800 font-medium">{civilian.banReason}</p>
-                                </div>
-                                <div>
-                                    <p className="text-xs text-slate-400 font-bold uppercase mb-1">Ban Date</p>
-                                    <p className="text-sm text-slate-800 font-medium">{new Date(civilian.banDate).toLocaleString()}</p>
-                                </div>
-                                {civilian.accountStatus === 'TEMP_BANNED' && (
-                                    <>
-                                        <div>
-                                            <p className="text-xs text-slate-400 font-bold uppercase mb-1">Appeal Deadline</p>
-                                            <p className="text-sm text-slate-800 font-medium">{new Date(civilian.appealDeadline).toLocaleDateString()}</p>
-                                        </div>
-                                        <div>
-                                            <p className="text-xs text-slate-400 font-bold uppercase mb-1">Remaining Days for Appeal</p>
-                                            <p className="text-sm text-emerald-600 font-bold">{civilian.remainingDays} Days</p>
-                                        </div>
-                                    </>
-                                )}
+                {/* 2. Ban Information (Conditional) */}
+                {(civilian.accountStatus === 'TEMP_BANNED' || civilian.accountStatus === 'PERMANENT_BANNED') && (
+                    <div className="space-y-6">
+                        <h3 className="text-lg font-bold text-orange-600">Ban Information</h3>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-12">
+                            <div>
+                                <p className="text-xs text-slate-400 font-bold uppercase mb-1">Ban Reason</p>
+                                <p className="text-base text-slate-800 font-medium">{civilian.banReason || "No reason provided"}</p>
                             </div>
+                            <div>
+                                <p className="text-xs text-slate-400 font-bold uppercase mb-1">Ban Date</p>
+                                <p className="text-base text-slate-800 font-medium">
+                                    {civilian.banDate ? new Date(civilian.banDate).toISOString().split('T')[0] : '-'}
+                                </p>
+                            </div>
+
+                            {civilian.accountStatus === 'TEMP_BANNED' && (
+                                <div>
+                                    <p className="text-xs text-slate-400 font-bold uppercase mb-1">Appeal Deadline</p>
+                                    <p className={`text-base font-bold ${civilian.remainingDays <= 3 ? 'text-red-600' : 'text-orange-600'}`}>
+                                        {civilian.remainingDays} days remaining
+                                    </p>
+                                </div>
+                            )}
                         </div>
+
+                        {/* Warnings */}
+                        <div className="space-y-2">
+                            {civilian.tempBanCount >= 2 && (
+                                <div className="flex items-center gap-2 text-red-600 bg-red-50 p-3 rounded-lg text-sm font-bold">
+                                    <AlertTriangle size={16} />
+                                    Warning: Maximum temporary bans reached. Next ban will be permanent.
+                                </div>
+                            )}
+                            {civilian.appealCount >= 2 && (
+                                <div className="flex items-center gap-2 text-orange-600 bg-orange-50 p-3 rounded-lg text-sm font-bold">
+                                    <AlertTriangle size={16} />
+                                    Warning: This is the last allowed appeal for this user.
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                )}
+
+                {/* 3. Action Buttons */}
+                <div className="flex gap-4 pt-4">
+                    {civilian.accountStatus === 'TEMP_BANNED' && (
+                        <button
+                            onClick={() => navigate(`/admin/appeals?civilianId=${civilian.id}`)}
+                            className="px-5 py-2.5 bg-[#2FA4A9] text-white font-bold rounded-lg hover:bg-[#268e93] transition-colors shadow-sm text-sm"
+                        >
+                            View Appeal Details
+                        </button>
                     )}
 
-                    {/* Privacy / VIVO Status */}
-                    <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
-                        <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wide mb-4 flex items-center gap-2">
-                            <Shield size={16} className="text-[#2FA4A9]" /> VIVO / Privacy Settings
-                        </h3>
-                        <div className="space-y-4">
-                            <div className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
-                                <span className="text-sm text-slate-600 font-medium">Login Access</span>
-                                <span className={`px-2 py-1 rounded text-xs font-bold ${!civilian.isLoginDisabled ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'}`}>
-                                    {!civilian.isLoginDisabled ? 'ENABLED' : 'DISABLED'}
-                                </span>
-                            </div>
-                            <div className="grid grid-cols-2 gap-4">
-                                <div>
-                                    <p className="text-xs text-slate-400 font-bold uppercase mb-1">Masked Name</p>
-                                    <p className="text-sm text-slate-600 font-mono bg-slate-50 p-2 rounded">{civilian.maskedName || '-'}</p>
-                                </div>
-                                <div>
-                                    <p className="text-xs text-slate-400 font-bold uppercase mb-1">Masked Email</p>
-                                    <p className="text-sm text-slate-600 font-mono bg-slate-50 p-2 rounded">{civilian.maskedEmail || '-'}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    {civilian.accountStatus === 'PERMANENT_BANNED' && (
+                        <button
+                            onClick={() => navigate(`/admin/civilians/${civilian.id}/vivo`)}
+                            className="px-5 py-2.5 bg-rose-600 text-white font-bold rounded-lg hover:bg-rose-700 transition-colors shadow-sm text-sm"
+                        >
+                            VIVO Manage
+                        </button>
+                    )}
 
-                    {/* Placeholder for future logs */}
-                    <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 flex items-center justify-center min-h-[150px] text-slate-400 text-sm border-dashed">
-                        <div className="text-center">
-                            <Clock size={24} className="mx-auto mb-2 opacity-50" />
-                            Account Activity Log (Coming Soon)
-                        </div>
-                    </div>
+                    <button
+                        onClick={() => navigate(-1)}
+                        className="px-5 py-2.5 bg-slate-100 text-slate-600 font-bold rounded-lg hover:bg-slate-200 transition-colors text-sm"
+                    >
+                        Back
+                    </button>
 
+                    {/* Keep Ban Buttons for Active Users (Backend Admin Feature) - Hidden from main view if strictly following request, but useful to keep accessible */}
+                    {civilian.accountStatus === 'ACTIVE' && (
+                        <div className="ml-auto flex gap-2">
+                            <button
+                                onClick={() => { setBanType('TEMP'); setShowBanModal(true); }}
+                                className="px-4 py-2 border border-orange-200 text-orange-600 font-bold rounded-lg hover:bg-orange-50 text-xs"
+                            >
+                                Temp Ban
+                            </button>
+                            <button
+                                onClick={() => { setBanType('PERMANENT'); setShowBanModal(true); }}
+                                className="px-4 py-2 border border-rose-200 text-rose-600 font-bold rounded-lg hover:bg-rose-50 text-xs"
+                            >
+                                Perm Ban
+                            </button>
+                        </div>
+                    )}
                 </div>
+
             </div>
 
             {/* Ban Action Modal */}
@@ -245,7 +242,6 @@ export default function CivilianDetails() {
                     </div>
                 </div>
             )}
-
         </div>
     );
 }

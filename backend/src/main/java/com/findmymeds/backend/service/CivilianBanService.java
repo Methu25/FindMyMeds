@@ -4,8 +4,7 @@ import com.findmymeds.backend.model.Civilian;
 import com.findmymeds.backend.model.enums.AccountStatus;
 import com.findmymeds.backend.model.enums.CivilianActionType;
 import com.findmymeds.backend.repository.CivilianRepository;
-import com.findmymeds.backend.service.CivilianHistoryLogger;
-import com.findmymeds.backend.service.CivilianRules;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +20,9 @@ public class CivilianBanService {
 
     @Transactional
     public void tempBan(Long civilianId, String reason, Long adminId) {
+        if (civilianId == null) {
+            throw new IllegalArgumentException("Civilian ID cannot be null");
+        }
         Civilian c = civilianRepository.findById(civilianId)
                 .orElseThrow(() -> new IllegalArgumentException("Civilian not found: " + civilianId));
 
@@ -43,6 +45,9 @@ public class CivilianBanService {
 
     @Transactional
     public void permanentBan(Long civilianId, String reason, Long adminId) {
+        if (civilianId == null) {
+            throw new IllegalArgumentException("Civilian ID cannot be null");
+        }
         Civilian c = civilianRepository.findById(civilianId)
                 .orElseThrow(() -> new IllegalArgumentException("Civilian not found: " + civilianId));
         permanentBanInternal(c, reason, adminId);
@@ -58,6 +63,11 @@ public class CivilianBanService {
         historyLogger.log(c, CivilianActionType.PERM_BAN, adminId, reason);
     }
 
-    private int nz(Integer v) { return v == null ? 0 : v; }
-    private String safe(String s) { return s == null ? "" : s; }
+    private int nz(Integer v) {
+        return v == null ? 0 : v;
+    }
+
+    private String safe(String s) {
+        return s == null ? "" : s;
+    }
 }
