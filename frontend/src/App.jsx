@@ -7,7 +7,8 @@ import Home from './pages/Home';
 // Admin Pages 
 import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminManagement from './pages/admin/AdminManagement';
-import CivilianManagement from './pages/admin/CivilianManagement';
+import CivilianManagement from "./pages/admin/Civilian/CivilianManagement";
+import CivilianDetails from "./pages/admin/Civilian/CivilianDetails";
 import AdminMedicineRegistry from './pages/admin/AdminMedicineRegistry';
 import AdminAddMedicine from './pages/admin/AdminAddMedicine';
 import AdminMedicineDetails from './pages/admin/AdminMedicineDetails';
@@ -63,7 +64,8 @@ function App() {
           <Route path="pharmacies" element={<PharmacyManagementHome />} />
 
           {/* Civilians */}
-          <Route path="civilians" element={<CivilianManagement />} />
+          <Route path="/admin/civilians" element={<CivilianManagement />} />
+          <Route path="/admin/civilians/:id" element={<CivilianDetails />} />
 
           {/* Notifications */}
           <Route path="notifications" element={<AdminNotificationCenter />} />

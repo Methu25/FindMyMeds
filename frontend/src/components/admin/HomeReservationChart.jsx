@@ -23,18 +23,55 @@ ChartJS.register(
   Legend
 );
 
-const ReservationChart = () => {
+const ReservationChart = ({ chartData }) => {
+
+  // Helper to fill in missing days (ensure always 30 data points)
+  const processData = (rawData) => {
+    const days = 30;
+    const filledData = [];
+    const today = new Date();
+    const dataMap = new Map();
+
+    if (rawData) {
+      rawData.forEach(item => {
+        // Assume item.date is "YYYY-MM-DD"
+        dataMap.set(item.date, item.count);
+      });
+    }
+
+    for (let i = days - 1; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(today.getDate() - i);
+      // Format as YYYY-MM-DD to match backend
+      const dateStr = d.toISOString().split('T')[0];
+      // Try to match somewhat loosely if timezone issues, but exact map is best first
+      // If map has the key, use it.
+
+      // Note: simple ISO split uses UTC. If your backend uses local server time, there might be a 1-day offset shift depending on time of day.
+      // For visual purposes, this is acceptable. 
+      filledData.push({
+        label: d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }), // "Jan 24"
+        value: dataMap.get(dateStr) || 0
+      });
+    }
+    return filledData;
+  };
+
+  const processed = processData(chartData);
+  const labels = processed.map(d => d.label);
+  const values = processed.map(d => d.value);
+
   const data = {
-    labels: Array.from({ length: 15 }, (_, i) => `Day ${i + 1}`),
+    labels: labels,
     datasets: [
       {
         fill: true,
         label: 'Reservations',
-        data: [50, 80, 65, 95, 120, 110, 140, 130, 160, 150, 185, 175, 200, 215, 225],
+        data: values,
         borderColor: '#2FA4A9',
         backgroundColor: (context) => {
           const ctx = context.chart.ctx;
-          const gradient = ctx.createLinearGradient(0, 0, 0, 280); 
+          const gradient = ctx.createLinearGradient(0, 0, 0, 280);
           gradient.addColorStop(0, 'rgba(47, 164, 169, 0.2)');
           gradient.addColorStop(1, 'rgba(47, 164, 169, 0)');
           return gradient;
@@ -64,20 +101,27 @@ const ReservationChart = () => {
     },
     scales: {
       x: {
-        grid: { display: false },
-        ticks: { 
-          color: '#94a3b8', 
+        grid: { display: false, drawBorder: false }, // Clean x-axis
+        ticks: {
+          color: '#94a3b8',
           font: { family: 'Inter', size: 11, weight: '600' },
           maxRotation: 0,
+          autoSkip: true,
+          maxTicksLimit: 15
         },
       },
       y: {
         beginAtZero: true,
-        grid: { color: '#f1f5f9', drawBorder: false },
-        ticks: { 
-          color: '#94a3b8', 
+        suggestedMax: 5,
+        border: { display: false }, // Remove vertical axis line
+        grid: {
+          color: '#f1f5f9',
+        },
+        ticks: {
+          color: '#94a3b8',
           font: { family: 'Inter', size: 11, weight: '600' },
-          stepSize: 50,
+          stepSize: 1,
+          padding: 10
         },
       },
     },
