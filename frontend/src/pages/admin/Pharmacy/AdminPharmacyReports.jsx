@@ -7,6 +7,7 @@ import {
 
 // Service Import
 import { getAllReports } from "../../../Service/Admin/ReportService";
+import MetricCard from "../../../components/admin/Pharmacy/MetricCard";
 
 const AdminPharmacyReports = () => {
   const navigate = useNavigate();
@@ -44,88 +45,80 @@ const AdminPharmacyReports = () => {
 
   // Analytics Calculation
   const stats = [
-    { label: 'Active Inquiries', count: reports.length, icon: <ClipboardList />, color: 'bg-slate-800', key: 'ALL' },
-    { label: 'Pending Review', count: reports.filter(r => r.status === 'PENDING').length, icon: <Clock />, color: 'bg-amber-500', key: 'PENDING' },
-    { label: 'Resolved Case', count: reports.filter(r => r.status === 'RESOLVED').length, icon: <CheckCircle2 />, color: 'bg-[#2FA4A9]', key: 'RESOLVED' },
-    { label: 'Rejected Entry', count: reports.filter(r => r.status === 'REJECTED').length, icon: <AlertCircle />, color: 'bg-rose-500', key: 'REJECTED' },
+    { label: 'Active Inquiries', count: reports.length, color: '#2FA4A9', key: 'ALL' },
+    { label: 'Pending Review', count: reports.filter(r => r.status === 'PENDING').length, color: '#58C6C9', key: 'PENDING' },
+    { label: 'Resolved Case', count: reports.filter(r => r.status === 'RESOLVED').length, color: '#2FA4A9', key: 'RESOLVED' },
+    { label: 'Rejected Entry', count: reports.filter(r => r.status === 'REJECTED').length, color: '#7AD6D9', key: 'REJECTED' },
   ];
 
   return (
-    <div className="p-8 space-y-8 animate-in fade-in duration-700 bg-[#F8FAFC] min-h-screen">
+    <div className="p-8 space-y-8 animate-in fade-in duration-700 bg-[#F7FBFB] min-h-screen">
       
-      {/* --- TOP HEADER SECTION --- */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-[1000] text-slate-800 uppercase tracking-tighter">Pharmacy Reports</h1>
-          <p className="text-[10px] font-black text-[#2FA4A9] uppercase tracking-[0.3em] mt-1 italic">
-            Governance & Inquiry Management System
-          </p>
+      {/* --- ANALYTICS DASH --- */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        {stats.map((stat) => (
+          <MetricCard
+            key={stat.key}
+            title={stat.label}
+            count={stat.count}
+            color={stat.color}
+            isActive={filter === stat.key}
+            onClick={() => setFilter(stat.key)}
+          />
+        ))}
+      </div>
+
+      {/* --- FILTER, SEARCH, REFRESH --- */}
+      <div className="flex flex-wrap items-start gap-4">
+        <div className="bg-white p-5 rounded-[2rem] border border-[#2FA4A9]/10 shadow-sm flex flex-wrap items-center gap-4 flex-1 min-w-[320px]">
+          <div className="flex-1 flex items-center gap-4 min-w-[260px]">
+            <Search size={20} className="text-[#2FA4A9]/40" />
+            <input 
+              type="text" 
+              placeholder="Search by Pharmacy Name or Case ID..."
+              className="flex-1 bg-transparent border-none text-sm font-semibold text-slate-700 placeholder:text-slate-400 outline-none"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+          
+          <div className="flex items-center gap-2 bg-[#EAF7F7] p-1.5 rounded-2xl border border-[#2FA4A9]/10">
+            {['ALL', 'PENDING', 'RESOLVED', 'REJECTED'].map((s) => (
+              <button
+                key={s}
+                onClick={() => setFilter(s)}
+                className={`px-6 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all ${
+                  filter === s ? 'bg-white text-[#2FA4A9] shadow-sm' : 'text-[#2FA4A9]/60 hover:text-[#2FA4A9]'
+                }`}
+              >
+                {s}
+              </button>
+            ))}
+          </div>
         </div>
+
         <button 
           onClick={fetchReports}
-          className="p-3 bg-white border border-slate-100 rounded-2xl text-slate-400 hover:text-[#2FA4A9] transition-all hover:rotate-180 duration-500 shadow-sm"
+          className="h-[56px] w-[56px] flex items-center justify-center bg-white border border-[#2FA4A9]/10 rounded-2xl text-[#2FA4A9] hover:text-[#1E8E92] transition-all hover:rotate-180 duration-500 shadow-sm"
+          aria-label="Refresh reports"
+          title="Refresh reports"
         >
           <RefreshCw size={20} />
         </button>
       </div>
 
-      {/* --- ANALYTICS DASH --- */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        {stats.map((stat, idx) => (
-          <div 
-            key={idx}
-            onClick={() => setFilter(stat.key)}
-            className={`cursor-pointer bg-white p-7 rounded-[2rem] border border-slate-100 shadow-sm transition-all hover:shadow-xl hover:-translate-y-1 ${filter === stat.key ? 'ring-2 ring-[#2FA4A9]/20 border-[#2FA4A9]' : ''}`}
-          >
-            <div className={`${stat.color} w-10 h-10 rounded-xl flex items-center justify-center text-white mb-5 shadow-lg`}>
-              {stat.icon}
-            </div>
-            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{stat.label}</p>
-            <h3 className="text-2xl font-[1000] text-slate-800 mt-1">{stat.count}</h3>
-          </div>
-        ))}
-      </div>
-
-      {/* --- FILTER & SEARCH BAR --- */}
-      <div className="bg-white p-5 rounded-[2rem] border border-slate-100 shadow-sm flex flex-wrap items-center gap-4">
-        <div className="flex-1 flex items-center gap-4 min-w-[300px]">
-          <Search size={20} className="text-slate-300" />
-          <input 
-            type="text" 
-            placeholder="Search by Pharmacy Name or Case ID..."
-            className="flex-1 bg-transparent border-none text-sm font-bold text-slate-700 placeholder:text-slate-300 outline-none"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
-        
-        <div className="flex items-center gap-2 bg-slate-50 p-1.5 rounded-2xl border border-slate-100">
-          {['ALL', 'PENDING', 'RESOLVED', 'REJECTED'].map((s) => (
-            <button
-              key={s}
-              onClick={() => setFilter(s)}
-              className={`px-6 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all ${
-                filter === s ? 'bg-white text-[#2FA4A9] shadow-sm' : 'text-slate-400 hover:text-slate-600'
-              }`}
-            >
-              {s}
-            </button>
-          ))}
-        </div>
-      </div>
-
       {/* --- TABLE CONTAINER --- */}
-      <div className="bg-white rounded-[3rem] border border-slate-100 shadow-sm overflow-hidden">
+      <div className="bg-white rounded-[3rem] border border-[#2FA4A9]/10 shadow-sm overflow-hidden">
         <table className="w-full text-left">
           <thead>
-            <tr className="bg-slate-50/50 border-b border-slate-50">
-              <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Inquiry Context</th>
-              <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Classification</th>
-              <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Current Status</th>
-              <th className="px-8 py-6 text-right text-[10px] font-black text-slate-400 uppercase tracking-widest">Execution</th>
+            <tr className="bg-[#F1F9F9] border-b border-[#E3F2F2]">
+              <th className="px-8 py-5 text-[11px] font-black text-[#2FA4A9] uppercase tracking-[0.18em]">Inquiry Context</th>
+              <th className="px-8 py-5 text-[11px] font-black text-[#2FA4A9] uppercase tracking-[0.18em]">Classification</th>
+              <th className="px-8 py-5 text-[11px] font-black text-[#2FA4A9] uppercase tracking-[0.18em]">Current Status</th>
+              <th className="px-8 py-5 text-right text-[11px] font-black text-[#2FA4A9] uppercase tracking-[0.18em]">Execution</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-50">
+          <tbody className="divide-y divide-[#EEF6F6]">
             {loading ? (
               <tr>
                 <td colSpan="4" className="px-8 py-24 text-center">
@@ -137,20 +130,20 @@ const AdminPharmacyReports = () => {
               </tr>
             ) : filteredReports.length > 0 ? (
               filteredReports.map((report) => (
-                <tr key={report.id} className="group hover:bg-slate-50/50 transition-colors">
+                <tr key={report.id} className="group hover:bg-[#F3FBFB] transition-colors odd:bg-white even:bg-[#FBFEFE]">
                   <td className="px-8 py-6">
                     <div className="flex items-center gap-4">
-                      <div className="w-11 h-11 bg-white border border-slate-100 rounded-2xl flex items-center justify-center text-slate-400 group-hover:text-[#2FA4A9] group-hover:border-[#2FA4A9]/30 transition-all shadow-sm">
+                      <div className="w-11 h-11 bg-[#EAF7F7] border border-[#2FA4A9]/10 rounded-2xl flex items-center justify-center text-[#2FA4A9] group-hover:text-[#1E8E92] group-hover:border-[#2FA4A9]/30 transition-all shadow-sm">
                         <MessageSquare size={18} />
                       </div>
                       <div>
-                        <p className="text-sm font-black text-slate-800 uppercase tracking-tight leading-none">{report.pharmacy_name}</p>
-                        <p className="text-[10px] font-bold text-slate-400 mt-2 italic tracking-wider">#ID-{report.id}</p>
+                        <p className="text-sm font-semibold text-slate-800 leading-none">{report.pharmacy_name}</p>
+                        <p className="text-[11px] font-semibold text-[#2FA4A9]/60 mt-2">#ID-{report.id}</p>
                       </div>
                     </div>
                   </td>
                   <td className="px-8 py-6">
-                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest bg-slate-100 px-3 py-1 rounded-full border border-slate-200">
+                    <span className="text-[10px] font-black text-[#2FA4A9] uppercase tracking-[0.12em] bg-[#EAF7F7] px-3 py-1 rounded-full border border-[#2FA4A9]/10">
                       {report.category}
                     </span>
                   </td>
@@ -160,7 +153,7 @@ const AdminPharmacyReports = () => {
                   <td className="px-8 py-6 text-right">
                     <button 
                       onClick={() => navigate(`/admin/reports/${report.id}`)}
-                      className="inline-flex items-center justify-center w-10 h-10 bg-slate-900 text-white rounded-xl hover:bg-[#2FA4A9] transition-all shadow-lg hover:shadow-[#2FA4A9]/30"
+                      className="inline-flex items-center justify-center w-10 h-10 bg-[#2FA4A9] text-white rounded-xl hover:bg-[#1E8E92] transition-all shadow-lg hover:shadow-[#2FA4A9]/30"
                     >
                       <ChevronRight size={18} />
                     </button>
@@ -184,13 +177,13 @@ const AdminPharmacyReports = () => {
 // Pure Status UI Component
 const StatusBadge = ({ status }) => {
   const styles = {
-    PENDING: "bg-amber-50 text-amber-600 border-amber-100",
-    RESOLVED: "bg-emerald-50 text-[#2FA4A9] border-emerald-100",
-    REJECTED: "bg-rose-50 text-rose-600 border-rose-100",
+    PENDING: "bg-[#EAF7F7] text-[#2FA4A9] border-[#CFECEC]",
+    RESOLVED: "bg-[#E7FAF9] text-[#1E8E92] border-[#C7EDED]",
+    REJECTED: "bg-[#FDEFEF] text-[#D86A6A] border-[#F7D9D9]",
   };
 
   return (
-    <span className={`px-4 py-1.5 rounded-full text-[9px] font-[1000] uppercase tracking-widest border ${styles[status] || styles.PENDING}`}>
+    <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.12em] border ${styles[status] || styles.PENDING}`}>
       {status || 'UNASSIGNED'}
     </span>
   );

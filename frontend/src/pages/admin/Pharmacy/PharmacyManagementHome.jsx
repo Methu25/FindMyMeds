@@ -174,7 +174,7 @@ const PharmacyManagementHome = () => {
       </div>
 
       {/* Sidebar */}
-      <div className="hidden xl:flex flex-col gap-6 w-[260px] p-6 bg-white h-screen sticky top-0 overflow-y-auto">
+      <div className="hidden xl:flex flex-col gap-6 w-[220px] ml-auto p-4 bg-white h-screen sticky top-0 overflow-y-auto">
         <QuickActionPanel actions={actions} />
         <NotificationPanel notifications={notifications} />
       </div>

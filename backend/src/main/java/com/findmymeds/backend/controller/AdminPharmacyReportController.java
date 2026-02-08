@@ -6,6 +6,7 @@ import com.findmymeds.backend.service.AdminPharmacyReportService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.lang.NonNull;
 
 import java.util.List;
 
@@ -23,17 +24,17 @@ public class AdminPharmacyReportController {
     }
 
     @GetMapping("/pharmacy/{pharmacyId}")
-    public List<PharmacyReport> getReportsByPharmacy(@PathVariable @org.springframework.lang.NonNull Long pharmacyId) {
+    public List<PharmacyReport> getReportsByPharmacy(@PathVariable @NonNull Long pharmacyId) {
         return reportService.getReportsByPharmacy(pharmacyId);
     }
 
     @PostMapping
-    public PharmacyReport createReport(@RequestBody @org.springframework.lang.NonNull PharmacyReport report) {
+    public PharmacyReport createReport(@RequestBody @NonNull PharmacyReport report) {
         return reportService.saveReport(report);
     }
 
     @PatchMapping("/{reportId}/status")
-    public PharmacyReport updateReportStatus(@PathVariable @org.springframework.lang.NonNull Long reportId,
+    public PharmacyReport updateReportStatus(@PathVariable @NonNull Long reportId,
             @RequestParam ReportStatus status) {
         return reportService.updateReportStatus(reportId, status);
     }

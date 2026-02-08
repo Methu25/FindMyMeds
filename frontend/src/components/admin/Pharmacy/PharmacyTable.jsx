@@ -29,10 +29,10 @@ const PharmacyTable = ({ pharmacies = [], loading }) => {
             <th className="px-4 py-2 text-left text-sm font-medium text-gray-500">ID</th>
             <th className="px-4 py-2 text-left text-sm font-medium text-gray-500">Name</th>
             <th className="px-4 py-2 text-left text-sm font-medium text-gray-500">Type</th>
-            <th className="px-4 py-2 text-left text-sm font-medium text-gray-500">Status</th>
             <th className="px-4 py-2 text-left text-sm font-medium text-gray-500">Address</th>
             <th className="px-4 py-2 text-left text-sm font-medium text-gray-500">Contact</th>
             <th className="px-4 py-2 text-center text-sm font-medium text-gray-500">Actions</th>
+            <th className="px-4 py-2 text-left text-sm font-medium text-gray-500">Status</th>
           </tr>
         </thead>
 
@@ -62,6 +62,25 @@ const PharmacyTable = ({ pharmacies = [], loading }) => {
                     {pharmacy.pharmacy_type}
                   </td>
 
+                  <td className="px-4 py-2">{pharmacy.address}</td>
+
+                  <td className="px-4 py-2">{pharmacy.contact_number}</td>
+
+                  <td className="px-4 py-2 text-center">
+                    <button
+                      onClick={() =>
+                        navigate(
+                          pharmacy.status === "PENDING"
+                            ? `/admin/pharmacy-review/${pharmacy.pharmacy_id}`
+                            : `/admin/pharmacies/${pharmacy.pharmacy_id}`
+                        )
+                      }
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-[11px] font-black uppercase tracking-widest text-white bg-gradient-to-r from-cyan-500 via-teal-500 to-emerald-500 shadow-lg shadow-emerald-500/20 ring-1 ring-white/10 hover:shadow-emerald-500/40 hover:scale-[1.02] transition"
+                    >
+                      {pharmacy.status === "PENDING" ? "Review" : "View / Manage"}
+                    </button>
+                  </td>
+
                   <td className="px-4 py-2 space-y-1">
                     {/* Status badge */}
                     <span
@@ -84,25 +103,6 @@ const PharmacyTable = ({ pharmacies = [], loading }) => {
                         Auto delete in {daysLeft} day{daysLeft !== 1 ? "s" : ""}
                       </div>
                     )}
-                  </td>
-
-                  <td className="px-4 py-2">{pharmacy.address}</td>
-
-                  <td className="px-4 py-2">{pharmacy.contact_number}</td>
-
-                  <td className="px-4 py-2 text-center">
-                    <button
-                      onClick={() =>
-                        navigate(
-                          pharmacy.status === "PENDING"
-                            ? `/admin/pharmacy-review/${pharmacy.pharmacy_id}`
-                            : `/admin/pharmacies/${pharmacy.pharmacy_id}`
-                        )
-                      }
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-[11px] font-black uppercase tracking-widest text-white bg-gradient-to-r from-cyan-500 via-teal-500 to-emerald-500 shadow-lg shadow-emerald-500/20 ring-1 ring-white/10 hover:shadow-emerald-500/40 hover:scale-[1.02] transition"
-                    >
-                      {pharmacy.status === "PENDING" ? "Review" : "View / Manage"}
-                    </button>
                   </td>
                 </tr>
               );

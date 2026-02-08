@@ -55,7 +55,7 @@ export const getReportDetails = async (id) => {
 
 export const updateReportStatus = async (id, status, reason) => {
     const response = await axios.patch(`${API_BASE_URL}/${id}/status`, null, {
-        params: { status },
+        params: { status, reason },
     });
     return normalizeReport(response.data);
 };
