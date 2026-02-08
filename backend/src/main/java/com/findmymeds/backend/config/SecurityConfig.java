@@ -30,6 +30,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -37,6 +38,11 @@ public class SecurityConfig {
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
+
+                        .requestMatchers("/**").permitAll());
+        return http.build();
+    }
+
                         // 1. Public Endpoints (Authentication & Public Pharmacy Search)
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/v1/admin/auth/**").permitAll() // Keep your existing endpoint too

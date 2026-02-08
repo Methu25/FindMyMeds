@@ -1,24 +1,33 @@
 import React from 'react';
 import { Bell } from 'lucide-react';
 
-const HomeAlertCard = () => {
+const HomeAlertCard = ({ data }) => {
   return (
-    <div className="bg-theme rounded-[2rem] p-8 shadow-xl shadow-theme/20 text-white relative overflow-hidden h-full flex flex-col justify-center">
-      {/* Decorative Bell Icon */}
-      <Bell className="absolute top-6 right-6 opacity-20 rotate-12" size={48} />
-      
-      <p className="text-sm font-bold opacity-80 mb-2 uppercase tracking-widest">Pending Alerts</p>
-      <h2 className="text-6xl font-extrabold mb-4 leading-none tracking-tighter">24</h2>
-      
-      <div className="space-y-1">
-        <p className="text-sm font-medium opacity-90">12 Civilian Appeals</p>
-        <p className="text-sm font-medium opacity-90">12 Pharma Requests</p>
+    <div className="bg-primary rounded-[2rem] p-6 shadow-xl shadow-primary/20 text-white relative overflow-hidden flex flex-col justify-between h-full min-h-[180px]">
+      {/* Header */}
+      <div className="flex justify-between items-start">
+        <h3 className="text-lg font-bold opacity-90">Pending Alerts</h3>
+        <Bell className="opacity-80" size={24} />
       </div>
 
-      <div className="absolute bottom-6 right-8">
-        <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-bold uppercase tracking-widest">
-          Just now
-        </span>
+      {/* Content Row */}
+      <div className="flex items-end justify-between mt-2">
+        <h2 className="text-6xl font-[900] leading-none tracking-tighter">
+          {data ? data.totalAlerts : 0}
+        </h2>
+
+        <div className="mb-2">
+          <span className="px-3 py-1.5 bg-white/20 backdrop-blur-md rounded-lg text-xs font-bold shadow-sm">
+            Update: Just now
+          </span>
+        </div>
+      </div>
+
+      {/* Footer Details */}
+      <div className="mt-4 pt-4 border-t border-white/10">
+        <p className="text-sm font-medium opacity-90 truncate">
+          {data ? data.pendingAppeals : 0} Civilian Appeals / {data ? data.pendingPharmacyApprovals : 0} Pharma Requests
+        </p>
       </div>
     </div>
   );
