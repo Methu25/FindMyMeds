@@ -15,8 +15,10 @@ import com.findmymeds.backend.model.enums.ReservationStatus;
 @AllArgsConstructor
 public class Reservation {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String reservationCode;
 
     @ManyToOne
     private Pharmacy pharmacy;
@@ -25,7 +27,10 @@ public class Reservation {
     private Civilian civilian;
 
     private Double totalAmount;
+    private Integer totalQuantity;
+    private Integer totalMedicinesCount;
     private LocalDateTime reservationDate;
+    private LocalDateTime pickupDate;
     private String timeframe; // e.g. "10:00 AM - 6:00 PM"
 
     @Enumerated(EnumType.STRING)

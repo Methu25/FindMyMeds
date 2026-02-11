@@ -5,7 +5,8 @@ import lombok.Data;
 @Data
 public class ReservationItemDTO {
     private Long id;
-    private String name;
+    private String medicineName;
     private int quantity;
-    // Getters and Setters
+    private Double price;
+    private Double subtotal;
 }
