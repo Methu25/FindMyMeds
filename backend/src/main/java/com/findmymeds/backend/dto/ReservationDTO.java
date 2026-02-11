@@ -1,26 +1,16 @@
 package com.findmymeds.backend.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import java.util.List;
+import java.time.LocalDateTime;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class ReservationDTO {
-    private Long id;
-    private String reservationCode;
+
+    private String id;
     private String status;
-    private String reservationDate;
-    private String pickupDate;
+    private LocalDateTime reservationDate;
     private String timeframe;
-    private String civilianName;
-    private String civilianLocation;
-    private String civilianEmail;
-    private String civilianPhone;
-    private Integer totalMedicinesCount;
-    private Integer totalQuantity;
     private Double totalAmount;
     private String prescriptionImageUrl;
     private String note;
