@@ -1,5 +1,7 @@
 package com.findmymeds.backend.service;
 
+import com.findmymeds.backend.dto.MedicineDTO;
+import com.findmymeds.backend.dto.CivilianDTO;
 import com.findmymeds.backend.dto.ReservationDTO;
 import com.findmymeds.backend.dto.ReservationItemDTO;
 import com.findmymeds.backend.model.Reservation;
@@ -53,26 +55,51 @@ public class PharmacyCurrentReservationService {
         dto.setReservationCode(reservation.getReservationCode() != null ? reservation.getReservationCode()
                 : "RES-" + reservation.getId());
         dto.setStatus(reservation.getStatus().name());
-        dto.setReservationDate(reservation.getReservationDate().toString());
+        dto.setReservationDate(
+                reservation.getReservationDate() != null ? reservation.getReservationDate().toString() : null);
         dto.setPickupDate(reservation.getPickupDate() != null ? reservation.getPickupDate().toString() : "TBD");
+        dto.setTimeframe(reservation.getTimeframe());
+        dto.setTotalAmount(reservation.getTotalAmount());
+        dto.setTotalQuantity(reservation.getTotalQuantity());
+        dto.setTotalMedicinesCount(reservation.getTotalMedicinesCount());
+        dto.setPrescriptionImageUrl(reservation.getPrescriptionImageUrl());
+        dto.setNote(reservation.getNote());
+
         if (reservation.getCivilian() != null) {
+            // Flat fields
             dto.setCivilianName(reservation.getCivilian().getFullName());
             dto.setCivilianEmail(reservation.getCivilian().getEmail());
             dto.setCivilianPhone(reservation.getCivilian().getPhone());
             dto.setCivilianLocation("Location Placeholder"); // Not in Civilian model yet
+
+            // Nested DTO
+            CivilianDTO civDto = new CivilianDTO();
+            civDto.setId(reservation.getCivilian().getId());
+            civDto.setName(reservation.getCivilian().getFullName());
+            civDto.setEmail(reservation.getCivilian().getEmail());
+            civDto.setPhone(reservation.getCivilian().getPhone());
+            dto.setCivilian(civDto);
         }
-        dto.setTotalMedicinesCount(reservation.getTotalMedicinesCount());
-        dto.setTotalQuantity(reservation.getTotalQuantity());
-        dto.setTotalAmount(reservation.getTotalAmount());
 
         if (reservation.getItems() != null) {
             dto.setItems(reservation.getItems().stream().map(item -> {
                 ReservationItemDTO itemDto = new ReservationItemDTO();
                 itemDto.setId(item.getId());
-                itemDto.setMedicineName(item.getMedicine() != null ? item.getMedicine().getGenericName() : "Unknown");
                 itemDto.setQuantity(item.getQuantity());
                 itemDto.setPrice(item.getPrice());
                 itemDto.setSubtotal(item.getPrice() != null ? item.getPrice() * item.getQuantity() : 0.0);
+
+                // Flat field
+                itemDto.setMedicineName(item.getMedicine() != null ? item.getMedicine().getMedicineName() : "Unknown");
+
+                if (item.getMedicine() != null) {
+                    MedicineDTO medDto = new MedicineDTO();
+                    medDto.setId(item.getMedicine().getId());
+                    medDto.setMedicineName(item.getMedicine().getMedicineName());
+                    medDto.setBrand(item.getMedicine().getManufacturer());
+                    medDto.setPrice(item.getMedicine().getPrice());
+                    itemDto.setMedicine(medDto);
+                }
                 return itemDto;
             }).collect(Collectors.toList()));
         }

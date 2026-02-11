@@ -10,6 +10,7 @@ public class ReservationDTO {
     private String status;
     private String reservationDate;
     private String pickupDate;
+    private String timeframe;
     private String civilianName;
     private String civilianLocation;
     private String civilianEmail;
@@ -17,5 +18,8 @@ public class ReservationDTO {
     private Integer totalMedicinesCount;
     private Integer totalQuantity;
     private Double totalAmount;
+    private String prescriptionImageUrl;
+    private String note;
+    private CivilianDTO civilian;
     private List<ReservationItemDTO> items;
 }
