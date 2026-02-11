@@ -1,41 +1,64 @@
-
-// This needs to be a new file since it doesn't exist where CivilianLayout expects it.
-// I'll create components/civilian/Sidebar.jsx
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Search, FileText } from 'lucide-react';
+import { Home, HelpCircle, Calendar, MessageSquare, LogOut, Leaf, MapPin } from 'lucide-react';
 
 const Sidebar = () => {
     const navItems = [
-        { name: 'My Activity', path: '/civilian/activity', icon: <LayoutDashboard size={20} /> },
-        { name: 'Find Pharmacy', path: '/civilian/find-pharmacy', icon: <Search size={20} /> },
-        { name: 'Reservations', path: '/civilian/reservation', icon: <FileText size={20} /> },
+        { name: 'Home', path: '/civilian', end: true, icon: Home },
+        { name: 'Inquiries', path: '/civilian/inquiries', icon: HelpCircle },
+        { name: 'Reservations', path: '/civilian/reservation', icon: Calendar },
+        { name: 'Find Pharmacy', path: '/civilian/find-pharmacy', icon: MapPin },
+        { name: 'Feedback', path: '/civilian/feedback', icon: MessageSquare },
     ];
 
     return (
-        <div className="w-64 bg-white border-r border-gray-200 h-full flex flex-col">
-            <div className="p-6">
-                <h1 className="text-xl font-bold text-teal-600">FindMyMeds</h1>
-                <p className="text-sm text-gray-500">Civilian Portal</p>
+        <aside className="w-64 bg-white border-r border-gray-100 h-full flex flex-col py-8 px-5">
+            {/* Logo Section */}
+            <div className="flex items-center gap-2 mb-10 px-2">
+                <Leaf className="text-teal-600 transform -rotate-12" size={24} fill="currentColor" strokeWidth={0} />
+                <span className="text-2xl font-extrabold text-teal-600 tracking-tight" style={{ color: '#2FA4A9' }}>
+                    Findmymeds
+                </span>
             </div>
-            <nav className="flex-1 px-4 space-y-2">
-                {navItems.map((item) => (
-                    <NavLink
-                        key={item.path}
-                        to={item.path}
-                        className={({ isActive }) =>
-                            `flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${isActive
-                                ? 'bg-teal-50 text-teal-700'
-                                : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                            }`
-                        }
-                    >
-                        {item.icon}
-                        {item.name}
-                    </NavLink>
-                ))}
+
+            {/* Navigation Menu */}
+            <nav className="flex-1 space-y-2">
+                {navItems.map((item) => {
+                    const Icon = item.icon;
+                    return (
+                        <NavLink
+                            key={item.path}
+                            to={item.path}
+                            end={item.end}
+                            className={({ isActive }) =>
+                                `flex items-center gap-4 px-4 py-3.5 rounded-xl text-sm transition-all duration-200 ${isActive
+                                    ? 'bg-teal-50 text-teal-600 font-bold shadow-sm'
+                                    : 'text-gray-500 font-medium hover:text-gray-900 shadow-none'
+                                }`
+                            }
+                        >
+                            {({ isActive }) => (
+                                <>
+                                    <Icon
+                                        size={20}
+                                        strokeWidth={isActive ? 2.5 : 2}
+                                        fill={isActive ? "currentColor" : "none"}
+                                        className={isActive ? "opacity-100" : "opacity-70"}
+                                    />
+                                    <span>{item.name}</span>
+                                </>
+                            )}
+                        </NavLink>
+                    );
+                })}
             </nav>
-        </div>
+
+            {/* Logout Button */}
+            <button className="flex items-center gap-4 px-4 py-3.5 rounded-xl text-sm font-bold text-red-500 hover:bg-red-50 transition-all duration-200 mt-auto">
+                <LogOut size={20} className="opacity-90" />
+                <span>Logout</span>
+            </button>
+        </aside>
     );
 };
 

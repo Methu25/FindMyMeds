@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Search, Plus, Pill, FileText } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Search, Plus, Minus, FileText, Calendar, Upload, Image, ChevronDown, Store, Edit, CircleCheck, TriangleAlert } from 'lucide-react';
 import PharmacyCard from '../../components/civilian/PharmacyCard';
 import ReservationForm from '../../components/civilian/ReservationForm';
 import '../../styles/civilian/ReservationPage.css';
@@ -10,10 +11,27 @@ function ReservationPage() {
     const [selectedPharmacy, setSelectedPharmacy] = useState(null);
     const [medicines, setMedicines] = useState([]);
     const [pharmacies, setPharmacies] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    // Initial state
     const [selectedMedicine, setSelectedMedicine] = useState(null);
-    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
+        // Fetch Pharmacies for recommendation
+        const fetchPharmacies = async () => {
+            try {
+                // Fetching nearby or all pharmacies
+                const res = await fetch('http://localhost:8080/api/pharmacies?query=');
+                if (res.ok) {
+                    const data = await res.json();
+                    setPharmacies(data.slice(0, 3)); // Just show top 3
+                }
+            } catch (err) {
+                console.error("Failed to fetch pharmacies", err);
+            } finally {
+                setLoading(false);
+            }
+        };
         fetchPharmacies();
     }, []);
 
@@ -30,51 +48,35 @@ function ReservationPage() {
             const res = await fetch(`http://localhost:8080/api/medicines?search=${query}`);
             if (res.ok) {
                 const data = await res.json();
-                setMedicines(data.content || data);
+                // Handle Page<Medicine> or List<Medicine>
+                const content = data.content || data;
+                setMedicines(content.map(m => ({
+                    ...m,
+                    dosage: m.strength,
+                    form: m.dosageForm
+                })));
             }
         } catch (err) {
             console.error("Failed to fetch medicines", err);
         }
     };
 
-    const fetchPharmacies = async () => {
-        try {
-            // Using search endpoint without query to get all, or could use nearby if location available
-            const res = await fetch('http://localhost:8080/api/pharmacies');
-            if (res.ok) {
-                const data = await res.json();
-                setPharmacies(data.map(p => ({
-                    ...p,
-                    available: 'N/A', // Availability requires inventory check, mostly static for now
-                    distance: p.distance ? parseFloat(p.distance.toFixed(1)) : (Math.random() * 5).toFixed(1) // Mock distance if null
-                })));
-            }
-        } catch (err) {
-            console.error("Failed to fetch pharmacies", err);
-        }
-    };
-
     const handleMedicineSelect = (med) => {
         setSelectedMedicine(med);
         setSearchQuery(med.medicineName);
-        setMedicines([]); // Hide dropdown
-    };
-
-    const handlePharmacySelect = (pharmacy) => {
-        setSelectedPharmacy(pharmacy);
+        setMedicines([]);
     };
 
     const handleSubmit = async (reservationData) => {
-        if (!selectedMedicine || !selectedPharmacy) {
-            alert("Please select a medicine and a pharmacy.");
+        if (!selectedPharmacy) {
+            alert("Please select a pharmacy");
             return;
         }
 
         const payload = {
             pharmacy: { id: selectedPharmacy.id },
             reservationDate: new Date().toISOString(),
-            timeframe: "10:00 AM - 12:00 PM", // Default or user selected
-            status: "PENDING",
+            status: 'PENDING',
             totalAmount: (selectedMedicine.price || 0) * quantity,
             items: [
                 {
@@ -83,6 +85,7 @@ function ReservationPage() {
                     price: selectedMedicine.price || 0
                 }
             ]
+            // civilian: { id: "..." } // Assuming backend handles current user or optional
         };
 
         try {
@@ -93,128 +96,129 @@ function ReservationPage() {
             });
 
             if (res.ok) {
-                alert('Reservation confirmed! You can view it in your Activity Page.');
-                // Reset form
+                alert("Reservation confirmed!");
                 setSelectedMedicine(null);
-                setSelectedPharmacy(null);
                 setQuantity(1);
                 setSearchQuery('');
             } else {
-                alert('Failed to submit reservation.');
+                alert("Failed to create reservation");
             }
         } catch (err) {
-            console.error("Error submitting reservation", err);
-            alert("An error occurred.");
+            console.error("Error creating reservation", err);
+            alert("Error creating reservation");
         }
     };
 
-    const handleCancel = () => {
-        setSelectedPharmacy(null);
-    };
-
     return (
-        <div className="reservation-page">
-            <section className="search-section">
-                <h2 className="section-header">Find & Select Medicines</h2>
+        <div className="main-content">
+            <div className="reservation-container">
+                {/* Left Column */}
+                <div className="col-section">
+                    <h2 className="section-header">Find & Select Medicines</h2>
 
-                <div className="search-container">
-                    <div className="search-bar">
-                        <div className="search-input-wrapper">
-                            <Search />
+                    <div className="card search-card">
+                        <div className="search-box">
+                            <Search className="text-gray-400" size={20} />
                             <input
                                 type="text"
-                                placeholder="Search medicines by name..."
+                                placeholder="Search medicines by name or generic..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                             />
                         </div>
-                    </div>
 
-                    {medicines.length > 0 && (
-                        <div className="medicine-dropdown bg-white border rounded mt-2 shadow-lg max-h-60 overflow-y-auto">
-                            {medicines.map(med => (
-                                <div
-                                    key={med.id}
-                                    className="p-3 hover:bg-gray-100 cursor-pointer border-b"
-                                    onClick={() => handleMedicineSelect(med)}
-                                >
-                                    <div className="font-bold">{med.medicineName}</div>
-                                    <div className="text-xs text-gray-500">{med.genericName}</div>
-                                </div>
-                            ))}
-                        </div>
-                    )}
-
-                    <span className="section-label">Selected Medicine</span>
-
-                    {selectedMedicine ? (
-                        <div className="medicine-suggestion">
-                            <div className="suggestion-title">{selectedMedicine.medicineName}</div>
-                            <div className="med-tags">
-                                <span className="med-tag"><Pill size={12} style={{ marginRight: 5 }} /> {selectedMedicine.dosageForm || 'N/A'}</span>
-                                {selectedMedicine.requiresPrescription && (
-                                    <span className="med-tag warning"><FileText size={12} style={{ marginRight: 5 }} /> Prescription Required</span>
-                                )}
+                        {medicines.length > 0 && (
+                            <div className="bg-white border rounded -mt-4 mb-4 shadow-lg max-h-60 overflow-y-auto z-10 relative">
+                                {medicines.map(med => (
+                                    <div
+                                        key={med.id}
+                                        className="p-3 hover:bg-gray-100 cursor-pointer border-b text-sm"
+                                        onClick={() => handleMedicineSelect(med)}
+                                    >
+                                        <div className="font-bold">{med.medicineName}</div>
+                                        <div className="text-xs text-gray-500">{med.genericName}</div>
+                                    </div>
+                                ))}
                             </div>
-                            <p className="suggestion-desc">
-                                {selectedMedicine.description || 'No description available.'}
-                            </p>
-                            <p className="mt-2 font-bold text-teal-600">Price: Rs. {selectedMedicine.price}</p>
-                        </div>
-                    ) : (
-                        <p className="text-gray-400 italic mb-4">Search and select a medicine to proceed.</p>
-                    )}
+                        )}
 
-                    <div className="action-row">
-                        <div className="qty-stepper">
-                            <button className="qty-btn" onClick={() => setQuantity(Math.max(1, quantity - 1))}>-</button>
-                            <input type="text" value={quantity} className="qty-input" readOnly />
-                            <button className="qty-btn" onClick={() => setQuantity(quantity + 1)}>+</button>
-                        </div>
-                        <button
-                            className="btn btn-primary"
-                            style={{ flex: 1 }}
-                            disabled={!selectedMedicine}
-                            onClick={() => { }} // Just visual helper here, actual add is in Submit
-                        >
-                            <Plus size={18} style={{ marginRight: 8 }} /> {selectedMedicine ? 'Ready to Reserve' : 'Select Medicine'}
-                        </button>
-                    </div>
-                </div>
+                        <span className="section-label">Suggestions</span>
 
-                <h2 className="section-header" style={{ marginTop: 10 }}>Select Pharmacy</h2>
-                <div className="pharmacy-list-card">
-                    <div className="pharmacy-list">
-                        {pharmacies.length === 0 ? (
-                            <p className="p-4 text-gray-500">Loading pharmacies or none found...</p>
+                        {selectedMedicine ? (
+                            <div className="medicine-suggestion">
+                                <div className="text-xl font-extrabold text-[#2FA4A9] mb-3">
+                                    {selectedMedicine.medicineName} {selectedMedicine.dosage}
+                                </div>
+                                <div className="flex items-center gap-2 mb-4">
+                                    <span className="med-tag">
+                                        <FileText size={14} className="mr-1" /> {selectedMedicine.form || 'Capsule'}
+                                    </span>
+                                    {selectedMedicine.requiresPrescription && (
+                                        <span className="med-tag warning">
+                                            <FileText size={14} className="mr-1" /> Prescription Required
+                                        </span>
+                                    )}
+                                </div>
+                                <p className="text-sm text-gray-500 leading-relaxed">
+                                    {selectedMedicine.description}
+                                </p>
+                            </div>
                         ) : (
-                            pharmacies.map((pharmacy) => (
+                            <div className="medicine-suggestion flex items-center justify-center text-gray-400 text-sm italic">
+                                Search and select a medicine to see details
+                            </div>
+                        )}
+
+                        <div className="action-row mt-auto">
+                            <div className="qty-stepper">
+                                <button className="qty-btn" onClick={() => quantity > 1 && setQuantity(quantity - 1)}>-</button>
+                                <input type="text" value={quantity} className="qty-input" readOnly />
+                                <button className="qty-btn" onClick={() => setQuantity(quantity + 1)}>+</button>
+                            </div>
+                            <button className="btn-primary w-full flex items-center justify-center gap-2" disabled={!selectedMedicine}>
+                                <Plus size={18} /> Add to Reservation
+                            </button>
+                        </div>
+                    </div>
+
+                    <div className="flex justify-between items-center mt-6 mb-2">
+                        <h2 className="section-header mb-0">Recommended Pharmacies</h2>
+                        <Link to="/civilian/find-pharmacy" className="text-sm text-teal-600 font-bold hover:underline">
+                            Find More
+                        </Link>
+                    </div>
+                    <div className="card pharmacy-list-card">
+                        {loading ? (
+                            <div className="p-4 text-gray-400 text-center">Loading pharmacies...</div>
+                        ) : (
+                            pharmacies.map(pharmacy => (
                                 <PharmacyCard
                                     key={pharmacy.id}
                                     pharmacy={pharmacy}
                                     isSelected={selectedPharmacy?.id === pharmacy.id}
-                                    onSelect={handlePharmacySelect}
+                                    onSelect={setSelectedPharmacy}
                                 />
                             ))
                         )}
                     </div>
                 </div>
-            </section>
 
-            <section className="reservation-section">
-                <h2 className="section-header">Your Reservation</h2>
-                <ReservationForm
-                    selectedPharmacy={selectedPharmacy}
-                    orderItems={selectedMedicine ? [{
-                        name: selectedMedicine.medicineName,
-                        quantity: quantity,
-                        price: selectedMedicine.price,
-                        requiresPrescription: selectedMedicine.requiresPrescription
-                    }] : []}
-                    onSubmit={handleSubmit}
-                    onCancel={handleCancel}
-                />
-            </section>
+                {/* Right Column */}
+                <div className="col-section">
+                    <h2 className="section-header">Your Reservation</h2>
+
+                    {/* ReservationForm acts as the summary card */}
+                    <ReservationForm
+                        selectedPharmacy={selectedPharmacy}
+                        orderItems={selectedMedicine ? [{
+                            name: selectedMedicine.medicineName,
+                            quantity: quantity,
+                            price: selectedMedicine.price || 5.00
+                        }] : []}
+                        onSubmit={handleSubmit}
+                    />
+                </div>
+            </div>
         </div>
     );
 }

@@ -1,0 +1,291 @@
+/* --- MAIN LAYOUT --- */
+.find-pharmacy-page {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 30px 40px;
+    background-color: #f4f7f9;
+    font-family: 'Inter', sans-serif;
+    color: #333;
+}
+
+/* --- HEADER --- */
+.fp-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.fp-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #2c3e50;
+}
+
+.fp-location-controls {
+    display: flex;
+    gap: 10px;
+}
+
+.fp-location-input {
+    padding: 10px 15px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    background-color: #fff;
+    font-size: 0.9rem;
+    width: 250px;
+    color: #64748b;
+}
+
+.fp-btn-blue {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.fp-btn-blue:hover {
+    background-color: #0069d9;
+}
+
+/* --- CONTENT GRID --- */
+.fp-content-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    /* Map gets more space */
+    gap: 25px;
+    flex-grow: 1;
+    overflow: hidden;
+    /* Prevent scrolling of whole page if inner parts scroll */
+    max-width: 1400px;
+}
+
+/* --- LEFT: MAP SECTION --- */
+.fp-map-container {
+    background-color: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    position: relative;
+    border: 1px solid #f0f0f0;
+    height: 100%;
+    min-height: 500px;
+}
+
+.fp-map-placeholder {
+    width: 100%;
+    height: 100%;
+    background-color: #eef2f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #94a3b8;
+}
+
+/* --- RIGHT: SIDEBAR SECTIONS --- */
+.fp-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow-y: auto;
+}
+
+/* --- FILTER CARD --- */
+.fp-card {
+    background-color: #fff;
+    border-radius: 16px;
+    padding: 25px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    border: 1px solid #f0f0f0;
+}
+
+.fp-card-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #2c3e50;
+}
+
+.fp-filters {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.fp-filter-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.fp-radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.fp-radio-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.95rem;
+    color: #4b5563;
+    cursor: pointer;
+}
+
+.fp-radio-option input[type="radio"] {
+    accent-color: #2FA4A9;
+    /* Theme teal */
+    width: 16px;
+    height: 16px;
+}
+
+/* Toggle Switch */
+.fp-toggle {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 20px;
+}
+
+.fp-toggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.fp-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 20px;
+}
+
+.fp-slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked+.fp-slider {
+    background-color: #2FA4A9;
+}
+
+input:checked+.fp-slider:before {
+    transform: translateX(20px);
+}
+
+/* --- PHARMACY LIST --- */
+.fp-pharmacy-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.fp-pharmacy-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.fp-pharmacy-item:last-child {
+    border-bottom: none;
+}
+
+.fp-pi-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.fp-pi-icon {
+    width: 40px;
+    height: 40px;
+    background-color: #dcfce7;
+    /* Light green bg */
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #16a34a;
+    /* Green icon */
+    flex-shrink: 0;
+}
+
+.fp-pi-info h4 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 4px;
+}
+
+.fp-pi-rating {
+    font-size: 0.85rem;
+    color: #64748b;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.fp-pi-rating i {
+    color: #eab308;
+}
+
+/* Star color */
+
+/* Badges/Buttons */
+.fp-badge {
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    display: inline-block;
+}
+
+.fp-badge-yellow {
+    background-color: #fef08a;
+    /* Yellow */
+    color: #854d0e;
+}
+
+.fp-badge-red {
+    background-color: #fecaca;
+    /* Red */
+    color: #991b1b;
+}
+
+.fp-btn-details {
+    background-color: #0ea5e9;
+    /* Sky blue */
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.fp-btn-details:hover {
+    background-color: #0284c7;
+}

@@ -1,12 +1,14 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-import Sidebar from './Sidebar';
+import Navbar from './Navbar';
 
 const CivilianLayout = () => {
     return (
-        <div className="flex h-screen bg-gray-50 font-sans">
-            <Sidebar />
-            <main className="flex-1 flex flex-col overflow-hidden ml-0 md:ml-[250px] transition-all duration-300">
+        <div className="min-h-screen bg-gray-50 font-sans">
+            <Navbar />
+
+            {/* Main Content Area */}
+            <main className="w-full">
                 <Outlet />
             </main>
         </div>
