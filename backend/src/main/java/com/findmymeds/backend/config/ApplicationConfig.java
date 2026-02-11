@@ -18,32 +18,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class ApplicationConfig {
 
     private final AdminRepository adminRepository;
-    private final com.findmymeds.backend.repository.CivilianRepository civilianRepository;
-    private final com.findmymeds.backend.repository.PharmacyRepository pharmacyRepository;
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> {
-            // 1. Try Admin
-            var admin = adminRepository.findByEmail(username);
-            if (admin.isPresent()) {
-                return new AdminUserDetails(admin.get());
-            }
-
-            // 2. Try Civilian
-            var civilian = civilianRepository.findByEmail(username);
-            if (civilian.isPresent()) {
-                return new CivilianUserDetails(civilian.get());
-            }
-
-            // 3. Try Pharmacy
-            var pharmacy = pharmacyRepository.findByEmail(username);
-            if (pharmacy.isPresent()) {
-                return new PharmacyUserDetails(pharmacy.get());
-            }
-
-            throw new UsernameNotFoundException("User not found");
-        };
+        return username -> adminRepository.findByEmail(username)
+                .map(AdminUserDetails::new) // Wrap Admin in UserDetails adapter
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
     @Bean

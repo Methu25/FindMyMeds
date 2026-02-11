@@ -60,9 +60,6 @@ public class Pharmacy {
     @Column(name = "status", columnDefinition = "varchar(20)")
     private PharmacyStatus status;
 
-    @Column(name = "password_hash")
-    private String passwordHash;
-
     @Column(name = "is_deleted")
     private Boolean isDeleted;
 

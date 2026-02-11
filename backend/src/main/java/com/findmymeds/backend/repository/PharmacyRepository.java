@@ -12,8 +12,6 @@ public interface PharmacyRepository extends JpaRepository<Pharmacy, Long> {
 
     Optional<Pharmacy> findByName(String name);
 
-    Optional<Pharmacy> findByEmail(String email);
-
     // Used by Admin Dashboard
     long countByStatus(PharmacyStatus status);
 }

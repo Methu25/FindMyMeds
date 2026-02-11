@@ -3,7 +3,6 @@ import AdminLayout from './components/admin/AdminLayout';
 
 // Landing Page 
 import Home from './pages/Home';
-import Login from './pages/Login';
 
 // Admin Pages 
 import AdminDashboard from './pages/admin/AdminDashboard';
@@ -59,17 +58,33 @@ function App() {
         <Routes>
           {/* Landing page first */}
           <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
 
+<<<<<<< HEAD
           {/*  Admin Routes */}
           <Route path="/admin" element={<AdminLayout />}>
-            <Route path="pharmacies/:pharmacyId" element={<AdminPharmacyDetails />} />
-            {/* Pharmacy Reports & Inquiries Routes */}
-            <Route path="reports" element={<AdminPharmacyReports />} />
-            <Route path="reports/:reportId" element={<AdminReportDetails />} />
-            <Route path="pharmacy/rejected" element={<RejectedPharmacyTable />} />
-            <Route path="pharmacy/rejected/:id" element={<RejectedPharmacyDetails />} />
-            <Route path="pharmacy-review/:pharmacyId" element={<AdminPharmacyReview />} />
+=======
+        {/*  Admin Routes */}
+        <Route path="/admin" element={<AdminLayout />}>
+        <Route
+  path="/admin/pharmacies/:pharmacyId"
+  element={<AdminPharmacyDetails />}
+/>
+{/* Pharmacy Reports & Inquiries Routes */}
+<Route 
+  path="/admin/reports" 
+  element={<AdminPharmacyReports />} 
+/>
+
+<Route 
+  path="/admin/reports/:reportId" 
+  element={<AdminReportDetails />} 
+/>
+<Route path="/admin/pharmacy/rejected" element={<RejectedPharmacyTable />} />
+<Route path="/admin/pharmacy/rejected/:id" element={<RejectedPharmacyDetails />} />
+
+        <Route path="/admin/pharmacy-review/:pharmacyId" element={<AdminPharmacyReview />} />
+
+>>>>>>> ea0ccdeec9e65e53792fa9870589eeb85279c56f
 
             {/* When visiting /admin -> go to /admin/dashboard */}
             <Route index element={<Navigate to="dashboard" replace />} />

@@ -58,9 +58,7 @@ public class SecurityConfig {
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
                         // 1. Public Endpoints (Authentication & Public Pharmacy Search)
-                        .requestMatchers("/api/auth/**", "/api/v1/admin/auth/**", "/api/v1/civilian/auth/**",
-                                "/api/v1/pharmacy/auth/**")
-                        .permitAll()
+                        .requestMatchers("/api/auth/**", "/api/v1/admin/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/pharmacies/**").permitAll()
 
                         // 2. Super Admin Only Endpoints
