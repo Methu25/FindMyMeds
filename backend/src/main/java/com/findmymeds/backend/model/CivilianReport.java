@@ -49,4 +49,16 @@ public class CivilianReport {
 
     @Column(name = "status_changed_at")
     private LocalDateTime statusChangedAt;
+
+    @Column(columnDefinition = "TEXT", name = "admin_response")
+    private String adminResponse;
+
+    @Column(name = "admin_response_attachment")
+    private String adminResponseAttachment;
+
+    @Column(name = "resolved_at")
+    private LocalDateTime resolvedAt;
+
+    @Column(name = "rejected_at")
+    private LocalDateTime rejectedAt;
 }

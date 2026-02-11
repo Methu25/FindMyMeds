@@ -22,6 +22,9 @@ public class CivilianAppealAdminService {
 
     @Transactional
     public void approve(Long appealId, Long adminId) {
+        if (appealId == null) {
+            throw new IllegalArgumentException("Appeal ID cannot be null");
+        }
         CivilianAppeal appeal = appealRepository.findById(appealId)
                 .orElseThrow(() -> new IllegalArgumentException("Appeal not found: " + appealId));
 
@@ -48,6 +51,9 @@ public class CivilianAppealAdminService {
 
     @Transactional
     public void reject(Long appealId, Long adminId, String reason) {
+        if (appealId == null) {
+            throw new IllegalArgumentException("Appeal ID cannot be null");
+        }
         CivilianAppeal appeal = appealRepository.findById(appealId)
                 .orElseThrow(() -> new IllegalArgumentException("Appeal not found: " + appealId));
 
@@ -62,6 +68,11 @@ public class CivilianAppealAdminService {
         historyLogger.log(appeal.getCivilian(), CivilianActionType.APPEAL_REJECTED, adminId, reason);
     }
 
-    private int nz(Integer v) { return v == null ? 0 : v; }
-    private String safe(String s) { return s == null ? "" : s; }
+    private int nz(Integer v) {
+        return v == null ? 0 : v;
+    }
+
+    private String safe(String s) {
+        return s == null ? "" : s;
+    }
 }

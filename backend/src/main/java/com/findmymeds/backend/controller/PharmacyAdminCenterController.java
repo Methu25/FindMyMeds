@@ -9,6 +9,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import com.findmymeds.backend.repository.PharmacyRepository;
+import com.findmymeds.backend.model.Pharmacy;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.Authentication;
 
 @RestController
 @RequestMapping("/api/pharmacy")
@@ -17,23 +21,39 @@ import java.util.List;
 public class PharmacyAdminCenterController {
 
     private final PharmacyAdminCenterService pharmacyAdminCenterService;
+    private final PharmacyRepository pharmacyRepository;
 
-    @GetMapping("/admin/profile")
+    @GetMapping("/center/profile")
     public ResponseEntity<PharmacyProfileDto> getProfile() {
-        Long pharmacyId = 1L; // Mock ID
-        return ResponseEntity.ok(pharmacyAdminCenterService.getProfile(pharmacyId));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+
+        Pharmacy pharmacy = pharmacyRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Logged in pharmacy not found"));
+
+        return ResponseEntity.ok(pharmacyAdminCenterService.getProfile(pharmacy.getId()));
     }
 
     @PostMapping("/reports")
     public ResponseEntity<Void> submitReport(@RequestBody ReportRequestDto report) {
-        Long pharmacyId = 1L; // Mock ID
-        pharmacyAdminCenterService.submitReport(pharmacyId, report);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+
+        Pharmacy pharmacy = pharmacyRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Logged in pharmacy not found"));
+
+        pharmacyAdminCenterService.submitReport(pharmacy.getId(), report);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/reports/history")
     public ResponseEntity<List<PharmacyReportDTO>> getReportHistory() {
-        Long pharmacyId = 1L; // Mock ID
-        return ResponseEntity.ok(pharmacyAdminCenterService.getReportHistory(pharmacyId));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+
+        Pharmacy pharmacy = pharmacyRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Logged in pharmacy not found"));
+
+        return ResponseEntity.ok(pharmacyAdminCenterService.getReportHistory(pharmacy.getId()));
     }
 }

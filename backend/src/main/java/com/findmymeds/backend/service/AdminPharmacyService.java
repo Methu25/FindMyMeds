@@ -36,6 +36,9 @@ public class AdminPharmacyService {
 
     // 🔹 Get pharmacy by ID (details page)
     public Pharmacy getPharmacyById(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("ID cannot be null");
+        }
         return pharmacyRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Pharmacy not found"));
     }
