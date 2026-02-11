@@ -104,9 +104,9 @@ export default function ReservationHistory() {
                 ) : (
                   history.map((item) => (
                     <tr key={item.id} className="hover:bg-gray-50 transition-all duration-300 even:bg-gray-50/50">
-                      <td className="px-10 py-8 font-bold text-lg">{item.reservationCode}</td>
-                      <td className="px-10 py-8">{item.reservationDate}</td>
-                      <td className="px-10 py-8 font-semibold">{item.civilianName}</td>
+                      <td className="px-10 py-8 font-bold text-lg">#{item.id}</td>
+                      <td className="px-10 py-8">{item.reservationDate ? new Date(item.reservationDate).toLocaleString() : 'N/A'}</td>
+                      <td className="px-10 py-8 font-semibold">{item.civilian?.name || 'Unknown'}</td>
                       <td className="px-10 py-8 font-bold text-xl text-green-600">Rs. {item.totalAmount}</td>
                       <td className="px-10 py-8">
                         <span className={`px-8 py-4 rounded-full text-white font-bold shadow-md ${activeType === 'COLLECTED' ? 'bg-green-600' :

@@ -51,28 +51,15 @@ public class PharmacyCurrentReservationService {
 
     private ReservationDTO convertToDTO(Reservation reservation) {
         ReservationDTO dto = new ReservationDTO();
-        dto.setId(reservation.getId());
-        dto.setReservationCode(reservation.getReservationCode() != null ? reservation.getReservationCode()
-                : "RES-" + reservation.getId());
+        dto.setId(reservation.getId().toString());
         dto.setStatus(reservation.getStatus().name());
-        dto.setReservationDate(
-                reservation.getReservationDate() != null ? reservation.getReservationDate().toString() : null);
-        dto.setPickupDate(reservation.getPickupDate() != null ? reservation.getPickupDate().toString() : "TBD");
+        dto.setReservationDate(reservation.getReservationDate());
         dto.setTimeframe(reservation.getTimeframe());
         dto.setTotalAmount(reservation.getTotalAmount());
-        dto.setTotalQuantity(reservation.getTotalQuantity());
-        dto.setTotalMedicinesCount(reservation.getTotalMedicinesCount());
         dto.setPrescriptionImageUrl(reservation.getPrescriptionImageUrl());
         dto.setNote(reservation.getNote());
 
         if (reservation.getCivilian() != null) {
-            // Flat fields
-            dto.setCivilianName(reservation.getCivilian().getFullName());
-            dto.setCivilianEmail(reservation.getCivilian().getEmail());
-            dto.setCivilianPhone(reservation.getCivilian().getPhone());
-            dto.setCivilianLocation("Location Placeholder"); // Not in Civilian model yet
-
-            // Nested DTO
             CivilianDTO civDto = new CivilianDTO();
             civDto.setId(reservation.getCivilian().getId());
             civDto.setName(reservation.getCivilian().getFullName());
@@ -87,10 +74,6 @@ public class PharmacyCurrentReservationService {
                 itemDto.setId(item.getId());
                 itemDto.setQuantity(item.getQuantity());
                 itemDto.setPrice(item.getPrice());
-                itemDto.setSubtotal(item.getPrice() != null ? item.getPrice() * item.getQuantity() : 0.0);
-
-                // Flat field
-                itemDto.setMedicineName(item.getMedicine() != null ? item.getMedicine().getMedicineName() : "Unknown");
 
                 if (item.getMedicine() != null) {
                     MedicineDTO medDto = new MedicineDTO();

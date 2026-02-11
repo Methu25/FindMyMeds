@@ -100,7 +100,7 @@ export default function CurrentReservations() {
                 <ArrowLeft size={24} />
               </button>
               <div>
-                <h1 className="text-2xl font-bold text-gray-800">Reservation: {selectedRes.reservationCode}</h1>
+                <h1 className="text-2xl font-bold text-gray-800">Reservation: #{selectedRes.id}</h1>
                 <p className="text-gray-500 font-medium">Status:
                   <span className={`ml-2 px-3 py-1 rounded-full text-xs font-bold text-white ${statusCards.find(c => c.status === selectedRes.status)?.color}`}>
                     {selectedRes.status}
@@ -153,7 +153,7 @@ export default function CurrentReservations() {
                     </div>
                     <div>
                       <p className="text-xs text-gray-400 uppercase font-bold tracking-wider">Full Name</p>
-                      <p className="font-bold text-gray-800">{selectedRes.civilianName}</p>
+                      <p className="font-bold text-gray-800">{selectedRes.civilian?.name || 'N/A'}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
@@ -162,7 +162,7 @@ export default function CurrentReservations() {
                     </div>
                     <div>
                       <p className="text-xs text-gray-400 uppercase font-bold tracking-wider">Phone Number</p>
-                      <p className="font-bold text-gray-800">{selectedRes.civilianPhone || 'N/A'}</p>
+                      <p className="font-bold text-gray-800">{selectedRes.civilian?.phone || 'N/A'}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
@@ -171,7 +171,7 @@ export default function CurrentReservations() {
                     </div>
                     <div>
                       <p className="text-xs text-gray-400 uppercase font-bold tracking-wider">Address</p>
-                      <p className="font-bold text-gray-800 leading-tight">{selectedRes.civilianLocation || 'N/A'}</p>
+                      <p className="font-bold text-gray-800 leading-tight">{selectedRes.civilian?.email || 'N/A'}</p>
                     </div>
                   </div>
                 </div>
@@ -185,11 +185,11 @@ export default function CurrentReservations() {
                 <div className="space-y-4">
                   <div className="flex justify-between">
                     <span className="text-gray-500 font-medium">Reservation ID</span>
-                    <span className="font-bold text-gray-800">{selectedRes.reservationCode}</span>
+                    <span className="font-bold text-gray-800">#{selectedRes.id}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-500 font-medium">Date</span>
-                    <span className="font-bold text-gray-800">{selectedRes.reservationDate}</span>
+                    <span className="font-bold text-gray-800">{selectedRes.reservationDate ? new Date(selectedRes.reservationDate).toLocaleString() : 'N/A'}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-500 font-medium">Status</span>
@@ -220,10 +220,10 @@ export default function CurrentReservations() {
                   <tbody className="divide-y divide-gray-100">
                     {selectedRes.items?.map((item, idx) => (
                       <tr key={idx} className="hover:bg-gray-50/50 transition">
-                        <td className="px-6 py-4 font-bold text-gray-800">{item.medicineName}</td>
+                        <td className="px-6 py-4 font-bold text-gray-800">{item.medicine?.medicineName || 'Unknown'}</td>
                         <td className="px-6 py-4 font-bold text-gray-800 text-center">{item.quantity}</td>
                         <td className="px-6 py-4 font-medium text-gray-800 text-right">{item.price?.toFixed(2)}</td>
-                        <td className="px-6 py-4 font-bold text-primary text-right">{item.subtotal?.toFixed(2)}</td>
+                        <td className="px-6 py-4 font-bold text-primary text-right">{((item.price || 0) * item.quantity).toFixed(2)}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -251,7 +251,7 @@ export default function CurrentReservations() {
                   <div className="space-y-3">
                     <div className="flex justify-between text-gray-500">
                       <span>Total Items</span>
-                      <span className="font-bold text-gray-800">{selectedRes.totalMedicinesCount} items</span>
+                      <span className="font-bold text-gray-800">{selectedRes.items?.length || 0} items</span>
                     </div>
                     <div className="flex justify-between text-gray-500">
                       <span>Subtotal</span>
@@ -394,25 +394,25 @@ export default function CurrentReservations() {
                 ) : (
                   reservations.map((res) => (
                     <tr key={res.id} className="hover:bg-teal-50/30 transition-all duration-300 group">
-                      <td className="px-8 py-8 font-black text-gray-800 tracking-tighter">#{res.reservationCode}</td>
+                      <td className="px-8 py-8 font-black text-gray-800 tracking-tighter">#{res.id}</td>
                       <td className="px-8 py-8">
-                        <p className="font-extrabold text-lg text-gray-800 underline decoration-primary/20">{res.civilianName}</p>
-                        <p className="text-xs font-bold text-gray-400 flex items-center gap-1 mt-1"><MapPin size={10} /> {res.civilianLocation || 'N/A'}</p>
+                        <p className="font-extrabold text-lg text-gray-800 underline decoration-primary/20">{res.civilian?.name || 'Unknown'}</p>
+                        <p className="text-xs font-bold text-gray-400 flex items-center gap-1 mt-1"><MapPin size={10} /> {res.civilian?.email || 'N/A'}</p>
                       </td>
                       <td className="px-8 py-8">
                         <div className="flex flex-col gap-1">
                           <span className="text-xs font-bold text-gray-400 flex items-center gap-2">
-                            <Clock size={12} className="text-blue-400" /> {res.reservationDate}
+                            <Clock size={12} className="text-blue-400" /> {res.reservationDate ? new Date(res.reservationDate).toLocaleDateString() : 'N/A'}
                           </span>
                           <span className="text-xs font-bold text-gray-400 flex items-center gap-2">
-                            <Truck size={12} className="text-primary" /> {res.pickupDate || 'Scheduled'}
+                            <Truck size={12} className="text-primary" /> {res.timeframe || 'Scheduled'}
                           </span>
                         </div>
                       </td>
                       <td className="px-8 py-8 text-center">
                         <div className="inline-flex flex-col">
-                          <span className="px-3 py-1 bg-teal-50 text-primary text-[10px] font-black rounded-lg uppercase tracking-wider">{res.totalMedicinesCount} Meds</span>
-                          <span className="text-xs font-bold text-gray-400 mt-1">{res.totalQuantity} Units</span>
+                          <span className="px-3 py-1 bg-teal-50 text-primary text-[10px] font-black rounded-lg uppercase tracking-wider">{res.items?.length || 0} Meds</span>
+                          <span className="text-xs font-bold text-gray-400 mt-1">{res.items?.reduce((sum, item) => sum + item.quantity, 0) || 0} Units</span>
                         </div>
                       </td>
                       <td className="px-8 py-8 text-right font-black text-2xl text-teal-600 tracking-tighter">Rs.{res.totalAmount?.toFixed(2)}</td>
