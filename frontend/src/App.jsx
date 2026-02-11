@@ -16,6 +16,12 @@ import AdminNotificationDetails from './pages/admin/AdminNotificationDetails';
 import AdminProfilePage from './pages/admin/AdminProfilePage';
 import SystemSettings from './pages/admin/SystemSettings';
 import PharmacyManagementHome from './pages/admin/Pharmacy/PharmacyManagementHome';
+import AdminPharmacyDetails from "./pages/admin/Pharmacy/AdminPharmacyDetails";
+import AdminPharmacyReview from "./pages/admin/Pharmacy/AdminPharmacyReview";
+import AdminPharmacyReports from "./pages/admin/Pharmacy/AdminPharmacyReports";
+import AdminReportDetails from "./pages/admin/Pharmacy/AdminReportDetails";
+import RejectedPharmacyTable from "./pages/admin/Pharmacy/RejectedPharmacyTable";
+import RejectedPharmacyDetails from "./pages/admin/Pharmacy/RejectedPharmacyDetails";
 
 // Pharmacy Pages 
 import PharmacyDashboard from './pages/pharmacy/Dashboard';
@@ -52,6 +58,12 @@ function App() {
           <Route path="medicines/add" element={<AdminAddMedicine />} />
           <Route path="medicines/:id" element={<AdminMedicineDetails />} />
           <Route path="pharmacies" element={<PharmacyManagementHome />} />
+          <Route path="pharmacies/:id" element={<AdminPharmacyDetails />} />
+          <Route path="pharmacies/review/:id" element={<AdminPharmacyReview />} />
+          <Route path="pharmacies/reports" element={<AdminPharmacyReports />} />
+          <Route path="pharmacies/reports/:id" element={<AdminReportDetails />} />
+          <Route path="pharmacies/rejected" element={<RejectedPharmacyTable />} />
+          <Route path="pharmacies/rejected/:id" element={<RejectedPharmacyDetails />} />
           <Route path="civilians" element={<CivilianManagement />} />
           <Route path="notifications" element={<AdminNotificationCenter />} />
           <Route path="notifications/:id" element={<AdminNotificationDetails />} />

@@ -39,13 +39,24 @@ export default function CurrentReservations() {
     setLoading(true)
     try {
       const response = await fetch(`http://localhost:8080/api/pharmacy/reservations/current?status=${activeStatus}&page=0&size=10`, { headers: getHeaders() })
-      if (response.ok) setReservations(await response.json())
-    } catch (error) { console.error('Reservations fetch error:', error) }
-    finally { setLoading(false) }
+      if (response.ok) {
+        const data = await response.json();
+        setReservations(data);
+      }
+    } catch (error) {
+      console.error('Reservations fetch error:', error)
+    } finally {
+      setLoading(false)
+    }
   }
 
-  useEffect(() => { fetchCounts() }, [])
-  useEffect(() => { fetchReservations() }, [activeStatus])
+  useEffect(() => {
+    fetchCounts()
+  }, [])
+
+  useEffect(() => {
+    fetchReservations()
+  }, [activeStatus])
 
   const handleUpdateStatus = async (id, newStatus) => {
     try {
