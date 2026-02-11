@@ -59,32 +59,15 @@ function App() {
           {/* Landing page first */}
           <Route path="/" element={<Home />} />
 
-<<<<<<< HEAD
           {/*  Admin Routes */}
           <Route path="/admin" element={<AdminLayout />}>
-=======
-        {/*  Admin Routes */}
-        <Route path="/admin" element={<AdminLayout />}>
-        <Route
-  path="/admin/pharmacies/:pharmacyId"
-  element={<AdminPharmacyDetails />}
-/>
-{/* Pharmacy Reports & Inquiries Routes */}
-<Route 
-  path="/admin/reports" 
-  element={<AdminPharmacyReports />} 
-/>
-
-<Route 
-  path="/admin/reports/:reportId" 
-  element={<AdminReportDetails />} 
-/>
-<Route path="/admin/pharmacy/rejected" element={<RejectedPharmacyTable />} />
-<Route path="/admin/pharmacy/rejected/:id" element={<RejectedPharmacyDetails />} />
-
-        <Route path="/admin/pharmacy-review/:pharmacyId" element={<AdminPharmacyReview />} />
-
->>>>>>> ea0ccdeec9e65e53792fa9870589eeb85279c56f
+            <Route path="pharmacies/:pharmacyId" element={<AdminPharmacyDetails />} />
+            {/* Pharmacy Reports & Inquiries Routes */}
+            <Route path="reports" element={<AdminPharmacyReports />} />
+            <Route path="reports/:reportId" element={<AdminReportDetails />} />
+            <Route path="pharmacy/rejected" element={<RejectedPharmacyTable />} />
+            <Route path="pharmacy/rejected/:id" element={<RejectedPharmacyDetails />} />
+            <Route path="pharmacy-review/:pharmacyId" element={<AdminPharmacyReview />} />
 
             {/* When visiting /admin -> go to /admin/dashboard */}
             <Route index element={<Navigate to="dashboard" replace />} />
@@ -102,12 +85,12 @@ function App() {
             <Route path="pharmacies" element={<PharmacyManagementHome />} />
 
             {/* Civilians */}
-            <Route path="/admin/civilians" element={<CivilianManagement />} />
-            <Route path="/admin/civilians/:id" element={<CivilianDetails />} />
-            <Route path="/admin/civilians/:id/vivo" element={<CivilianVivo />} />
-            <Route path="/admin/civilian-reports" element={<CivilianReports />} />
-            <Route path="/admin/civilian-reports/:id" element={<CivilianReportDetails />} />
-            <Route path="/admin/appeals" element={<AppealDetails />} />
+            <Route path="civilians" element={<CivilianManagement />} />
+            <Route path="civilians/:id" element={<CivilianDetails />} />
+            <Route path="civilians/:id/vivo" element={<CivilianVivo />} />
+            <Route path="civilian-reports" element={<CivilianReports />} />
+            <Route path="civilian-reports/:id" element={<CivilianReportDetails />} />
+            <Route path="appeals" element={<AppealDetails />} />
 
             {/* Notifications */}
             <Route path="notifications" element={<AdminNotificationCenter />} />
@@ -116,6 +99,8 @@ function App() {
             {/* Profile */}
             <Route path="profile" element={<AdminProfilePage />} />
           </Route>
+
+
 
           {/* Pharmacy Routes */}
           <Route path="/pharmacy/*" element={
