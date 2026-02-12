@@ -81,16 +81,24 @@ function App() {
             <Route path="dashboard" element={<AdminDashboard />} />
             <Route path="administrators" element={<AdminManagement />} />
             <Route path="settings" element={<SystemSettings />} />
+
+            {/* Medicines */}
             <Route path="medicines" element={<AdminMedicineRegistry />} />
             <Route path="medicines/add" element={<AdminAddMedicine />} />
             <Route path="medicines/:id" element={<AdminMedicineDetails />} />
+
+            {/* Pharmacies */}
             <Route path="pharmacies" element={<PharmacyManagementHome />} />
+
+            {/* Civilians */}
             <Route path="civilians" element={<CivilianManagement />} />
             <Route path="civilians/:id" element={<CivilianDetails />} />
             <Route path="civilians/:id/vivo" element={<CivilianVivo />} />
             <Route path="civilian-reports" element={<CivilianReports />} />
             <Route path="civilian-reports/:id" element={<CivilianReportDetails />} />
             <Route path="appeals" element={<AppealDetails />} />
+
+            {/* Notifications */}
             <Route path="notifications" element={<AdminNotificationCenter />} />
             <Route path="notifications/:id" element={<AdminNotificationDetails />} />
             <Route path="profile" element={<AdminProfilePage />} />
