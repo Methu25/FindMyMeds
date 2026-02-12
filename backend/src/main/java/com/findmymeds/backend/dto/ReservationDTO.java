@@ -2,6 +2,7 @@ package com.findmymeds.backend.dto;
 
 import lombok.Data;
 import java.util.List;
+import java.time.LocalDateTime;
 
 @Data
 public class ReservationDTO {
@@ -15,5 +16,4 @@ public class ReservationDTO {
     private String note;
     private CivilianDTO civilian;
     private List<ReservationItemDTO> items;
-    // Getters and Setters
 }

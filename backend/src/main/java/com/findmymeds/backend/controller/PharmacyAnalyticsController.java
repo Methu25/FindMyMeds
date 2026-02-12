@@ -6,17 +6,27 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.findmymeds.backend.config.PharmacyUserDetails;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+
 @RestController
 @RequestMapping("/api/pharmacy/data-summary")
 @RequiredArgsConstructor
-@CrossOrigin(origins = { "http://localhost:5173", "http://localhost:5174" }, allowCredentials = "true")
 public class PharmacyAnalyticsController {
 
     private final PharmacyAnalyticsService analyticsService;
 
+    private Long getCurrentPharmacyId() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.getPrincipal() instanceof PharmacyUserDetails) {
+            return ((PharmacyUserDetails) auth.getPrincipal()).getPharmacy().getId();
+        }
+        throw new RuntimeException("Unauthorized: User is not a pharmacy");
+    }
+
     @GetMapping
     public ResponseEntity<PharmacyAnalyticsDto> getPharmacyAnalytics() {
-        Long pharmacyId = 1L; // Mock ID, usually from Auth Context
-        return ResponseEntity.ok(analyticsService.getPharmacyAnalytics(pharmacyId));
+        return ResponseEntity.ok(analyticsService.getPharmacyAnalytics(getCurrentPharmacyId()));
     }
 }

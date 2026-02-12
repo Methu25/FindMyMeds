@@ -8,6 +8,9 @@ import org.springframework.lang.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import com.findmymeds.backend.config.PharmacyUserDetails;
 import java.util.List;
 
 @RestController
@@ -17,10 +20,18 @@ public class PharmacyCurrentReservationController {
     @Autowired
     private PharmacyCurrentReservationService reservationService;
 
+    private Long getCurrentPharmacyId() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.getPrincipal() instanceof PharmacyUserDetails) {
+            return ((PharmacyUserDetails) auth.getPrincipal()).getPharmacy().getId();
+        }
+        throw new RuntimeException("Unauthorized: User is not a pharmacy");
+    }
+
     @GetMapping("/counts")
     @PreAuthorize("hasRole('PHARMACY')")
     public ResponseEntity<List<Long>> getCurrentReservationCounts() {
-        return ResponseEntity.ok(reservationService.getCurrentReservationCounts());
+        return ResponseEntity.ok(reservationService.getCurrentReservationCounts(getCurrentPharmacyId()));
     }
 
     @GetMapping
@@ -30,13 +41,13 @@ public class PharmacyCurrentReservationController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
         if (status == null) {
-            // Frontend call without params -> return all current
-            return ResponseEntity.ok(reservationService.getAllCurrentReservations(1L)); // Mock pharmacy ID 1L
+            return ResponseEntity.ok(reservationService.getAllCurrentReservations(getCurrentPharmacyId()));
         }
-        return ResponseEntity.ok(reservationService.getCurrentReservationsByStatus(status, page, size));
+        return ResponseEntity
+                .ok(reservationService.getCurrentReservationsByStatus(getCurrentPharmacyId(), status, page, size));
     }
 
-    @PutMapping("/{id}/status")
+    @PatchMapping("/{id}/status")
     @PreAuthorize("hasRole('PHARMACY')")
     public ResponseEntity<Void> updateReservationStatus(@PathVariable @NonNull String id, @RequestParam String status) {
         reservationService.updateReservationStatus(id, status);

@@ -22,7 +22,12 @@ export default function MedicineInventory() {
 
     // Fetch Metrics
     useEffect(() => {
-        fetch('http://localhost:8080/api/pharmacy/inventory/metrics')
+        const token = localStorage.getItem('pharmacyToken');
+        fetch('http://localhost:8081/api/pharmacy/inventory/metrics', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
             .then(res => res.json())
             .then(data => setMetrics(data))
             .catch(err => console.error("Error fetching metrics:", err))
@@ -31,6 +36,7 @@ export default function MedicineInventory() {
     // Fetch Inventory
     useEffect(() => {
         setLoading(true)
+        const token = localStorage.getItem('pharmacyToken');
         const queryParams = new URLSearchParams({
             page: 0,
             size: 100,
@@ -38,10 +44,14 @@ export default function MedicineInventory() {
             filter: activeFilter
         })
 
-        fetch(`http://localhost:8080/api/pharmacy/inventory?${queryParams}`)
+        fetch(`http://localhost:8081/api/pharmacy/inventory?${queryParams}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
             .then(res => res.json())
             .then(data => {
-                if (data.content) {
+                if (data && data.content) {
                     setInventory(data.content)
                 }
                 setLoading(false)
