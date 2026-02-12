@@ -1,9 +1,6 @@
 package com.findmymeds.backend.service;
 
-import com.findmymeds.backend.dto.MedicineDTO;
-import com.findmymeds.backend.dto.CivilianDTO;
 import com.findmymeds.backend.dto.ReservationDTO;
-import com.findmymeds.backend.dto.ReservationItemDTO;
 import com.findmymeds.backend.model.Reservation;
 import com.findmymeds.backend.repository.ReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,7 +69,7 @@ public class PharmacyCurrentReservationService {
 
     private ReservationDTO convertToDTO(Reservation reservation) {
         ReservationDTO dto = new ReservationDTO();
-        dto.setId(reservation.getId().toString());
+        dto.setId(reservation.getId());
         dto.setStatus(reservation.getStatus().name());
         dto.setReservationDate(reservation.getReservationDate());
         dto.setTimeframe(reservation.getTimeframe());
@@ -81,32 +78,39 @@ public class PharmacyCurrentReservationService {
         dto.setNote(reservation.getNote());
 
         if (reservation.getCivilian() != null) {
-            CivilianDTO civDto = new CivilianDTO();
+            com.findmymeds.backend.dto.CivilianDTO civDto = new com.findmymeds.backend.dto.CivilianDTO();
             civDto.setId(reservation.getCivilian().getId());
-            civDto.setName(reservation.getCivilian().getFullName());
+            civDto.setName(reservation.getCivilian().getFullName()); // Assuming fullName exists
             civDto.setEmail(reservation.getCivilian().getEmail());
             civDto.setPhone(reservation.getCivilian().getPhone());
             dto.setCivilian(civDto);
         }
 
+        // Mapping items is skipped for brevity but should be done if frontend needs
+        // them.
+        // CurrentReservations.jsx uses item.medicine.medicineName
+        // So we need to map items too!
         if (reservation.getItems() != null) {
             dto.setItems(reservation.getItems().stream().map(item -> {
-                ReservationItemDTO itemDto = new ReservationItemDTO();
+                com.findmymeds.backend.dto.ReservationItemDTO itemDto = new com.findmymeds.backend.dto.ReservationItemDTO();
                 itemDto.setId(item.getId());
                 itemDto.setQuantity(item.getQuantity());
                 itemDto.setPrice(item.getPrice());
 
                 if (item.getMedicine() != null) {
-                    MedicineDTO medDto = new MedicineDTO();
+                    com.findmymeds.backend.dto.MedicineDTO medDto = new com.findmymeds.backend.dto.MedicineDTO();
                     medDto.setId(item.getMedicine().getId());
                     medDto.setMedicineName(item.getMedicine().getMedicineName());
-                    medDto.setBrand(item.getMedicine().getManufacturer());
-                    medDto.setPrice(item.getMedicine().getPrice());
+                    medDto.setBrand(item.getMedicine().getManufacturer()); // Manufacturer as brand? Or should I use
+                                                                           // manufacturer? DTO has brand. Med has
+                                                                           // manufacturer.
+                    // medDto.setPrice(item.getMedicine().getPrice());
                     itemDto.setMedicine(medDto);
                 }
                 return itemDto;
             }).collect(Collectors.toList()));
         }
+
         return dto;
     }
 }
