@@ -1,12 +1,12 @@
 package com.findmymeds.backend.model;
 
 import jakarta.persistence.*;
-import com.findmymeds.backend.model.Civilian;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import com.findmymeds.backend.model.enums.ReservationStatus;
 
@@ -27,7 +27,13 @@ public class Reservation {
 
     private Double totalAmount;
     private LocalDateTime reservationDate;
+    private LocalDate pickupDate; // User selected pickup date
     private String timeframe; // e.g. "10:00 AM - 6:00 PM"
+
+    private String prescriptionImageUrl;
+
+    @Column(columnDefinition = "TEXT")
+    private String note;
 
     @Enumerated(EnumType.STRING)
     private ReservationStatus status;

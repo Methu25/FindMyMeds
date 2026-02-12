@@ -13,4 +13,5 @@ public class SystemSettingsDto {
     private String defaultHomepage;
     private boolean inventoryAlerts;
     private boolean expiryAlerts;
+    private boolean systemMessages;
 }
