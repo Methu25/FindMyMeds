@@ -38,6 +38,9 @@ public class Pharmacy {
     @Column(name = "registration_no")
     private String registrationNo;
 
+    @Column(name = "password_hash")
+    private String passwordHash;
+
     @Column(name = "nic")
     private String nic;
 

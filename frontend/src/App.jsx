@@ -1,8 +1,11 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import AdminLayout from './components/admin/AdminLayout';
+import AdminLogin from './pages/admin/AdminLogin';
+import ProtectedRoute from './components/ProtectedRoute';
 
 // Landing Page 
 import Home from './pages/Home';
+import Login from './pages/Login';
 
 // Admin Pages 
 import AdminDashboard from './pages/admin/AdminDashboard';
@@ -58,46 +61,52 @@ function App() {
         <Routes>
           {/* Landing page first */}
           <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
 
-          {/*  Admin Routes */}
-          <Route path="/admin" element={<AdminLayout />}>
-            <Route path="pharmacies/:pharmacyId" element={<AdminPharmacyDetails />} />
-            {/* Pharmacy Reports & Inquiries Routes */}
-            <Route path="reports" element={<AdminPharmacyReports />} />
-            <Route path="reports/:reportId" element={<AdminReportDetails />} />
-            <Route path="pharmacy/rejected" element={<RejectedPharmacyTable />} />
-            <Route path="pharmacy/rejected/:id" element={<RejectedPharmacyDetails />} />
-            <Route path="pharmacy-review/:pharmacyId" element={<AdminPharmacyReview />} />
+          {/* Hidden Admin Login */}
+          <Route path="/admin/u/login" element={<AdminLogin />} />
 
-            {/* When visiting /admin -> go to /admin/dashboard */}
-            <Route index element={<Navigate to="dashboard" replace />} />
+          {/*  Admin Routes - Protected */}
+          <Route element={<ProtectedRoute allowedRoles={['ADMIN', 'SUPER_ADMIN']} />}>
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route path="pharmacies/:pharmacyId" element={<AdminPharmacyDetails />} />
+              {/* Pharmacy Reports & Inquiries Routes */}
+              <Route path="reports" element={<AdminPharmacyReports />} />
+              <Route path="reports/:reportId" element={<AdminReportDetails />} />
+              <Route path="pharmacy/rejected" element={<RejectedPharmacyTable />} />
+              <Route path="pharmacy/rejected/:id" element={<RejectedPharmacyDetails />} />
+              <Route path="pharmacy-review/:pharmacyId" element={<AdminPharmacyReview />} />
 
-            <Route path="dashboard" element={<AdminDashboard />} />
-            <Route path="administrators" element={<AdminManagement />} />
-            <Route path="settings" element={<SystemSettings />} />
+              {/* When visiting /admin -> go to /admin/dashboard */}
+              <Route index element={<Navigate to="dashboard" replace />} />
 
-            {/* Medicines */}
-            <Route path="medicines" element={<AdminMedicineRegistry />} />
-            <Route path="medicines/add" element={<AdminAddMedicine />} />
-            <Route path="medicines/:id" element={<AdminMedicineDetails />} />
+              <Route path="dashboard" element={<AdminDashboard />} />
+              <Route path="administrators" element={<AdminManagement />} />
+              <Route path="settings" element={<SystemSettings />} />
 
-            {/* Pharmacies placeholder */}
-            <Route path="pharmacies" element={<PharmacyManagementHome />} />
+              {/* Medicines */}
+              <Route path="medicines" element={<AdminMedicineRegistry />} />
+              <Route path="medicines/add" element={<AdminAddMedicine />} />
+              <Route path="medicines/:id" element={<AdminMedicineDetails />} />
 
-            {/* Civilians */}
-            <Route path="civilians" element={<CivilianManagement />} />
-            <Route path="civilians/:id" element={<CivilianDetails />} />
-            <Route path="civilians/:id/vivo" element={<CivilianVivo />} />
-            <Route path="civilian-reports" element={<CivilianReports />} />
-            <Route path="civilian-reports/:id" element={<CivilianReportDetails />} />
-            <Route path="appeals" element={<AppealDetails />} />
+              {/* Pharmacies placeholder */}
+              <Route path="pharmacies" element={<PharmacyManagementHome />} />
 
-            {/* Notifications */}
-            <Route path="notifications" element={<AdminNotificationCenter />} />
-            <Route path="notifications/:id" element={<AdminNotificationDetails />} />
+              {/* Civilians */}
+              <Route path="civilians" element={<CivilianManagement />} />
+              <Route path="civilians/:id" element={<CivilianDetails />} />
+              <Route path="civilians/:id/vivo" element={<CivilianVivo />} />
+              <Route path="civilian-reports" element={<CivilianReports />} />
+              <Route path="civilian-reports/:id" element={<CivilianReportDetails />} />
+              <Route path="appeals" element={<AppealDetails />} />
 
-            {/* Profile */}
-            <Route path="profile" element={<AdminProfilePage />} />
+              {/* Notifications */}
+              <Route path="notifications" element={<AdminNotificationCenter />} />
+              <Route path="notifications/:id" element={<AdminNotificationDetails />} />
+
+              {/* Profile */}
+              <Route path="profile" element={<AdminProfilePage />} />
+            </Route>
           </Route>
 
 

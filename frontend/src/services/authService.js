@@ -1,0 +1,62 @@
+import axios from 'axios';
+
+const API_URL = 'http://localhost:8081/api/v1';
+
+export const authService = {
+    // Civilian Login
+    loginCivilian: async (email, password) => {
+        try {
+            const response = await axios.post(`${API_URL}/civilian/auth/login`, {
+                email,
+                password
+            });
+            if (response.data.token) {
+                localStorage.setItem('token', response.data.token);
+                localStorage.setItem('userType', 'CIVILIAN');
+            }
+            return response.data;
+        } catch (error) {
+            throw error.response ? error.response.data : error;
+        }
+    },
+
+    // Pharmacy Login
+    loginPharmacy: async (licenseNumber, password) => {
+        try {
+            const response = await axios.post(`${API_URL}/pharmacy/auth/login`, {
+                licenseNumber,
+                password
+            });
+            if (response.data.token) {
+                localStorage.setItem('token', response.data.token);
+                localStorage.setItem('userType', 'PHARMACY');
+            }
+            return response.data;
+        } catch (error) {
+            throw error.response ? error.response.data : error;
+        }
+    },
+
+    // Admin Login
+    loginAdmin: async (email, password) => {
+        try {
+            const response = await axios.post(`${API_URL}/admin/auth/login`, {
+                email,
+                password
+            });
+            if (response.data.token) {
+                localStorage.setItem('token', response.data.token);
+                localStorage.setItem('userType', response.data.role); // ADMIN or SUPER_ADMIN
+            }
+            return response.data;
+        } catch (error) {
+            throw error.response ? error.response.data : error;
+        }
+    },
+
+    logout: () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('userType');
+        // window.location.href = '/login'; 
+    }
+};
