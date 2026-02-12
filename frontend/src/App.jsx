@@ -19,14 +19,14 @@ import AdminMedicineDetails from './pages/admin/AdminMedicineDetails';
 import AdminNotificationCenter from './pages/admin/AdminNotificationCenter';
 import AdminNotificationDetails from './pages/admin/AdminNotificationDetails';
 import AdminProfilePage from './pages/admin/AdminProfilePage';
-import SystemSettings from './pages/admin/SystemSettings'; // Moved to admin
-import PharmacyManagementHome from './pages/admin/Pharmacy/PharmacyManagementHome'; // Imported PharmacyManagementHome
-import AdminPharmacyDetails from "./pages/admin/Pharmacy/AdminPharmacyDetails";
-import AdminPharmacyReview from "./pages/admin/Pharmacy/AdminPharmacyReview";
-import AdminPharmacyReports from "./pages/admin/Pharmacy/AdminPharmacyReports";
-import AdminReportDetails from "./pages/admin/Pharmacy/AdminReportDetails";
-import RejectedPharmacyTable from "./pages/admin/Pharmacy/RejectedPharmacyTable";
-import RejectedPharmacyDetails from "./pages/admin/Pharmacy/RejectedPharmacyDetails";
+import SystemSettings from './pages/admin/SystemSettings';
+import PharmacyManagementHome from './pages/admin/Pharmacy/PharmacyManagementHome';
+// import AdminPharmacyDetails from "./pages/admin/Pharmacy/AdminPharmacyDetails";
+// import AdminPharmacyReview from "./pages/admin/Pharmacy/AdminPharmacyReview";
+// import AdminPharmacyReports from "./pages/admin/Pharmacy/AdminPharmacyReports";
+// import AdminReportDetails from "./pages/admin/Pharmacy/AdminReportDetails";
+// import RejectedPharmacyTable from "./pages/admin/Pharmacy/RejectedPharmacyTable";
+// import RejectedPharmacyDetails from "./pages/admin/Pharmacy/RejectedPharmacyDetails";
 
 // Pharmacy Pages 
 import PharmacyDashboard from './pages/pharmacy/Dashboard';
@@ -54,6 +54,7 @@ import { NotificationProvider } from './context/NotificationContext';
 import { ToastProvider } from './context/ToastContext';
 import React, { useEffect } from 'react';
 
+// App version: 1.0.1 - Forced Refresh
 function App() {
   useEffect(() => {
     const applyTheme = () => {
