@@ -1,6 +1,7 @@
 package com.findmymeds.backend.config;
 
 import com.findmymeds.backend.repository.AdminRepository;
+import com.findmymeds.backend.repository.PharmacyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,12 +19,23 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class ApplicationConfig {
 
     private final AdminRepository adminRepository;
+    private final PharmacyRepository pharmacyRepository;
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> adminRepository.findByEmail(username)
-                .map(AdminUserDetails::new) // Wrap Admin in UserDetails adapter
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return username -> {
+            var admin = adminRepository.findByEmail(username);
+            if (admin.isPresent()) {
+                return new AdminUserDetails(admin.get());
+            }
+
+            var pharmacy = pharmacyRepository.findByEmail(username);
+            if (pharmacy.isPresent()) {
+                return new PharmacyUserDetails(pharmacy.get());
+            }
+
+            throw new UsernameNotFoundException("User not found");
+        };
     }
 
     @Bean
