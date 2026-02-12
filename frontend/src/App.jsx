@@ -93,8 +93,10 @@ function App() {
               <Route path="notifications/:id" element={<PharmacyNotificationDetails />} />
               <Route path="admin-center" element={<AdminCenter />} />
               <Route path="settings" element={<div className="p-8">Pharmacy Settings Content Coming Soon</div>} />
-              <Route path="current-reservations" element={<CurrentReservations />} />
-              <Route path="reservation-history" element={<ReservationHistory />} />
+              <Route path="current-reservations" element={<PharmacyCurrentReservations />} />
+              <Route path="reservation-history" element={<PharmacyReservationHistory />} />
+              <Route path="reports" element={<PharmacyReportPage />} />
+              <Route path="profile" element={<PharmacyProfile />} />
             </Routes>
           </NotificationProvider>
         } />

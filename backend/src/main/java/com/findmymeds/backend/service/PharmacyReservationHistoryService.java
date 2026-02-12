@@ -75,18 +75,12 @@ public class PharmacyReservationHistoryService {
         if (reservation.getItems() != null) {
             dto.setItems(reservation.getItems().stream().map(item -> {
                 ReservationItemDTO itemDto = new ReservationItemDTO();
-                com.findmymeds.backend.dto.ReservationItemDTO itemDto = new com.findmymeds.backend.dto.ReservationItemDTO();
                 itemDto.setId(item.getId());
                 itemDto.setQuantity(item.getQuantity());
                 itemDto.setPrice(item.getPrice());
 
                 if (item.getMedicine() != null) {
                     MedicineDTO medDto = new MedicineDTO();
-                    medDto.setId(item.getMedicine().getId());
-                    medDto.setMedicineName(item.getMedicine().getMedicineName());
-                    medDto.setBrand(item.getMedicine().getManufacturer());
-                    medDto.setPrice(item.getMedicine().getPrice());
-                    com.findmymeds.backend.dto.MedicineDTO medDto = new com.findmymeds.backend.dto.MedicineDTO();
                     medDto.setId(item.getMedicine().getId());
                     medDto.setMedicineName(item.getMedicine().getMedicineName());
                     medDto.setBrand(item.getMedicine().getManufacturer());

@@ -107,11 +107,11 @@ export default function PharmacyReportPage() {
 
     // Chart Data Preparation
     const revenueLineData = {
-        labels: analytics.dailyRevenue.map(item => new Date(item.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })),
+        labels: (analytics.dailyRevenue || []).map(item => item.date ? new Date(item.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'N/A'),
         datasets: [
             {
                 label: 'Revenue (LKR)',
-                data: analytics.dailyRevenue.map(item => item.revenue),
+                data: (analytics.dailyRevenue || []).map(item => item.revenue || 0),
                 borderColor: '#2FA4A9',
                 backgroundColor: 'rgba(47, 164, 169, 0.1)',
                 fill: true,
@@ -123,10 +123,10 @@ export default function PharmacyReportPage() {
     };
 
     const reservationDoughnutData = {
-        labels: Object.keys(analytics.reservationStatusCounts),
+        labels: Object.keys(analytics.reservationStatusCounts || {}),
         datasets: [
             {
-                data: Object.values(analytics.reservationStatusCounts),
+                data: Object.values(analytics.reservationStatusCounts || {}),
                 backgroundColor: [
                     '#2FA4A9', // COLLECTED
                     '#FAC005', // PENDING
@@ -141,10 +141,10 @@ export default function PharmacyReportPage() {
     };
 
     const inventoryDoughnutData = {
-        labels: Object.keys(analytics.inventoryStatusCounts),
+        labels: Object.keys(analytics.inventoryStatusCounts || {}),
         datasets: [
             {
-                data: Object.values(analytics.inventoryStatusCounts),
+                data: Object.values(analytics.inventoryStatusCounts || {}),
                 backgroundColor: [
                     '#2FA4A9', // In Stock
                     '#FF922B', // Low Stock
@@ -205,7 +205,7 @@ export default function PharmacyReportPage() {
                     />
                     <AnalyticCard
                         title="Low Stock Warning"
-                        value={analytics.inventoryStatusCounts['Low Stock'] || 0}
+                        value={analytics.inventoryStatusCounts?.['Low Stock'] || 0}
                         icon={AlertTriangle}
                         trend="-2.4%"
                         color="text-orange-600"
@@ -214,7 +214,7 @@ export default function PharmacyReportPage() {
                     />
                     <AnalyticCard
                         title="Potential Revenue Loss"
-                        value={`LKR ${(analytics.inventoryStatusCounts['Out of Stock'] * 1250).toLocaleString()}`}
+                        value={`LKR ${((analytics.inventoryStatusCounts?.['Out of Stock'] || 0) * 1250).toLocaleString()}`}
                         icon={XCircle}
                         trend="+12%"
                         color="text-red-600"
@@ -289,11 +289,11 @@ export default function PharmacyReportPage() {
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-50">
-                                    {analytics.topSellingMedicines.map((med, idx) => (
+                                    {(analytics.topSellingMedicines || []).map((med, idx) => (
                                         <tr key={idx} className="hover:bg-gray-50/50 transition duration-200">
-                                            <td className="px-6 py-4 text-sm font-bold text-gray-700">{med.medicineName}</td>
-                                            <td className="px-6 py-4 text-sm text-gray-600 text-center">{med.quantitySold}</td>
-                                            <td className="px-6 py-4 text-sm font-black text-primary text-right">LKR {med.totalRevenue.toLocaleString()}</td>
+                                            <td className="px-6 py-4 text-sm font-bold text-gray-700">{med.medicineName || 'N/A'}</td>
+                                            <td className="px-6 py-4 text-sm text-gray-600 text-center">{med.quantitySold || 0}</td>
+                                            <td className="px-6 py-4 text-sm font-black text-primary text-right">LKR {(med.totalRevenue || 0).toLocaleString()}</td>
                                         </tr>
                                     ))}
                                 </tbody>
@@ -320,10 +320,10 @@ export default function PharmacyReportPage() {
                                 />
                             </div>
                             <div className="flex-1 grid grid-cols-2 gap-4 w-full">
-                                {Object.entries(analytics.inventoryStatusCounts).map(([label, val], idx) => (
+                                {Object.entries(analytics.inventoryStatusCounts || {}).map(([label, val], idx) => (
                                     <div key={idx} className="flex flex-col p-3 rounded-2xl bg-gray-50 border border-gray-100">
                                         <span className="text-[10px] text-gray-400 uppercase font-bold mb-1">{label}</span>
-                                        <span className="text-lg font-black text-gray-800">{val}</span>
+                                        <span className="text-lg font-black text-gray-800">{val || 0}</span>
                                     </div>
                                 ))}
                             </div>

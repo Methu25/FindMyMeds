@@ -132,7 +132,7 @@ public class CivilianVivoService {
         }
 
         return AdminVivoReservationDTO.builder()
-                .reservationId(r.getId())
+                .reservationId(r.getId().toString())
                 .status(String.valueOf(r.getStatus()))
                 .reservationDate(r.getReservationDate())
                 .pharmacyId(pharmacyId)
