@@ -23,30 +23,51 @@ public class PharmacyCurrentReservationService {
 
     public List<Long> getCurrentReservationCounts() {
         return List.of(
-                reservationRepository.countByStatus("PENDING"),
-                reservationRepository.countByStatus("CONFIRMED"),
-                reservationRepository.countByStatus("ONGOING"),
-                reservationRepository.countByStatus("READY"),
-                reservationRepository.countByStatus("COLLECTED"),
-                reservationRepository.countByStatus("CANCELLED"));
+                reservationRepository.countByStatus(com.findmymeds.backend.model.enums.ReservationStatus.PENDING),
+                reservationRepository.countByStatus(com.findmymeds.backend.model.enums.ReservationStatus.CONFIRMED),
+                reservationRepository.countByStatus(com.findmymeds.backend.model.enums.ReservationStatus.ONGOING),
+                reservationRepository.countByStatus(com.findmymeds.backend.model.enums.ReservationStatus.READY),
+                reservationRepository.countByStatus(com.findmymeds.backend.model.enums.ReservationStatus.COLLECTED),
+                reservationRepository.countByStatus(com.findmymeds.backend.model.enums.ReservationStatus.CANCELLED));
     }
 
     public List<ReservationDTO> getCurrentReservationsByStatus(String status, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return reservationRepository.findByStatus(status, pageable).stream()
+        return reservationRepository
+                .findByStatus(com.findmymeds.backend.model.enums.ReservationStatus.valueOf(status), pageable).stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
 
-    public void updateReservationStatus(@NonNull Long id, String status) {
+    public void updateReservationStatus(@NonNull String id, String status) {
         Reservation reservation = reservationRepository.findById(id).orElseThrow();
         reservation.setStatus(com.findmymeds.backend.model.enums.ReservationStatus.valueOf(status));
         reservationRepository.save(reservation);
     }
 
-    public ReservationDTO getReservationDetails(@NonNull Long id) {
+    public ReservationDTO getReservationDetails(@NonNull String id) {
         Reservation reservation = reservationRepository.findById(id).orElseThrow();
         return convertToDTO(reservation);
+    }
+
+    public List<ReservationDTO> getAllCurrentReservations(Long pharmacyId) {
+        // Fetch all reservations for the pharmacy that are NOT cancelled or
+        // collected/expired if that's what "current" means.
+        // Or simply fetch PENDING, CONFIRMED, READY, ONGOING.
+        List<com.findmymeds.backend.model.enums.ReservationStatus> activeStatuses = List.of(
+                com.findmymeds.backend.model.enums.ReservationStatus.PENDING,
+                com.findmymeds.backend.model.enums.ReservationStatus.CONFIRMED,
+                com.findmymeds.backend.model.enums.ReservationStatus.ONGOING,
+                com.findmymeds.backend.model.enums.ReservationStatus.READY);
+
+        // This is inefficient if we have many, but matches the "mock" simple list
+        // behavior.
+        // We should filters in DB. Ideally add findByPharmacyIdAndStatusIn...
+        return reservationRepository.findAll().stream()
+                .filter(r -> r.getPharmacy() != null && r.getPharmacy().getId().equals(pharmacyId))
+                .filter(r -> activeStatuses.contains(r.getStatus()))
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
     private ReservationDTO convertToDTO(Reservation reservation) {

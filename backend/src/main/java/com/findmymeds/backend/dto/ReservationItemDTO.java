@@ -9,4 +9,6 @@ public class ReservationItemDTO {
     private MedicineDTO medicine;
     private int quantity;
     private Double price;
+
+    // Getters and Setters
 }

@@ -19,6 +19,7 @@ import java.util.List;
 public class ReportCleanupService {
 
     private final AdminReportRepository reportRepository;
+    private final com.findmymeds.backend.repository.CivilianReportRepository civilianReportRepository;
 
     // Run daily at midnight
     @Scheduled(cron = "0 0 0 * * *")
@@ -39,6 +40,15 @@ public class ReportCleanupService {
             log.info("Deleted {} old reports/inquiries", oldReports.size());
         } else {
             log.info("No old reports to delete");
+        }
+
+        // Cleanup Civilian Reports
+        List<com.findmymeds.backend.model.CivilianReport> oldCivilianReports = civilianReportRepository
+                .findByStatusInAndStatusChangedAtBefore(finalStatuses, cutoffDate);
+
+        if (!oldCivilianReports.isEmpty()) {
+            civilianReportRepository.deleteAll(oldCivilianReports);
+            log.info("Deleted {} old civilian reports/inquiries", oldCivilianReports.size());
         }
     }
 }

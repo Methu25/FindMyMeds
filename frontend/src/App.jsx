@@ -7,7 +7,12 @@ import Home from './pages/Home';
 // Admin Pages 
 import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminManagement from './pages/admin/AdminManagement';
-import CivilianManagement from './pages/admin/CivilianManagement';
+import CivilianManagement from "./pages/admin/Civilian/CivilianManagement";
+import CivilianDetails from "./pages/admin/Civilian/CivilianDetails";
+import CivilianVivo from "./pages/admin/Civilian/CivilianVivo";
+import CivilianReports from "./pages/admin/Civilian/CivilianReports";
+import CivilianReportDetails from "./pages/admin/Civilian/CivilianReportDetails";
+import AppealDetails from "./pages/admin/Appeal/AppealDetails";
 import AdminMedicineRegistry from './pages/admin/AdminMedicineRegistry';
 import AdminAddMedicine from './pages/admin/AdminAddMedicine';
 import AdminMedicineDetails from './pages/admin/AdminMedicineDetails';
@@ -29,9 +34,13 @@ import MedicineInventory from './pages/pharmacy/MedicineInventory';
 import PharmacyMedicineDetails from './pages/pharmacy/MedicineDetails';
 import PharmacyNotificationCenter from './pages/pharmacy/NotificationCenter';
 import PharmacyNotificationDetails from './pages/pharmacy/NotificationDetails';
-import CurrentReservations from './pages/pharmacy/CurrentReservations';
-import ReservationHistory from './pages/pharmacy/ReservationHistory';
 import AdminCenter from './pages/pharmacy/AdminCenter.jsx';
+import PharmacySystemSettings from './pages/pharmacy/SystemSettings';
+import PharmacyAddMedicine from './pages/pharmacy/AddMedicine';
+import PharmacyCurrentReservations from './pages/pharmacy/CurrentReservations';
+import PharmacyReservationHistory from './pages/pharmacy/ReservationHistory';
+import PharmacyReportPage from './pages/pharmacy/PharmacyReportPage';
+import PharmacyProfile from './pages/pharmacy/PharmacyProfile';
 
 // Civilian Pages 
 import CivilianLayout from './components/civilian/CivilianLayout';
@@ -40,6 +49,7 @@ import FindPharmacy from './pages/civilian/FindPharmacy';
 import ReservationPage from './pages/civilian/ReservationPage';
 
 import { NotificationProvider } from './context/NotificationContext';
+import { ToastProvider } from './context/ToastContext';
 
 // App version: 1.0.1 - Forced Refresh
 function App() {

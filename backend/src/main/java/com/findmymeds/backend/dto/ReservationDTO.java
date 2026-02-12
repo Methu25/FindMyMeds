@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 @Data
 public class ReservationDTO {
     private String id;
+
     private String status;
     private java.time.LocalDateTime reservationDate;
     private String timeframe;

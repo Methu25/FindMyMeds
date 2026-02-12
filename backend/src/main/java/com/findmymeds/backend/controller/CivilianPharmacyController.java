@@ -10,15 +10,19 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/pharmacies")
-@CrossOrigin(origins = { "http://localhost:5173", "http://localhost:5174" })
+@CrossOrigin(origins = { "http://localhost:5173", "http://localhost:5174", "http://localhost:5179" })
 public class CivilianPharmacyController {
 
     @Autowired
     private CivilianPharmacyService pharmacyService;
 
     @GetMapping
-    public List<Pharmacy> searchPharmacies(@RequestParam(required = false) String query) {
-        return pharmacyService.searchPharmacies(query);
+    public List<Pharmacy> searchPharmacies(
+            @RequestParam(required = false) String query,
+            @RequestParam(required = false) String filter,
+            @RequestParam(required = false) Double lat,
+            @RequestParam(required = false) Double lng) {
+        return pharmacyService.searchPharmacies(query, filter, lat, lng);
     }
 
     @GetMapping("/nearby")

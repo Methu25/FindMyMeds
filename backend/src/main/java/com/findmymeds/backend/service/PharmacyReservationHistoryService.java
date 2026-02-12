@@ -23,21 +23,34 @@ public class PharmacyReservationHistoryService {
 
     public List<Long> getReservationHistoryCounts() {
         return List.of(
-                reservationRepository.countByStatus("COLLECTED"),
-                reservationRepository.countByStatus("EXPIRED"),
-                reservationRepository.countByStatus("CANCELLED"));
+                reservationRepository.countByStatus(com.findmymeds.backend.model.enums.ReservationStatus.COLLECTED),
+                reservationRepository.countByStatus(com.findmymeds.backend.model.enums.ReservationStatus.EXPIRED),
+                reservationRepository.countByStatus(com.findmymeds.backend.model.enums.ReservationStatus.CANCELLED));
     }
 
     public List<ReservationDTO> getReservationHistoryByType(String type, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return reservationRepository.findByStatus(type, pageable).stream()
+        return reservationRepository
+                .findByStatus(com.findmymeds.backend.model.enums.ReservationStatus.valueOf(type), pageable).stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
 
-    public ReservationDTO getReservationHistoryDetails(@NonNull Long id) {
+    public ReservationDTO getReservationHistoryDetails(@NonNull String id) {
         Reservation reservation = reservationRepository.findById(id).orElseThrow();
         return convertToDTO(reservation);
+    }
+
+    public List<ReservationDTO> getAllHistory(Long pharmacyId) {
+        List<com.findmymeds.backend.model.enums.ReservationStatus> historyStatuses = List.of(
+                com.findmymeds.backend.model.enums.ReservationStatus.COLLECTED,
+                com.findmymeds.backend.model.enums.ReservationStatus.CANCELLED,
+                com.findmymeds.backend.model.enums.ReservationStatus.EXPIRED);
+        return reservationRepository.findAll().stream()
+                .filter(r -> r.getPharmacy() != null && r.getPharmacy().getId().equals(pharmacyId))
+                .filter(r -> historyStatuses.contains(r.getStatus()))
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
     private ReservationDTO convertToDTO(Reservation reservation) {
@@ -62,6 +75,7 @@ public class PharmacyReservationHistoryService {
         if (reservation.getItems() != null) {
             dto.setItems(reservation.getItems().stream().map(item -> {
                 ReservationItemDTO itemDto = new ReservationItemDTO();
+                com.findmymeds.backend.dto.ReservationItemDTO itemDto = new com.findmymeds.backend.dto.ReservationItemDTO();
                 itemDto.setId(item.getId());
                 itemDto.setQuantity(item.getQuantity());
                 itemDto.setPrice(item.getPrice());
@@ -72,6 +86,10 @@ public class PharmacyReservationHistoryService {
                     medDto.setMedicineName(item.getMedicine().getMedicineName());
                     medDto.setBrand(item.getMedicine().getManufacturer());
                     medDto.setPrice(item.getMedicine().getPrice());
+                    com.findmymeds.backend.dto.MedicineDTO medDto = new com.findmymeds.backend.dto.MedicineDTO();
+                    medDto.setId(item.getMedicine().getId());
+                    medDto.setMedicineName(item.getMedicine().getMedicineName());
+                    medDto.setBrand(item.getMedicine().getManufacturer());
                     itemDto.setMedicine(medDto);
                 }
                 return itemDto;
