@@ -1,4 +1,5 @@
 com\findmymeds\backend\controller\AdminCivilianAppealController.class
+com\findmymeds\backend\dto\PharmacyAnalyticsDto$DailyRevenueDto.class
 com\findmymeds\backend\dto\AdminCivilianReportDetailsDTO$AdminCivilianReportDetailsDTOBuilder.class
 com\findmymeds\backend\model\enums\PharmacyType.class
 com\findmymeds\backend\service\CivilianArchiveService.class
@@ -33,14 +34,17 @@ com\findmymeds\backend\dto\AdminCivilianTempBanRequestDTO.class
 com\findmymeds\backend\repository\AdminPharmacyReportRepository.class
 com\findmymeds\backend\model\CivilianReport.class
 com\findmymeds\backend\model\Reservation.class
+com\findmymeds\backend\config\ApplicationConfig.class
 com\findmymeds\backend\controller\CivilianController.class
 com\findmymeds\backend\controller\AdminPharmacyProfileController.class
 com\findmymeds\backend\dto\AdminVivoAppealDTO.class
 com\findmymeds\backend\model\Medicine$MedicineStatus.class
+com\findmymeds\backend\config\JwtAuthFilter.class
 com\findmymeds\backend\controller\AdminNotificationController.class
 com\findmymeds\backend\model\Medicine.class
 com\findmymeds\backend\dto\AdminCivilianMetricCardDTO.class
 com\findmymeds\backend\model\CivilianReportLog.class
+com\findmymeds\backend\controller\PharmacyAnalyticsController.class
 com\findmymeds\backend\dto\AdminVivoHistoryDTO$AdminVivoHistoryDTOBuilder.class
 com\findmymeds\backend\service\AdminService.class
 com\findmymeds\backend\service\CivilianRules.class
@@ -50,9 +54,11 @@ com\findmymeds\backend\dto\AdminCivilianTableRowDTO$AdminCivilianTableRowDTOBuil
 com\findmymeds\backend\repository\CivilianReportLogRepository.class
 com\findmymeds\backend\service\PharmacyService.class
 com\findmymeds\backend\service\AdminReportService.class
+com\findmymeds\backend\dto\TopMedicineDto.class
 com\findmymeds\backend\model\AdminNotFoundException.class
 com\findmymeds\backend\repository\AdminActionLogRepository.class
 com\findmymeds\backend\controller\NotificationController.class
+com\findmymeds\backend\config\AppealDataInitializer.class
 com\findmymeds\backend\repository\CivilianReportRepository.class
 com\findmymeds\backend\scheduler\CivilianEnforcementScheduler.class
 com\findmymeds\backend\controller\CivilianAppealController.class
@@ -70,13 +76,16 @@ com\findmymeds\backend\dto\ReservationItemDTO.class
 com\findmymeds\backend\dto\MedicineDTO.class
 com\findmymeds\backend\model\AdminResponse.class
 com\findmymeds\backend\model\ReservationItem.class
+com\findmymeds\backend\service\PharmacyAnalyticsService.class
 com\findmymeds\backend\repository\AdminRepository.class
 com\findmymeds\backend\service\CivilianPharmacyService.class
+com\findmymeds\backend\controller\AdminAuthController.class
 com\findmymeds\backend\repository\projection\ReservationCountByDate.class
 com\findmymeds\backend\dto\AdminCivilianReportRespondDTO.class
 com\findmymeds\backend\model\AdminReportInquiry.class
 com\findmymeds\backend\model\enums\BanType.class
 com\findmymeds\backend\repository\PharmacyReportRepository.class
+com\findmymeds\backend\dto\AdminLoginRequest.class
 com\findmymeds\backend\dto\AdminNotificationMetricsDTO.class
 com\findmymeds\backend\dto\AdminOverviewSuperDTO.class
 com\findmymeds\backend\dto\AdminPendingAlertsDTO.class
@@ -94,6 +103,7 @@ com\findmymeds\backend\dto\AdminCivilianVivoDTO.class
 com\findmymeds\backend\model\AdminActionLog.class
 com\findmymeds\backend\model\enums\AdminStatus.class
 com\findmymeds\backend\service\PharmacyMedicineInventoryService.class
+com\findmymeds\backend\service\PharmacyReportCleanupService.class
 com\findmymeds\backend\model\CivilianProfile.class
 com\findmymeds\backend\model\RuleRegulation.class
 com\findmymeds\backend\repository\DeletedCivilianRepository.class
@@ -106,6 +116,7 @@ com\findmymeds\backend\model\ReportResponse.class
 com\findmymeds\backend\service\PharmacyCurrentReservationService.class
 com\findmymeds\backend\dto\AdminAppealDetailsDTO$AdminAppealDetailsDTOBuilder.class
 com\findmymeds\backend\model\GlobalExceptionHandler.class
+com\findmymeds\backend\repository\ReservationItemRepository.class
 com\findmymeds\backend\model\enums\ReportType.class
 com\findmymeds\backend\controller\PharmacyProfileController.class
 com\findmymeds\backend\dto\SystemSettingsDto.class
@@ -125,6 +136,7 @@ com\findmymeds\backend\dto\AdminCivilianDetailsDTO$AdminCivilianDetailsDTOBuilde
 com\findmymeds\backend\controller\PharmacyAdminCenterController.class
 com\findmymeds\backend\model\CreateAdminRequest.class
 com\findmymeds\backend\controller\AdminController.class
+com\findmymeds\backend\config\JwtService.class
 com\findmymeds\backend\model\PharmacyProfile.class
 com\findmymeds\backend\dto\AdminChartCountDTO.class
 com\findmymeds\backend\service\AdminNotificationService.class
@@ -135,10 +147,12 @@ com\findmymeds\backend\dto\ReportRequestDto.class
 com\findmymeds\backend\model\CivilianAppeal.class
 com\findmymeds\backend\dto\AdminCivilianReportDetailsDTO.class
 com\findmymeds\backend\model\enums\Role.class
+com\findmymeds\backend\dto\AdminLoginResponse.class
 com\findmymeds\backend\service\PharmacyNotificationService.class
 com\findmymeds\backend\service\AdminPharmacyInventoryService.class
 com\findmymeds\backend\service\CivilianBanService.class
 com\findmymeds\backend\controller\PharmacyNotificationController.class
+com\findmymeds\backend\config\CorsConfig.class
 com\findmymeds\backend\model\Admin.class
 com\findmymeds\backend\service\PharmacyReservationHistoryService.class
 com\findmymeds\backend\service\CivilianVivoService.class
@@ -148,6 +162,7 @@ com\findmymeds\backend\repository\AdminPharmacyInventoryRepository.class
 com\findmymeds\backend\repository\CivilianHistoryRepository.class
 com\findmymeds\backend\repository\AdminReportRepository.class
 com\findmymeds\backend\scheduler\CivilianReportCleanupScheduler.class
+com\findmymeds\backend\service\AdminAuthService.class
 com\findmymeds\backend\service\AdminPharmacyReportService.class
 com\findmymeds\backend\controller\AdminReportController.class
 com\findmymeds\backend\dto\DashboardMetricsDto.class
@@ -167,6 +182,7 @@ com\findmymeds\backend\dto\MedicineDetailDTO.class
 com\findmymeds\backend\model\PharmacyReport.class
 com\findmymeds\backend\service\CivilianAppealAdminService.class
 com\findmymeds\backend\controller\PharmacyReservationHistoryController.class
+com\findmymeds\backend\dto\PharmacyAnalyticsDto.class
 com\findmymeds\backend\service\ReportCleanupService.class
 com\findmymeds\backend\model\enums\AppealStatus.class
 com\findmymeds\backend\dto\MedicineInventoryDTO.class
@@ -178,6 +194,7 @@ com\findmymeds\backend\dto\AdminCivilianVivoDTO$AdminCivilianVivoDTOBuilder.clas
 com\findmymeds\backend\controller\AdminPharmacyReportController.class
 com\findmymeds\backend\model\AdminActivityLog.class
 com\findmymeds\backend\controller\CivilianReservationController.class
+com\findmymeds\backend\config\CorsConfig$1.class
 com\findmymeds\backend\controller\AdminCivilianReportController.class
 com\findmymeds\backend\repository\CivilianRepository.class
 com\findmymeds\backend\repository\CivilianReservationRepository.class
@@ -191,6 +208,7 @@ com\findmymeds\backend\dto\AdminAppealDetailsDTO.class
 com\findmymeds\backend\model\Medicine$ApprovalStatus.class
 com\findmymeds\backend\model\DuplicateEmailException.class
 com\findmymeds\backend\repository\NotificationRepository.class
+com\findmymeds\backend\config\AdminUserDetails.class
 com\findmymeds\backend\dto\CivilianDTO.class
 com\findmymeds\backend\model\CreateReportRequest.class
 com\findmymeds\backend\dto\ReservationDTO.class
