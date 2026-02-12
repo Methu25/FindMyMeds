@@ -1,7 +1,7 @@
 package com.findmymeds.backend.controller;
 
 import com.findmymeds.backend.dto.AuthenticationResponse;
-import com.findmymeds.backend.dto.PharmacyLoginRequest;
+import com.findmymeds.backend.dto.PharmacyLoginRequestDto;
 import com.findmymeds.backend.service.PharmacyAuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +19,7 @@ public class PharmacyAuthController {
 
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> login(
-            @RequestBody PharmacyLoginRequest request) {
+            @RequestBody PharmacyLoginRequestDto request) {
         return ResponseEntity.ok(service.login(request));
     }
 }
