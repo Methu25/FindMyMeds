@@ -27,9 +27,12 @@ export default function AdminCenter() {
     const fetchData = async () => {
         setLoading(true);
         try {
+            const token = localStorage.getItem('pharmacyToken');
+            const headers = { 'Authorization': `Bearer ${token}` };
+
             const [profileRes, historyRes] = await Promise.all([
-                fetch('http://localhost:8080/api/pharmacy/profile'),
-                fetch('http://localhost:8080/api/pharmacy/reports/history')
+                fetch('http://localhost:8081/api/pharmacy/center/profile', { headers }),
+                fetch('http://localhost:8081/api/pharmacy/reports/history', { headers })
             ]);
 
             if (profileRes.ok) setProfile(await profileRes.json());
@@ -38,7 +41,7 @@ export default function AdminCenter() {
             console.error('Error fetching data:', error);
             // Set empty profile instead of mock data
             setProfile({
-                name: 'Loading...',
+                name: 'Loading Error',
                 licenseNumber: '-',
                 registrationNo: '-',
                 ownerName: '-',
@@ -66,9 +69,13 @@ export default function AdminCenter() {
         e.preventDefault();
         setSubmitting(true);
         try {
-            const response = await fetch('http://localhost:8080/api/pharmacy/reports', {
+            const token = localStorage.getItem('pharmacyToken');
+            const response = await fetch('http://localhost:8081/api/pharmacy/reports', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
                 body: JSON.stringify(formData)
             });
             if (response.ok) {
@@ -81,10 +88,15 @@ export default function AdminCenter() {
                     description: ''
                 });
                 // Refresh history
-                const historyRes = await fetch('http://localhost:8080/api/pharmacy/reports/history');
+                const historyRes = await fetch('http://localhost:8081/api/pharmacy/reports/history', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
                 if (historyRes.ok) setHistory(await historyRes.json());
+            } else {
+                alert('Failed to submit report');
             }
         } catch (error) {
+            console.error(error);
             alert('Failed to submit report');
         } finally {
             setSubmitting(false);

@@ -7,7 +7,7 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex flex-col">
-      
+
       {/* Navbar */}
       <nav className="flex justify-between items-center p-6 lg:px-24">
         <div className="flex items-center gap-2">
@@ -75,7 +75,7 @@ const Home = () => {
 
           {/* Pharmacy */}
           <div
-            onClick={() => navigate('/pharmacy')}
+            onClick={() => navigate('/pharmacy-login')}
             className="cursor-pointer p-8 bg-white/60 backdrop-blur-xl border border-white/20 rounded-3xl shadow-lg shadow-indigo-100 hover:shadow-indigo-200 hover:-translate-y-1 transition-all"
           >
             <div className="w-12 h-12 bg-teal-100 rounded-2xl flex items-center justify-center text-teal-600 mb-6">

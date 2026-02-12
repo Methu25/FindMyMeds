@@ -30,6 +30,8 @@ import RejectedPharmacyDetails from "./pages/admin/Pharmacy/RejectedPharmacyDeta
 
 // Pharmacy Pages 
 import PharmacyDashboard from './pages/pharmacy/Dashboard';
+import PharmacyLogin from './pages/pharmacy/PharmacyLogin';
+import PharmacySignup from './pages/pharmacy/PharmacySignup';
 import MedicineInventory from './pages/pharmacy/MedicineInventory';
 import PharmacyMedicineDetails from './pages/pharmacy/MedicineDetails';
 import PharmacyNotificationCenter from './pages/pharmacy/NotificationCenter';
@@ -50,10 +52,33 @@ import ReservationPage from './pages/civilian/ReservationPage';
 
 import { NotificationProvider } from './context/NotificationContext';
 import { ToastProvider } from './context/ToastContext';
+import React, { useEffect } from 'react';
 
 function App() {
+  useEffect(() => {
+    const applyTheme = () => {
+      const theme = localStorage.getItem('theme') || 'system';
+      const root = window.document.documentElement;
+
+      root.classList.remove('light', 'dark');
+
+      if (theme === 'dark') {
+        root.classList.add('dark');
+      } else if (theme === 'light') {
+        root.classList.add('light');
+      }
+      // If 'system', we don't add any class, allowing the media query to work
+    };
+
+    applyTheme();
+    // Watch for localStorage changes from other tabs
+    window.addEventListener('storage', applyTheme);
+    return () => window.removeEventListener('storage', applyTheme);
+  }, []);
+
   return (
     <BrowserRouter>
+
       <ToastProvider>
         <Routes>
           {/* Landing page first */}
@@ -101,6 +126,8 @@ function App() {
           </Route>
 
           {/* Pharmacy Routes */}
+          <Route path="/pharmacy-login" element={<PharmacyLogin />} />
+          <Route path="/pharmacy-signup" element={<PharmacySignup />} />
           <Route path="/pharmacy/*" element={
             <NotificationProvider>
               <Routes>
