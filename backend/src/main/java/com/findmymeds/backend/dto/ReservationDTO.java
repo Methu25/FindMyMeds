@@ -6,10 +6,9 @@ import java.time.LocalDateTime;
 
 @Data
 public class ReservationDTO {
-
     private String id;
     private String status;
-    private LocalDateTime reservationDate;
+    private java.time.LocalDateTime reservationDate;
     private String timeframe;
     private Double totalAmount;
     private String prescriptionImageUrl;
