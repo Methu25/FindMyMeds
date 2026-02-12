@@ -115,6 +115,33 @@ export default function ReservationHistory() {
                   <th className="px-6 py-4 text-left text-[10px] font-black uppercase tracking-widest text-gray-400">Status</th>
                 </tr>
               </thead>
+              <tbody className="divide-y divide-gray-200">
+                {loading ? (
+                  <tr><td colSpan="6" className="text-center py-20 text-2xl text-gray-500">Loading...</td></tr>
+                ) : history.length === 0 ? (
+                  <tr><td colSpan="6" className="text-center py-20 text-2xl text-gray-500">No records found.</td></tr>
+                ) : (
+                  history.map((item) => (
+                    <tr key={item.id} className="hover:bg-gray-50 transition-all duration-300 even:bg-gray-50/50">
+                      <td className="px-10 py-8 font-bold text-lg">#{item.id}</td>
+                      <td className="px-10 py-8">{item.reservationDate ? new Date(item.reservationDate).toLocaleString() : 'N/A'}</td>
+                      <td className="px-10 py-8 font-semibold">{item.civilian?.name || 'Unknown'}</td>
+                      <td className="px-10 py-8 font-bold text-xl text-green-600">Rs. {item.totalAmount}</td>
+                      <td className="px-10 py-8">
+                        <span className={`px-8 py-4 rounded-full text-white font-bold shadow-md ${activeType === 'COLLECTED' ? 'bg-green-600' :
+                          activeType === 'EXPIRED' ? 'bg-orange-600' : 'bg-red-600'
+                          }`}>
+                          {item.status}
+                        </span>
+                      </td>
+                      <td className="px-10 py-8">
+                        <button className="bg-teal-600 hover:bg-teal-700 text-white font-bold text-lg px-12 py-5 rounded-xl transition-all duration-300">
+                          View Details
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                )}
               <tbody className="divide-y divide-gray-50">
                 {filteredReservations.map((res) => (
                   <tr key={res.id} className="hover:bg-gray-50/50 transition-colors">

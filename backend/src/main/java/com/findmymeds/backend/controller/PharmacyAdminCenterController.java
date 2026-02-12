@@ -31,7 +31,8 @@ public class PharmacyAdminCenterController {
         Pharmacy pharmacy = pharmacyRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Logged in pharmacy not found"));
 
-        return ResponseEntity.ok(pharmacyAdminCenterService.getProfile(pharmacy.getId()));
+        return ResponseEntity
+                .ok(pharmacyAdminCenterService.getProfile(java.util.Objects.requireNonNull(pharmacy.getId())));
     }
 
     @PostMapping("/reports")
