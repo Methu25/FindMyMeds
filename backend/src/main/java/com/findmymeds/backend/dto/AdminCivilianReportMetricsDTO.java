@@ -15,14 +15,6 @@ public class AdminCivilianReportMetricsDTO {
     public AdminCivilianReportMetricsDTO() {
     }
 
-    public AdminCivilianReportMetricsDTO(long total, long pending, long inProgress, long resolved, long rejected) {
-        this.total = total;
-        this.pending = pending;
-        this.inProgress = inProgress;
-        this.resolved = resolved;
-        this.rejected = rejected;
-    }
-
     public long getTotal() {
         return total;
     }

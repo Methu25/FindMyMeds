@@ -1,4 +1,8 @@
 C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\config\AdminUserDetails.java
+<<<<<<< HEAD
+=======
+C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\config\AppealDataInitializer.java
+>>>>>>> 915f3bdc4a2b398f1a075fb1f04b1b6f604c9425
 C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\config\ApplicationConfig.java
 C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\config\CorsConfig.java
 C:\Projects\FindMyMeds\backend\src\main\java\com\findmymeds\backend\config\JwtAuthFilter.java

@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalDate;
+
 import java.util.List;
 import com.findmymeds.backend.model.enums.ReservationStatus;
 
@@ -31,12 +31,9 @@ public class Reservation {
     private Double totalAmount;
     private Integer totalQuantity;
     private Integer totalMedicinesCount;
-    private java.time.LocalDateTime reservationDate;
-    private java.time.LocalDate pickupDate;
+    private LocalDateTime reservationDate;
+    private LocalDate pickupDate;
     private String timeframe; // e.g. "10:00 AM - 6:00 PM"
-    private String prescriptionImageUrl;
-    private String note;
-
     private String prescriptionImageUrl;
 
     @Column(columnDefinition = "TEXT")
