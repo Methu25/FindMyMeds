@@ -62,11 +62,9 @@ function App() {
           {/*  Admin Routes */}
           <Route path="/admin" element={<AdminLayout />}>
             <Route path="pharmacies/:pharmacyId" element={<AdminPharmacyDetails />} />
-
             {/* Pharmacy Reports & Inquiries Routes */}
             <Route path="reports" element={<AdminPharmacyReports />} />
             <Route path="reports/:reportId" element={<AdminReportDetails />} />
-
             <Route path="pharmacy/rejected" element={<RejectedPharmacyTable />} />
             <Route path="pharmacy/rejected/:id" element={<RejectedPharmacyDetails />} />
 
