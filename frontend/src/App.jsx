@@ -59,32 +59,18 @@ function App() {
           {/* Landing page first */}
           <Route path="/" element={<Home />} />
 
-<<<<<<< HEAD
           {/*  Admin Routes */}
           <Route path="/admin" element={<AdminLayout />}>
-=======
-        {/*  Admin Routes */}
-        <Route path="/admin" element={<AdminLayout />}>
-        <Route
-  path="/admin/pharmacies/:pharmacyId"
-  element={<AdminPharmacyDetails />}
-/>
-{/* Pharmacy Reports & Inquiries Routes */}
-<Route 
-  path="/admin/reports" 
-  element={<AdminPharmacyReports />} 
-/>
+            <Route path="pharmacies/:pharmacyId" element={<AdminPharmacyDetails />} />
 
-<Route 
-  path="/admin/reports/:reportId" 
-  element={<AdminReportDetails />} 
-/>
-<Route path="/admin/pharmacy/rejected" element={<RejectedPharmacyTable />} />
-<Route path="/admin/pharmacy/rejected/:id" element={<RejectedPharmacyDetails />} />
+            {/* Pharmacy Reports & Inquiries Routes */}
+            <Route path="reports" element={<AdminPharmacyReports />} />
+            <Route path="reports/:reportId" element={<AdminReportDetails />} />
 
-        <Route path="/admin/pharmacy-review/:pharmacyId" element={<AdminPharmacyReview />} />
+            <Route path="pharmacy/rejected" element={<RejectedPharmacyTable />} />
+            <Route path="pharmacy/rejected/:id" element={<RejectedPharmacyDetails />} />
 
->>>>>>> ea0ccdeec9e65e53792fa9870589eeb85279c56f
+            <Route path="pharmacy-review/:pharmacyId" element={<AdminPharmacyReview />} />
 
             {/* When visiting /admin -> go to /admin/dashboard */}
             <Route index element={<Navigate to="dashboard" replace />} />
