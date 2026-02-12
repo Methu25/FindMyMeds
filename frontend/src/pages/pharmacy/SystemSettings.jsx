@@ -21,13 +21,30 @@ export default function SystemSettings() {
     useEffect(() => {
         const fetchSettings = async () => {
             try {
-                const response = await fetch('http://localhost:8080/api/pharmacy/settings');
+                const token = localStorage.getItem('pharmacyToken');
+                const response = await fetch('http://localhost:8081/api/pharmacy/settings', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
                 if (response.ok) {
                     const data = await response.json();
                     setSettings(prev => ({ ...prev, ...data }));
+
+                    // Apply theme from backend if available
+                    if (data.theme) {
+                        localStorage.setItem('theme', data.theme.toLowerCase());
+                        applyThemeLocally(data.theme.toLowerCase());
+                    }
+                } else {
+                    // Fallback to localStorage if fetch fails
+                    const localTheme = localStorage.getItem('theme') || 'light';
+                    setSettings(prev => ({ ...prev, theme: localTheme.charAt(0).toUpperCase() + localTheme.slice(1) }));
                 }
             } catch (error) {
                 console.error('Failed to fetch settings:', error);
+                const localTheme = localStorage.getItem('theme') || 'light';
+                setSettings(prev => ({ ...prev, theme: localTheme.charAt(0).toUpperCase() + localTheme.slice(1) }));
             } finally {
                 setLoading(false);
             }
@@ -36,20 +53,41 @@ export default function SystemSettings() {
         fetchSettings();
     }, []);
 
+    const applyThemeLocally = (themeValue) => {
+        const root = window.document.documentElement;
+        root.classList.remove('light', 'dark');
+        if (themeValue === 'dark') {
+            root.classList.add('dark');
+        } else if (themeValue === 'light') {
+            root.classList.add('light');
+        }
+    };
+
     const handleToggle = (key) => {
         setSettings(prev => ({ ...prev, [key]: !prev[key] }));
     };
 
     const handleChange = (key, value) => {
         setSettings(prev => ({ ...prev, [key]: value }));
+        // Proactively apply theme if the user toggles it, 
+        // but user requested "click save changes", so I'll wait for save button or apply now?
+        // Let's apply immediately for better UX, but the user specifically mentioned the save button.
+        // Actually, if I apply immediately and then they click save, it works too.
+        if (key === 'theme') {
+            applyThemeLocally(value.toLowerCase());
+        }
     };
 
     const saveSettings = async () => {
         setSaving(true);
         try {
-            const response = await fetch('http://localhost:8080/api/pharmacy/settings', {
+            const token = localStorage.getItem('pharmacyToken');
+            const response = await fetch('http://localhost:8081/api/pharmacy/settings', {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
                 body: JSON.stringify({
                     notificationsEnabled: settings.notificationsEnabled,
                     theme: settings.theme,
@@ -61,6 +99,8 @@ export default function SystemSettings() {
             });
 
             if (response.ok) {
+                localStorage.setItem('theme', settings.theme.toLowerCase());
+                applyThemeLocally(settings.theme.toLowerCase());
                 showToast('Settings saved successfully!');
             } else {
                 showToast('Failed to save settings.', 'error');

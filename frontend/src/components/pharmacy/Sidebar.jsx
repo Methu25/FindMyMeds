@@ -15,8 +15,8 @@ const menuItems = [
 
 export default function Sidebar() {
     return (
-        <div className="fixed left-0 top-0 h-screen w-64 bg-primary text-white flex flex-col shadow-xl">
-            <div className="p-6 border-b border-white/10">
+        <div className="fixed left-0 top-0 h-screen w-64 bg-sidebar-bg text-sidebar-text flex flex-col shadow-xl transition-colors duration-300">
+            <div className="p-6 border-b border-current/10">
                 <h1 className="text-2xl font-black tracking-tight">FindMyMeds</h1>
                 <p className="text-[10px] font-bold uppercase tracking-widest opacity-60">Pharmacy Portal</p>
             </div>
@@ -30,8 +30,8 @@ export default function Sidebar() {
                             end={item.end}
                             className={({ isActive }) =>
                                 `flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-300 font-bold text-sm ${isActive
-                                    ? 'bg-white text-primary shadow-lg shadow-black/10'
-                                    : 'hover:bg-white/10 text-white/80 hover:text-white'
+                                    ? 'bg-sidebar-text text-sidebar-bg shadow-lg shadow-black/10'
+                                    : 'hover:bg-current/10 text-sidebar-text/80 hover:text-sidebar-text'
                                 }`
                             }
                         >
@@ -41,9 +41,10 @@ export default function Sidebar() {
                     )
                 })}
             </nav>
-            <div className="p-6 text-[10px] font-black uppercase tracking-widest opacity-40 border-t border-white/10 text-center">
+            <div className="p-6 text-[10px] font-black uppercase tracking-widest opacity-40 border-t border-current/10 text-center">
                 © 2026 FindMyMeds
             </div>
         </div>
     )
 }
+
