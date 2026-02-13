@@ -84,9 +84,7 @@ export default function CurrentReservations() {
     } catch (error) { console.error('Details fetch error:', error) }
   }
 
-  const handleUpdateStatus = (id, status) => {
-    updateStatus(id, status)
-  }
+
 
   if (viewMode === 'details' && selectedRes) {
     return (
