@@ -28,6 +28,9 @@ export default function AdminCenter() {
     const fetchData = async () => {
         setLoading(true);
         try {
+            const token = localStorage.getItem('pharmacyToken');
+            const headers = { 'Authorization': `Bearer ${token}` };
+
             const [profileRes, historyRes] = await Promise.all([
                 api.get('/pharmacy/profile'),
                 api.get('/pharmacy/reports/history')
@@ -39,7 +42,7 @@ export default function AdminCenter() {
             console.error('Error fetching data:', error);
             // Set empty profile instead of mock data
             setProfile({
-                name: 'Loading...',
+                name: 'Loading Error',
                 licenseNumber: '-',
                 registrationNo: '-',
                 ownerName: '-',

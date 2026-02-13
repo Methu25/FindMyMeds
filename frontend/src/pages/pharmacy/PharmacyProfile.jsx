@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Layout from '../../components/pharmacy/Layout';
 import api from '../../services/api';
 import {
@@ -8,6 +8,7 @@ import {
 export default function PharmacyProfile() {
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
+    const fileInputRef = useRef(null);
 
     const [profile, setProfile] = useState({
         name: '',
@@ -50,6 +51,36 @@ export default function PharmacyProfile() {
         setProfile(prev => ({ ...prev, [name]: value }));
     };
 
+    const handleLogoUpload = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const formData = new FormData();
+        formData.append('file', file);
+
+        try {
+            const token = localStorage.getItem('pharmacyToken');
+            const res = await fetch('http://localhost:8080/api/pharmacy/profile/upload-logo', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                },
+                body: formData
+            });
+
+            if (res.ok) {
+                const data = await res.json();
+                setProfile(prev => ({ ...prev, logoPath: data.logoUrl }));
+                // alert('Logo uploaded successfully!');
+            } else {
+                alert('Failed to upload logo.');
+            }
+        } catch (error) {
+            console.error('Error uploading logo:', error);
+            alert('Error uploading logo.');
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setSaving(true);
@@ -78,22 +109,39 @@ export default function PharmacyProfile() {
         );
     }
 
+    const getImageUrl = (path) => {
+        if (!path) return null;
+        if (path.startsWith('http')) return path;
+        return `http://localhost:8080${path}`;
+    };
+
     return (
         <Layout title="Pharmacy Profile">
             <div className="max-w-6xl mx-auto pb-12 animate-in fade-in duration-500">
                 <form onSubmit={handleSubmit} className="space-y-8">
+                    <input
+                        type="file"
+                        ref={fileInputRef}
+                        className="hidden"
+                        accept="image/*"
+                        onChange={handleLogoUpload}
+                    />
 
                     {/* Header / Identity Section */}
                     <div className="bg-white rounded-[2rem] p-8 shadow-sm border border-gray-100 flex flex-col md:flex-row gap-10 items-center">
                         <div className="relative group">
                             <div className="w-40 h-40 rounded-3xl bg-gray-50 flex items-center justify-center text-primary border-4 border-gray-100 overflow-hidden shadow-inner">
                                 {profile.logoPath ? (
-                                    <img src={profile.logoPath} alt="Logo" className="w-full h-full object-cover" />
+                                    <img src={getImageUrl(profile.logoPath)} alt="Logo" className="w-full h-full object-cover" />
                                 ) : (
                                     <Building size={48} className="opacity-20" />
                                 )}
                             </div>
-                            <button type="button" className="absolute bottom-2 right-2 bg-white text-primary p-2 rounded-xl shadow-lg border border-gray-100 hover:bg-primary hover:text-white transition group-hover:scale-110">
+                            <button
+                                type="button"
+                                onClick={() => fileInputRef.current.click()}
+                                className="absolute bottom-2 right-2 bg-white text-primary p-2 rounded-xl shadow-lg border border-gray-100 hover:bg-primary hover:text-white transition group-hover:scale-110"
+                            >
                                 <Upload size={16} />
                             </button>
                         </div>
@@ -236,19 +284,7 @@ export default function PharmacyProfile() {
                                     />
                                 </div>
 
-                                <div className="pt-2">
-                                    <label className="text-xs font-black text-gray-400 uppercase tracking-widest block mb-2">Documents</label>
-                                    <div className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 border border-gray-100">
-                                        <div className="bg-white p-2 rounded-lg shadow-sm text-primary">
-                                            <FileText size={20} />
-                                        </div>
-                                        <div className="flex-1">
-                                            <p className="text-xs font-bold text-gray-700">Pharmacy_License.pdf</p>
-                                            <p className="text-[10px] text-gray-400">Verified on {new Date().toLocaleDateString()}</p>
-                                        </div>
-                                        <button type="button" className="text-[10px] font-bold text-primary hover:underline">VIEW</button>
-                                    </div>
-                                </div>
+
                             </div>
                         </div>
                     </div>

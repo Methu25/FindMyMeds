@@ -1,6 +1,5 @@
 package com.findmymeds.backend.repository;
 
-import com.findmymeds.backend.model.Notification;
 import com.findmymeds.backend.model.enums.NotificationType;
 import com.findmymeds.backend.model.enums.Role;
 import org.springframework.data.domain.Page;
@@ -10,6 +9,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import com.findmymeds.backend.model.Notification;
 import java.time.LocalDateTime;
 import java.util.List;
 

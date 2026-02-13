@@ -15,5 +15,4 @@ public class ReservationDTO {
     private String note;
     private CivilianDTO civilian;
     private List<ReservationItemDTO> items;
-    // Getters and Setters
 }

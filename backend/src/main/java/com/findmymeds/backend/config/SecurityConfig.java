@@ -52,8 +52,11 @@ public class SecurityConfig {
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
+                        // 0. Temporary Cleanup Endpoint
+                        .requestMatchers("/api/debug/**").permitAll()
+
                         // 1. Public Endpoints (Authentication & Public Pharmacy Search)
-                        .requestMatchers("/api/auth/**", "/api/v1/admin/auth/**").permitAll()
+                        .requestMatchers("/api/auth/**", "/api/v1/admin/auth/**", "/api/pharmacy/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/pharmacies/**").permitAll()
                         .requestMatchers("/api/pharmacy/**", "/api/notifications/**").permitAll()
                         .requestMatchers("/api/v1/pharmacy/**").permitAll()

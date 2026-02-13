@@ -8,9 +8,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.security.access.prepost.PreAuthorize;
+
 @RestController
 @RequestMapping("/api/pharmacy/inventory")
 @lombok.RequiredArgsConstructor
+@PreAuthorize("hasRole('PHARMACY')")
 public class PharmacyMedicineInventoryController {
 
     private final PharmacyMedicineInventoryService inventoryService;

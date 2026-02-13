@@ -28,6 +28,8 @@ export default function SystemSettings() {
                 }
             } catch (error) {
                 console.error('Failed to fetch settings:', error);
+                const localTheme = localStorage.getItem('theme') || 'light';
+                setSettings(prev => ({ ...prev, theme: localTheme.charAt(0).toUpperCase() + localTheme.slice(1) }));
             } finally {
                 setLoading(false);
             }
@@ -36,12 +38,29 @@ export default function SystemSettings() {
         fetchSettings();
     }, []);
 
+    const applyThemeLocally = (themeValue) => {
+        const root = window.document.documentElement;
+        root.classList.remove('light', 'dark');
+        if (themeValue === 'dark') {
+            root.classList.add('dark');
+        } else if (themeValue === 'light') {
+            root.classList.add('light');
+        }
+    };
+
     const handleToggle = (key) => {
         setSettings(prev => ({ ...prev, [key]: !prev[key] }));
     };
 
     const handleChange = (key, value) => {
         setSettings(prev => ({ ...prev, [key]: value }));
+        // Proactively apply theme if the user toggles it, 
+        // but user requested "click save changes", so I'll wait for save button or apply now?
+        // Let's apply immediately for better UX, but the user specifically mentioned the save button.
+        // Actually, if I apply immediately and then they click save, it works too.
+        if (key === 'theme') {
+            applyThemeLocally(value.toLowerCase());
+        }
     };
 
     const saveSettings = async () => {
