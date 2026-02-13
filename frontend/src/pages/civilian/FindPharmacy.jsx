@@ -36,7 +36,7 @@ const FindPharmacy = () => {
 
     const fetchPharmacies = async (lat, lng) => {
         try {
-            const response = await fetch(`http://localhost:8080/api/pharmacies/nearby?lat=${lat}&lng=${lng}&radius=15`);
+            const response = await fetch(`http://localhost:8081/api/pharmacies/nearby?lat=${lat}&lng=${lng}&radius=15`);
             if (response.ok) {
                 const data = await response.json();
                 setPharmacies(data);

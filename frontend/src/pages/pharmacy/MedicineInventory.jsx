@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Layout from '../../components/pharmacy/Layout'
 import MetricCard from '../../components/pharmacy/MetricCard'
+import api from '../../services/api'
 import { Pill, CheckCircle2, AlertTriangle, PackageX, Skull, CalendarClock, CircleOff } from 'lucide-react'
 
 export default function MedicineInventory() {
@@ -22,27 +23,25 @@ export default function MedicineInventory() {
 
     // Fetch Metrics
     useEffect(() => {
-        fetch('http://localhost:8080/api/pharmacy/inventory/metrics')
-            .then(res => res.json())
-            .then(data => setMetrics(data))
+        api.get('/pharmacy/inventory/metrics')
+            .then(res => setMetrics(res.data))
             .catch(err => console.error("Error fetching metrics:", err))
     }, [])
 
     // Fetch Inventory
     useEffect(() => {
         setLoading(true)
-        const queryParams = new URLSearchParams({
+        const params = {
             page: 0,
             size: 100,
             search: searchQuery,
             filter: activeFilter
-        })
+        }
 
-        fetch(`http://localhost:8080/api/pharmacy/inventory?${queryParams}`)
-            .then(res => res.json())
-            .then(data => {
-                if (data.content) {
-                    setInventory(data.content)
+        api.get('/pharmacy/inventory', { params })
+            .then(res => {
+                if (res.data && res.data.content) {
+                    setInventory(res.data.content)
                 }
                 setLoading(false)
             })

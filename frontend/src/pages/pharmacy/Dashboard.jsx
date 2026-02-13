@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Layout from '../../components/pharmacy/Layout'
+import api from '../../services/api'
 import {
     Package, CheckCircle, XCircle, Pill, TrendingUp,
     ArrowUpRight, ArrowDownRight, Zap, Bell, Clock, Plus, Settings, MessageSquare, History,
@@ -29,14 +30,9 @@ export default function Dashboard() {
     useEffect(() => {
         const fetchDashboardData = async () => {
             try {
-                const token = localStorage.getItem('token');
-                const metricsRes = await fetch('http://localhost:8080/api/pharmacy/dashboard/metrics', {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                if (metricsRes.ok) {
-                    const data = await metricsRes.json();
+                const metricsRes = await api.get('/pharmacy/dashboard/metrics');
+                if (metricsRes.data) {
+                    const data = metricsRes.data;
                     setMetrics({
                         todaysReservations: data.todaysReservations || 0,
                         pendingOrders: data.pendingOrders || 0,
@@ -52,9 +48,9 @@ export default function Dashboard() {
                 }
 
                 // Fetch inventory metrics for stock health calculation
-                const inventoryRes = await fetch('http://localhost:8080/api/pharmacy/inventory/metrics');
-                if (inventoryRes.ok) {
-                    const invData = await inventoryRes.json();
+                const inventoryRes = await api.get('/pharmacy/inventory/metrics');
+                if (inventoryRes.data) {
+                    const invData = inventoryRes.data;
                     const total = invData.totalMedicines || 1;
                     const healthyCount = invData.inStock || 0;
                     const lowCount = invData.lowStock || 0;
@@ -67,10 +63,9 @@ export default function Dashboard() {
 
                 // Fetch recent activities
                 try {
-                    const activitiesRes = await fetch('http://localhost:8080/api/pharmacy/activities/recent');
-                    if (activitiesRes.ok) {
-                        const actData = await activitiesRes.json();
-                        setActivities(actData.slice(0, 3));
+                    const activitiesRes = await api.get('/pharmacy/activities/recent');
+                    if (activitiesRes.data) {
+                        setActivities(activitiesRes.data.slice(0, 3));
                     }
                 } catch (e) {
                     console.log('Activities endpoint not available');

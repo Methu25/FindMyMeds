@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Layout from '../../components/pharmacy/Layout';
+import api from '../../services/api';
 import { Bell, Monitor, Shield, Save, Download, Trash2, CheckCircle2 } from 'lucide-react';
 
 export default function SystemSettings() {
@@ -21,10 +22,9 @@ export default function SystemSettings() {
     useEffect(() => {
         const fetchSettings = async () => {
             try {
-                const response = await fetch('http://localhost:8080/api/pharmacy/settings');
-                if (response.ok) {
-                    const data = await response.json();
-                    setSettings(prev => ({ ...prev, ...data }));
+                const response = await api.get('/pharmacy/settings');
+                if (response.data) {
+                    setSettings(prev => ({ ...prev, ...response.data }));
                 }
             } catch (error) {
                 console.error('Failed to fetch settings:', error);
@@ -47,27 +47,23 @@ export default function SystemSettings() {
     const saveSettings = async () => {
         setSaving(true);
         try {
-            const response = await fetch('http://localhost:8080/api/pharmacy/settings', {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    notificationsEnabled: settings.notificationsEnabled,
-                    theme: settings.theme,
-                    defaultHomepage: settings.defaultHomepage,
-                    inventoryAlerts: settings.inventoryAlerts,
-                    expiryAlerts: settings.expiryAlerts,
-                    systemMessages: settings.systemMessages
-                })
+            const response = await api.put('/pharmacy/settings', {
+                notificationsEnabled: settings.notificationsEnabled,
+                theme: settings.theme,
+                defaultHomepage: settings.defaultHomepage,
+                inventoryAlerts: settings.inventoryAlerts,
+                expiryAlerts: settings.expiryAlerts,
+                systemMessages: settings.systemMessages
             });
 
-            if (response.ok) {
+            if (response.status === 200 || response.status === 204) {
                 showToast('Settings saved successfully!');
             } else {
                 showToast('Failed to save settings.', 'error');
             }
         } catch (error) {
             console.error('Save error:', error);
-            showToast('An error occurred while saving.', 'error');
+            showToast(error.response?.data?.message || 'An error occurred while saving.', 'error');
         } finally {
             setSaving(false);
         }

@@ -15,7 +15,7 @@ export default function SystemSettings() {
     useEffect(() => {
         const fetchSettings = async () => {
             try {
-                const response = await fetch('http://localhost:8080/api/pharmacy/settings');
+                const response = await fetch('http://localhost:8081/api/pharmacy/settings');
                 if (response.ok) {
                     const data = await response.json();
                     setSettings(data);
@@ -31,7 +31,7 @@ export default function SystemSettings() {
 
     const handleSave = async () => {
         try {
-            const response = await fetch('http://localhost:8080/api/pharmacy/settings', {
+            const response = await fetch('http://localhost:8081/api/pharmacy/settings', {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(settings)
