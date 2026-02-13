@@ -31,6 +31,10 @@ public class CivilianController {
 
     @GetMapping("/{id}/notifications")
     public org.springframework.http.ResponseEntity<?> getNotifications(@PathVariable Long id) {
+        // Validate that the civilian exists
+        if (!civilianRepository.existsById(id)) {
+            return org.springframework.http.ResponseEntity.notFound().build();
+        }
         return org.springframework.http.ResponseEntity.ok(civilianReservationService.getNotifications(id));
     }
 }

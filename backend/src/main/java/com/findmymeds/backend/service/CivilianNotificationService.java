@@ -4,7 +4,9 @@ import com.findmymeds.backend.model.CivilianNotification;
 import com.findmymeds.backend.model.enums.CivilianNotificationType;
 import com.findmymeds.backend.repository.CivilianNotificationRepo;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -36,11 +38,8 @@ public class CivilianNotificationService {
     }
 
     // GET single notification
-    public CivilianNotification getOne(@org.springframework.lang.NonNull Integer id,
-            @org.springframework.lang.NonNull Integer userId) {
+    public CivilianNotification getOne(Integer id, Integer userId) {
         return repository.findById(id)
-                // .filter(n -> n.getUserId().equals(userId)) // Remove filter if userId type
-                // mismatch, repository returns Optional
                 .map(n -> {
                     if (!n.getUserId().equals(userId)) {
                         throw new RuntimeException("Unauthorized access to notification");
@@ -51,11 +50,17 @@ public class CivilianNotificationService {
     }
 
     // MARK AS READ
-    public void markAsRead(@org.springframework.lang.NonNull Integer id,
-            @org.springframework.lang.NonNull Integer userId) {
+    public void markAsRead(Integer id, Integer userId) {
         CivilianNotification notification = getOne(id, userId);
         notification.setIsRead(true);
         repository.save(notification);
+    }
+
+    // DELETE read notifications older than 15 days
+    @Transactional
+    public int deleteOldReadNotifications() {
+        LocalDateTime cutoffDate = LocalDateTime.now().minusDays(15);
+        return repository.deleteReadNotificationsOlderThan(cutoffDate);
     }
 
 }

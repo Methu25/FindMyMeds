@@ -61,7 +61,7 @@ import NotificationPage from './pages/civilian/NotificationPage';
 
 import { NotificationProvider } from './context/NotificationContext';
 import { ToastProvider } from './context/ToastContext';
-
+import CivilianNotificationDetails from './pages/civilian/CivilianNotificationDetails';
 function App() {
   useEffect(() => {
     const applyTheme = () => {
@@ -132,7 +132,7 @@ function App() {
               <Route path="civilian-reports" element={<CivilianReports />} />
               <Route path="civilian-reports/:id" element={<CivilianReportDetails />} />
               <Route path="appeals" element={<AppealDetails />} />
-
+              
               {/* Notifications */}
               <Route path="notifications" element={<AdminNotificationCenter />} />
               <Route path="notifications/:id" element={<AdminNotificationDetails />} />
@@ -173,6 +173,7 @@ function App() {
             <Route path="find-pharmacy" element={<FindPharmacy />} />
             <Route path="reservation" element={<CivilianReservation />} />
             <Route path="notifications" element={<NotificationPage />} />
+            <Route path="notifications/:id" element={<CivilianNotificationDetails />} />
           </Route>
 
           {/* Fallback */}

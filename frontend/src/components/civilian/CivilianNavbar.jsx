@@ -1,125 +1,151 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
     Home,
     LayoutDashboard,
     Search,
     MessageSquare,
-    Calendar,
     LogOut,
     Menu,
     X,
-    User,
     Bell
 } from 'lucide-react';
 
+// Import logo from assets
+import LogoImg from '../../assets/logo.jpg'; 
+
 const CivilianNavbar = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const [scrolled, setScrolled] = useState(false);
     const location = useLocation();
     const navigate = useNavigate();
 
+    useEffect(() => {
+        const handleScroll = () => setScrolled(window.scrollY > 20);
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
     const menuItems = [
         { icon: Home, label: 'Home', path: '/civilian/home' },
-        { icon: LayoutDashboard, label: 'Dashboard', path: '/civilian/dashboard' }, // This might need to point to ActivityPage if dashboard is not distinct
+        { icon: LayoutDashboard, label: 'My Activity', path: '/civilian/dashboard' },
         { icon: Search, label: 'Reserve Medicine', path: '/civilian/reservation' },
-        { icon: Calendar, label: 'Reservations', path: '/civilian/reservations' },
         { icon: Bell, label: 'Notifications', path: '/civilian/notifications' },
-        { icon: MessageSquare, label: 'Inquiries', path: '/civilian/inquiries' },
+        { icon: MessageSquare, label: 'Feedback Center', path: '/civilian/inquiries' },
     ];
 
     const isActive = (path) => location.pathname === path;
 
     const handleLogout = () => {
-        // Implement logout logic here
         localStorage.removeItem('token');
         localStorage.removeItem('userRole');
         navigate('/login');
     };
 
     return (
-        <nav className="bg-white shadow-md fixed w-full z-50">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex justify-between h-16">
+        <nav className={`fixed w-full z-50 transition-all duration-500 ${
+            scrolled ? 'bg-white/90 backdrop-blur-lg shadow-md h-16' : 'bg-white h-20'
+        }`}>
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
+                <div className="flex justify-between items-center h-full">
+                    
+                    {/* Logo Section */}
                     <div className="flex items-center">
-                        <Link to="/civilian/home" className="flex-shrink-0 flex items-center">
-                            <span className="font-bold text-2xl text-emerald-600">FindMyMeds</span>
+                        <Link to="/civilian/home" className="flex-shrink-0 flex items-center group">
+                            <div className="relative">
+                                <img 
+                                    src={LogoImg} 
+                                    alt="FindMyMeds Logo" 
+                                    className="h-10 w-10 object-contain transition-transform duration-500 group-hover:scale-110" 
+                                />
+                                <div className="absolute inset-0 bg-[#2FA4A9]/20 blur-lg rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                            </div>
+                            <span className="ml-3 font-black text-2xl tracking-tighter text-[#2FA4A9]">
+                                FindMyMeds
+                            </span>
                         </Link>
-                        <div className="hidden md:ml-6 md:flex md:space-x-8">
+
+                        {/* Desktop Menu */}
+                        <div className="hidden md:ml-10 md:flex md:space-x-1">
                             {menuItems.map((item) => (
                                 <Link
                                     key={item.path}
                                     to={item.path}
-                                    className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${isActive(item.path)
-                                        ? 'border-emerald-500 text-gray-900'
-                                        : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
-                                        }`}
+                                    className={`relative px-4 py-2 rounded-full text-sm font-bold transition-all duration-300 group ${
+                                        isActive(item.path)
+                                            ? 'text-[#2FA4A9]'
+                                            : 'text-[#2FA4A9]/60 hover:text-[#2FA4A9]'
+                                    }`}
                                 >
-                                    <item.icon className="w-4 h-4 mr-2" />
-                                    {item.label}
+                                    <div className="flex items-center relative z-10">
+                                        <item.icon className={`w-4 h-4 mr-2 transition-transform duration-300 ${isActive(item.path) ? 'scale-110' : 'group-hover:scale-110'}`} />
+                                        {item.label}
+                                    </div>
+                                    {isActive(item.path) && (
+                                        <div className="absolute inset-0 bg-[#2FA4A9]/10 rounded-full border border-[#2FA4A9]/20"></div>
+                                    )}
                                 </Link>
                             ))}
                         </div>
                     </div>
+
+                    {/* Right Side Action - Improved Light Logout Button */}
                     <div className="hidden md:flex items-center">
                         <button
                             onClick={handleLogout}
-                            className="ml-8 inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                            className="group inline-flex items-center justify-center px-6 py-2.5 font-bold text-[#2FA4A9] bg-[#2FA4A9]/10 rounded-full border border-[#2FA4A9]/20 transition-all duration-300 hover:bg-[#2FA4A9] hover:text-white hover:shadow-lg hover:shadow-[#2FA4A9]/30 focus:outline-none active:scale-95"
                         >
-                            <LogOut className="w-4 h-4 mr-2" />
-                            Logout
+                            <LogOut className="w-4 h-4 mr-2 transition-transform duration-300 group-hover:translate-x-1" />
+                            <span>Logout</span>
                         </button>
                     </div>
+
+                    {/* Mobile menu button */}
                     <div className="-mr-2 flex items-center md:hidden">
                         <button
                             onClick={() => setIsOpen(!isOpen)}
-                            className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-emerald-500"
+                            className="inline-flex items-center justify-center p-2 rounded-xl text-[#2FA4A9] hover:bg-[#2FA4A9]/10 transition-all focus:outline-none"
                         >
-                            <span className="sr-only">Open main menu</span>
-                            {isOpen ? (
-                                <X className="block h-6 w-6" aria-hidden="true" />
-                            ) : (
-                                <Menu className="block h-6 w-6" aria-hidden="true" />
-                            )}
+                            {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
                         </button>
                     </div>
                 </div>
             </div>
 
-            {/* Mobile menu */}
-            {isOpen && (
-                <div className="md:hidden">
-                    <div className="pt-2 pb-3 space-y-1">
-                        {menuItems.map((item) => (
-                            <Link
-                                key={item.path}
-                                to={item.path}
-                                onClick={() => setIsOpen(false)}
-                                className={`block pl-3 pr-4 py-2 border-l-4 text-base font-medium ${isActive(item.path)
-                                    ? 'bg-emerald-50 border-emerald-500 text-emerald-700'
-                                    : 'border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700'
-                                    }`}
-                            >
-                                <div className="flex items-center">
-                                    <item.icon className="w-5 h-5 mr-3" />
-                                    {item.label}
-                                </div>
-                            </Link>
-                        ))}
+            {/* Mobile menu panel */}
+            <div className={`md:hidden absolute w-full bg-white transition-all duration-300 ease-in-out border-b border-[#2FA4A9]/10 ${
+                isOpen ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0 pointer-events-none'
+            }`}>
+                <div className="pt-2 pb-6 space-y-1 px-4">
+                    {menuItems.map((item) => (
+                        <Link
+                            key={item.path}
+                            to={item.path}
+                            onClick={() => setIsOpen(false)}
+                            className={`flex items-center px-4 py-4 rounded-2xl text-base font-bold transition-all ${
+                                isActive(item.path)
+                                    ? 'bg-[#2FA4A9] text-white shadow-lg'
+                                    : 'text-[#2FA4A9]/70 hover:bg-[#2FA4A9]/5 hover:text-[#2FA4A9]'
+                            }`}
+                        >
+                            <item.icon className="w-5 h-5 mr-4" />
+                            {item.label}
+                        </Link>
+                    ))}
+                    <div className="pt-4 mt-4 border-t border-[#2FA4A9]/10">
                         <button
                             onClick={() => {
                                 setIsOpen(false);
                                 handleLogout();
                             }}
-                            className="w-full text-left block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-red-600 hover:bg-red-50 hover:border-red-300"
+                            className="w-full flex items-center px-4 py-4 rounded-2xl text-base font-bold text-[#2FA4A9] bg-[#2FA4A9]/10 hover:bg-[#2FA4A9] hover:text-white transition-all"
                         >
-                            <div className="flex items-center">
-                                <LogOut className="w-5 h-5 mr-3" />
-                                Logout
-                            </div>
+                            <LogOut className="w-5 h-5 mr-4" />
+                            Logout
                         </button>
                     </div>
                 </div>
-            )}
+            </div>
         </nav>
     );
 };
