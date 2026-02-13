@@ -12,6 +12,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 public class PharmacyUserDetails implements UserDetails {
+    // Custom UserDetails implementation for Pharmacy
 
     private final Pharmacy pharmacy;
 

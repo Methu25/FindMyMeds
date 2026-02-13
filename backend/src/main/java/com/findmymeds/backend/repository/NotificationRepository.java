@@ -10,10 +10,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.findmymeds.backend.model.Notification;
+import com.findmymeds.backend.model.enums.UserType;
 import java.time.LocalDateTime;
 import java.util.List;
 
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
+
+    List<Notification> findByUserIdAndUserTypeOrderByCreatedAtDesc(Long userId, UserType userType);
 
     // Pharmacy specific methods (Added in HEAD)
     @Query("SELECT n FROM Notification n WHERE n.userId = :userId AND n.userType = 'PHARMACY'")

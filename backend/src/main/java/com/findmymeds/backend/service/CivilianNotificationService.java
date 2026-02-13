@@ -39,12 +39,20 @@ public class CivilianNotificationService {
     public CivilianNotification getOne(@org.springframework.lang.NonNull Integer id,
             @org.springframework.lang.NonNull Integer userId) {
         return repository.findById(id)
-                .filter(n -> n.getUserId().equals(userId))
+                // .filter(n -> n.getUserId().equals(userId)) // Remove filter if userId type
+                // mismatch, repository returns Optional
+                .map(n -> {
+                    if (!n.getUserId().equals(userId)) {
+                        throw new RuntimeException("Unauthorized access to notification");
+                    }
+                    return n;
+                })
                 .orElseThrow(() -> new RuntimeException("Notification not found"));
     }
 
     // MARK AS READ
-    public void markAsRead(Integer id, Integer userId) {
+    public void markAsRead(@org.springframework.lang.NonNull Integer id,
+            @org.springframework.lang.NonNull Integer userId) {
         CivilianNotification notification = getOne(id, userId);
         notification.setIsRead(true);
         repository.save(notification);

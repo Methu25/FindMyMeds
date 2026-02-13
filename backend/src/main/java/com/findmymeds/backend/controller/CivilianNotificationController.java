@@ -19,8 +19,7 @@ public class CivilianNotificationController {
     // GET /api/notification?userId=1
     @GetMapping
     public List<CivilianNotification> getAll(
-            @RequestParam Integer userId
-    ) {
+            @RequestParam Integer userId) {
         return service.getAll(userId);
     }
 
@@ -28,8 +27,7 @@ public class CivilianNotificationController {
     @GetMapping("/type")
     public List<CivilianNotification> getByType(
             @RequestParam Integer userId,
-            @RequestParam CivilianNotificationType type
-    ) {
+            @RequestParam CivilianNotificationType type) {
         return service.getByType(userId, type);
     }
 
@@ -37,29 +35,24 @@ public class CivilianNotificationController {
     @GetMapping("/read-status")
     public List<CivilianNotification> getByReadStatus(
             @RequestParam Integer userId,
-            @RequestParam Boolean isRead
-    ) {
+            @RequestParam Boolean isRead) {
         return service.getByReadStatus(userId, isRead);
     }
 
     // GET /api/notification/{id}
     @GetMapping("/{id}")
     public CivilianNotification getOne(
-            @PathVariable Integer id,
-            @RequestParam Integer userId
-    ) {
+            @PathVariable int id,
+            @RequestParam int userId) {
         return service.getOne(id, userId);
     }
 
     // PUT /api/notification/{id}/read
     @PutMapping("/{id}/read")
     public void markAsRead(
-            @PathVariable Integer id,
-            @RequestParam Integer userId
-    ) {
+            @PathVariable int id,
+            @RequestParam int userId) {
         service.markAsRead(id, userId);
     }
 
-
 }
-

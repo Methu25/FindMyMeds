@@ -41,4 +41,23 @@ public class Reservation {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "reservation")
     private List<ReservationItem> items;
+
+    // New fields for Single-Medicine Reservation Flow
+    @ManyToOne
+    @JoinColumn(name = "medicine_id")
+    private Medicine medicine;
+
+    private Integer quantity;
+
+    @Column(name = "expiry_date")
+    private java.time.LocalDate expiryDate;
+
+    @Column(name = "created_at")
+    private java.time.LocalDateTime createdAt;
+
+    // Existing fields mapped to requirements:
+    // pickupDate is already present
+    // note is already present
+    // status is already present
+    // prescriptionImageUrl maps to prescription_file
 }

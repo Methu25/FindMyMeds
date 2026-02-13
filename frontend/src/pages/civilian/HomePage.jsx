@@ -1,201 +1,134 @@
 import React from "react";
-import "../styles/CivilianDashboard.css";
-import logo from "../assets/logo2.jpeg";
+import { useNavigate } from "react-router-dom";
+import { MapPin, BookOpen, MessageCircle, Bell, Flame } from 'lucide-react';
 
-const CivilianDashboard = () => {
+const HomePage = () => {
+  const navigate = useNavigate();
+  const [stats, setStats] = React.useState({
+    pharmaciesNearby: 0,
+    activeReservations: 0,
+    pendingInquiries: 0
+  });
+
+  // Mock ID for now, replace with Auth Context later
+  const civilianId = 1;
+
+  React.useEffect(() => {
+    fetch(`http://localhost:8080/api/civilians/${civilianId}/dashboard-stats`)
+      .then(res => res.json())
+      .then(data => setStats(data))
+      .catch(err => console.error("Failed to fetch dashboard stats", err));
+  }, []);
+
   return (
-    <div style={{ display: "flex", height: "100vh" }}>
-      
-      {/* SIDEBAR */}
-      <aside className="sidebar">
-        <div className="brand">
-          <img src={logo} alt="Logo" style={{ width: "30px", height: "30px" }} />
-          <span>Findmymeds</span>
+    <div className="p-6 max-w-7xl mx-auto space-y-8">
+
+      {/* WELCOME BANNER */}
+      <section className="bg-emerald-600 rounded-3xl p-8 text-white shadow-lg flex flex-col md:flex-row justify-between items-center bg-gradient-to-r from-emerald-600 to-teal-500">
+        <div className="space-y-2 mb-4 md:mb-0">
+          <h1 className="text-3xl font-bold">Welcome back, User! 👋</h1>
+          <p className="text-emerald-100">Find and reserve your essential medications easily today.</p>
         </div>
+        <button
+          className="bg-white text-emerald-700 px-6 py-3 rounded-xl font-bold shadow-md hover:bg-emerald-50 transition-colors"
+          onClick={() => navigate("/civilian/reservation")}
+        >
+          Reserve your medicine
+        </button>
+      </section>
 
-        <ul className="menu-list">
-          <li>
-            <a href="/civilian-main" className="menu-item active">
-              <i className="fa-solid fa-house"></i>
-              <span>Home</span>
-            </a>
-          </li>
+      {/* DASHBOARD CONTENT */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-          <li>
-            <a href="/civilian-main" className="menu-item">
-              <i className="fa-solid fa-chart-line"></i>
-              <span>Dashboard</span>
-            </a>
-          </li>
+        {/* LEFT GROUP */}
+        <div className="lg:col-span-2 space-y-6">
 
-          <li>
-            <a href="/civilian-reservation-history" className="menu-item">
-              <i className="fa-regular fa-calendar-check"></i>
-              <span>Your Activities</span>
-            </a>
-          </li>
-
-          <li>
-            <a href="/civilian-notification" className="menu-item">
-              <i className="fa-regular fa-bell"></i>
-              <span>Notifications</span>
-            </a>
-          </li>
-
-          <li>
-            <a href="/civilian-feedback" className="menu-item">
-              <i className="fa-regular fa-comment-dots"></i>
-              <span>Appeals & Feedbacks</span>
-            </a>
-          </li>
-
-          <li>
-            <a href="/logout" className="menu-item logout-btn">
-              <i className="fa-solid fa-arrow-right-from-bracket"></i>
-              <span>Logout</span>
-            </a>
-          </li>
-        </ul>
-      </aside>
-
-      {/* MAIN CONTENT */}
-      <main className="main-content">
-        
-        {/* HEADER */}
-        <header className="header">
-          <div className="search-bar">
-            <i className="fa-solid fa-magnifying-glass" style={{ color: "var(--text-gray)" }}></i>
-            <input type="text" placeholder="Search for your medicine..." />
-          </div>
-
-          <div className="user-profile">
-            <i
-              className="fa-regular fa-bell"
-              style={{ fontSize: "20px", color: "var(--text-gray)", cursor: "pointer" }}
-            ></i>
-            <img
-              src="https://randomuser.api/portraits/men/32.jpeg"
-              alt="Profile"
-            />
-          </div>
-        </header>
-
-        {/* WELCOME BANNER */}
-        <section className="welcome-banner">
-          <div className="welcome-text">
-            <h1>Welcome back, Yash! 👋</h1>
-            <p>Find and reserve your essential medications easily today.</p>
-          </div>
-          <button
-            className="reserve-btn"
-            onClick={() => window.open("/civilian-medicine-reservation", "_blank")}
+          <div
+            className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow cursor-pointer flex flex-col justify-between h-48"
+            onClick={() => navigate("/civilian/find-pharmacy")}
           >
-            Reserve your medicine
-          </button>
-        </section>
-
-        {/* DASHBOARD */}
-        <div className="dashboard-container">
-          
-          {/* LEFT GROUP */}
-          <div className="left-group">
-
-            <div
-              className="card main-card"
-              onClick={() => window.open("/civilian-pharmacy-nearby", "_blank")}
-              style={{ cursor: "pointer" }}
-            >
-              <div className="card-header">
-                <h3 className="card-title">Pharmacies Nearby</h3>
-                <i className="fa-solid fa-map-location-dot card-icon"></i>
-              </div>
+            <div className="flex justify-between items-start">
               <div>
-                <div className="stat-value">12</div>
-                <p className="stat-label">Open now in your area</p>
+                <h3 className="text-xl font-bold text-slate-800">Pharmacies Nearby</h3>
+                <p className="text-gray-500 mt-1">Open now in your area</p>
               </div>
-              <p className="card-footer-text">
-                View Map <i className="fa-solid fa-arrow-right"></i>
-              </p>
-            </div>
-
-            <div className="card main-card">
-              <div
-                className="card-header"
-                onClick={() => window.open("/civilian-drug-dictionary", "_blank")}
-                style={{ cursor: "pointer" }}
-              >
-                <h3 className="card-title">Drug Dictionary</h3>
-                <i className="fa-solid fa-book-medical card-icon"></i>
-              </div>
-              <p className="stat-label">Search & learn about medicines.</p>
-              <p className="card-footer-text">
-                Start Searching <i className="fa-solid fa-arrow-right"></i>
-              </p>
-            </div>
-
-            <div
-              className="card main-card"
-              onClick={() => window.open("/civilian-inquiries", "_blank")}
-              style={{ cursor: "pointer" }}
-            >
-              <div className="card-header">
-                <h3 className="card-title">My Inquiries</h3>
-                <i className="fa-regular fa-circle-question card-icon"></i>
-              </div>
-              <div>
-                <div className="stat-value">3</div>
-                <p className="stat-label">Pending responses</p>
+              <div className="p-3 bg-blue-100 text-blue-600 rounded-xl">
+                <MapPin size={24} />
               </div>
             </div>
-
+            <div>
+              <div className="text-4xl font-bold text-slate-900">{stats.pharmaciesNearby}</div>
+            </div>
+            <div className="text-sm font-medium text-emerald-600 flex items-center gap-1">
+              View Map <span>→</span>
+            </div>
           </div>
 
-          {/* RIGHT GROUP */}
-          <div className="right-group">
-            <div className="card highlight-card">
-              <div className="card-header">
-                <h3 className="card-title">Notifications</h3>
-                <i className="fa-regular fa-bell card-icon"></i>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div
+              className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow cursor-pointer h-40 flex flex-col justify-between"
+            // onClick={() => navigate("/civilian/drug-dictionary")} // Feature not yet implemented
+            >
+              <div className="flex justify-between items-start">
+                <h3 className="font-bold text-slate-800">Drug Dictionary</h3>
+                <div className="p-2 bg-purple-100 text-purple-600 rounded-lg">
+                  <BookOpen size={20} />
+                </div>
               </div>
+              <p className="text-sm text-gray-500">Search & learn about medicines.</p>
+              <div className="text-sm font-medium text-emerald-600">Start Searching →</div>
             </div>
 
-            <div className="card highlight-card">
-              <div className="card-header">
-                <h3 className="card-title">Popular Medicines</h3>
-                <i className="fa-solid fa-fire card-icon"></i>
+            <div
+              className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow cursor-pointer h-40 flex flex-col justify-between"
+              onClick={() => navigate("/civilian/inquiries")}
+            >
+              <div className="flex justify-between items-start">
+                <h3 className="font-bold text-slate-800">My Inquiries</h3>
+                <div className="p-2 bg-amber-100 text-amber-600 rounded-lg">
+                  <MessageCircle size={20} />
+                </div>
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-slate-900">{stats.pendingInquiries}</div>
+                <p className="text-xs text-gray-500">Pending responses</p>
               </div>
             </div>
           </div>
 
         </div>
-      </main>
+
+        {/* RIGHT GROUP */}
+        <div className="space-y-6">
+          <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 cursor-pointer hover:shadow-md transition-shadow" onClick={() => navigate("/civilian/notifications")}>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-bold text-slate-800">Notifications</h3>
+              <Bell size={20} className="text-gray-400" />
+            </div>
+            <p className="text-sm text-gray-500">You have no new notifications.</p>
+          </div>
+
+          <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-bold text-slate-800">Popular Medicines</h3>
+              <Flame size={20} className="text-orange-500" />
+            </div>
+            <ul className="space-y-3">
+              <li className="flex justify-between text-sm">
+                <span className="text-gray-600">Panadol</span>
+                <span className="font-medium text-emerald-600">High Demand</span>
+              </li>
+              <li className="flex justify-between text-sm">
+                <span className="text-gray-600">Vitamin C</span>
+                <span className="font-medium text-emerald-600">Trending</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
     </div>
   );
 };
 
-const SearchBar = () => {
-  const handleSearchKeyDown = (event) => {
-    if (event.key === "Enter") {
-      const query = event.target.value.toLowerCase().trim();
-
-      if (query.includes("medicine") || query.includes("drug")) {
-        window.location.href = "/civilian-drug-dictionary";
-      } else if (query.includes("pharmacy") || query.includes("near")) {
-        window.location.href = "/civilian-pharmacy-nearby";
-      } else {
-        alert("No matching results found.");
-      }
-    }
-  };
-
-  return (
-    <input
-      type="text"
-      placeholder="Search for your medicine..."
-      onKeyDown={handleSearchKeyDown}
-    />
-  );
-};
-
-
-export default CivilianDashboard;
+export default HomePage;
