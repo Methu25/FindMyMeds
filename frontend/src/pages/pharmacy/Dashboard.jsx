@@ -29,8 +29,8 @@ export default function Dashboard() {
     useEffect(() => {
         const fetchDashboardData = async () => {
             try {
-                const token = localStorage.getItem('token');
-                const metricsRes = await fetch('http://localhost:8080/api/pharmacy/dashboard/metrics', {
+                const token = localStorage.getItem('pharmacyToken');
+                const metricsRes = await fetch('http://localhost:8081/api/pharmacy/dashboard/metrics', {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -52,7 +52,11 @@ export default function Dashboard() {
                 }
 
                 // Fetch inventory metrics for stock health calculation
-                const inventoryRes = await fetch('http://localhost:8080/api/pharmacy/inventory/metrics');
+                const inventoryRes = await fetch('http://localhost:8081/api/pharmacy/inventory/metrics', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
                 if (inventoryRes.ok) {
                     const invData = await inventoryRes.json();
                     const total = invData.totalMedicines || 1;
@@ -67,7 +71,11 @@ export default function Dashboard() {
 
                 // Fetch recent activities
                 try {
-                    const activitiesRes = await fetch('http://localhost:8080/api/pharmacy/activities/recent');
+                    const activitiesRes = await fetch('http://localhost:8081/api/pharmacy/activities/recent', {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
                     if (activitiesRes.ok) {
                         const actData = await activitiesRes.json();
                         setActivities(actData.slice(0, 3));
@@ -365,7 +373,7 @@ function QuickActionButton({ icon: Icon, label, color, bg, onClick }) {
             onClick={onClick}
             className="flex flex-col items-center justify-center p-4 rounded-3xl border border-gray-50 hover:border-primary/20 hover:shadow-lg transition-all duration-300 group h-full bg-white"
         >
-            <div className={`p - 3 rounded - 2xl ${bg} ${color} mb - 3 group - hover: scale - 110 transition - transform duration - 300 shadow - sm`}>
+            <div className={`p-3 rounded-2xl ${bg} ${color} mb-3 group-hover:scale-110 transition-transform duration-300 shadow-sm`}>
                 <Icon size={24} />
             </div>
             <span className="text-xs font-bold text-gray-600 group-hover:text-primary transition-colors text-center">{label}</span>
@@ -377,9 +385,9 @@ function ActivityItem({ user, action, detail, time, iconColor, onClick }) {
     return (
         <div
             onClick={onClick}
-            className={`flex gap - 4 items - start p - 2 rounded - 2xl transition - all duration - 300 ${onClick ? 'cursor-pointer hover:bg-primary/5 hover:translate-x-1' : ''} `}
+            className={`flex gap-4 items-start p-2 rounded-2xl transition-all duration-300 ${onClick ? 'cursor-pointer hover:bg-primary/5 hover:translate-x-1' : ''}`}
         >
-            <div className={`w - 10 h - 10 rounded - 2xl ${iconColor} flex items - center justify - center text - white shrink - 0 font - bold text - sm shadow - sm`}>
+            <div className={`w-10 h-10 rounded-2xl ${iconColor} flex items-center justify-center text-white shrink-0 font-bold text-sm shadow-sm`}>
                 {user.charAt(0)}
             </div>
             <div className="flex-1 min-w-0">

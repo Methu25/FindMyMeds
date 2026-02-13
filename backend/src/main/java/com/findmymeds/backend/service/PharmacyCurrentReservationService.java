@@ -21,20 +21,28 @@ public class PharmacyCurrentReservationService {
     @Autowired
     private ReservationRepository reservationRepository;
 
-    public List<Long> getCurrentReservationCounts() {
+    public List<Long> getCurrentReservationCounts(Long pharmacyId) {
         return List.of(
-                reservationRepository.countByStatus(com.findmymeds.backend.model.enums.ReservationStatus.PENDING),
-                reservationRepository.countByStatus(com.findmymeds.backend.model.enums.ReservationStatus.CONFIRMED),
-                reservationRepository.countByStatus(com.findmymeds.backend.model.enums.ReservationStatus.ONGOING),
-                reservationRepository.countByStatus(com.findmymeds.backend.model.enums.ReservationStatus.READY),
-                reservationRepository.countByStatus(com.findmymeds.backend.model.enums.ReservationStatus.COLLECTED),
-                reservationRepository.countByStatus(com.findmymeds.backend.model.enums.ReservationStatus.CANCELLED));
+                reservationRepository.countByPharmacyIdAndStatus(pharmacyId,
+                        com.findmymeds.backend.model.enums.ReservationStatus.PENDING),
+                reservationRepository.countByPharmacyIdAndStatus(pharmacyId,
+                        com.findmymeds.backend.model.enums.ReservationStatus.CONFIRMED),
+                reservationRepository.countByPharmacyIdAndStatus(pharmacyId,
+                        com.findmymeds.backend.model.enums.ReservationStatus.ONGOING),
+                reservationRepository.countByPharmacyIdAndStatus(pharmacyId,
+                        com.findmymeds.backend.model.enums.ReservationStatus.READY),
+                reservationRepository.countByPharmacyIdAndStatus(pharmacyId,
+                        com.findmymeds.backend.model.enums.ReservationStatus.COLLECTED),
+                reservationRepository.countByPharmacyIdAndStatus(pharmacyId,
+                        com.findmymeds.backend.model.enums.ReservationStatus.CANCELLED));
     }
 
-    public List<ReservationDTO> getCurrentReservationsByStatus(String status, int page, int size) {
+    public List<ReservationDTO> getCurrentReservationsByStatus(Long pharmacyId, String status, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return reservationRepository
-                .findByStatus(com.findmymeds.backend.model.enums.ReservationStatus.valueOf(status), pageable).stream()
+                .findByPharmacyIdAndStatus(pharmacyId,
+                        com.findmymeds.backend.model.enums.ReservationStatus.valueOf(status), pageable)
+                .stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }

@@ -1,8 +1,10 @@
 import { NavLink } from 'react-router-dom'
-import { Home, Package, History, Pill, Bell, Settings, MessageSquare, PieChart, User } from 'lucide-react'
+import { Home, LayoutDashboard, Package, History, Pill, Bell, Settings, MessageSquare, PieChart, User } from 'lucide-react'
+import logo from '../../assets/logo.jpg'
 
 const menuItems = [
-    { name: 'Dashboard', icon: Home, path: '/pharmacy', end: true },
+    { name: 'Home', icon: Home, path: '/', end: true },
+    { name: 'Dashboard', icon: LayoutDashboard, path: '/pharmacy', end: true },
     { name: 'Current Reservations', icon: Package, path: '/pharmacy/current-reservations' },
     { name: 'Reservation History', icon: History, path: '/pharmacy/reservation-history' },
     { name: 'Inventory Management', icon: Pill, path: '/pharmacy/inventory' },
@@ -17,8 +19,13 @@ export default function Sidebar() {
     return (
         <div className="fixed left-0 top-0 h-screen w-64 bg-sidebar-bg text-sidebar-text flex flex-col shadow-xl transition-colors duration-300">
             <div className="p-6 border-b border-current/10">
-                <h1 className="text-2xl font-black tracking-tight">FindMyMeds</h1>
-                <p className="text-[10px] font-bold uppercase tracking-widest opacity-60">Pharmacy Portal</p>
+                <div className="flex items-center gap-3">
+                    <img src={logo} alt="Logo" className="w-10 h-10 object-contain" />
+                    <div className="flex flex-col">
+                        <h1 className="text-xl font-black tracking-tight leading-tight">FindMyMeds</h1>
+                        <p className="text-[10px] font-bold uppercase tracking-widest opacity-60 leading-tight">Pharmacy Portal</p>
+                    </div>
+                </div>
             </div>
             <nav className="flex-1 p-4 space-y-2 mt-4">
                 {menuItems.map((item) => {

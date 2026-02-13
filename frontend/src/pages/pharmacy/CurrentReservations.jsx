@@ -1,11 +1,10 @@
 import { useState, useEffect } from 'react'
 import {
   Package, CheckCircle, XCircle, Clock, Truck, Clipboard,
-  ArrowLeft, Printer, Download, MapPin, Phone, Mail, FileText,
-  ChevronRight, Info
+  ArrowLeft, Printer, Download, MapPin, Phone, FileText,
+  ChevronRight, Info, User, Calendar
 } from 'lucide-react'
 import Layout from '../../components/pharmacy/Layout'
-import MetricCard from '../../components/pharmacy/MetricCard'
 
 export default function CurrentReservations() {
   const [activeStatus, setActiveStatus] = useState('PENDING')
@@ -25,61 +24,48 @@ export default function CurrentReservations() {
   ]
 
   const getHeaders = () => ({
-    'Authorization': `Bearer ${localStorage.getItem('token')}`
+    'Authorization': `Bearer ${localStorage.getItem('pharmacyToken')}`
   })
+
+  useEffect(() => {
+    fetchCounts()
+    fetchReservations()
+  }, [activeStatus])
 
   const fetchCounts = async () => {
     try {
-      const response = await fetch('http://localhost:8080/api/pharmacy/reservations/current/counts', { headers: getHeaders() })
-      if (response.ok) setCounts(await response.json())
+      const response = await fetch('http://localhost:8081/api/pharmacy/reservations/current/counts', { headers: getHeaders() })
+      if (response.ok) {
+        const data = await response.json()
+        setCounts(data)
+      }
     } catch (error) { console.error('Counts fetch error:', error) }
   }
-import React, { useState, useEffect } from 'react';
-import Layout from '../../components/pharmacy/Layout';
-import { Clock, CheckCircle2, XCircle, Package, User, Calendar, ChevronRight, AlertCircle } from 'lucide-react';
-
-export default function CurrentReservations() {
-  const [reservations, setReservations] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetchReservations();
-  }, []);
 
   const fetchReservations = async () => {
+    setLoading(true)
     try {
-      const response = await fetch(`http://localhost:8080/api/pharmacy/reservations/current?status=${activeStatus}&page=0&size=10`, { headers: getHeaders() })
-      const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:8080/api/pharmacy/reservations/current', {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
+      const response = await fetch(`http://localhost:8081/api/pharmacy/reservations/current?status=${activeStatus}&page=0&size=10`, { headers: getHeaders() })
       if (response.ok) {
         const data = await response.json();
         setReservations(data);
       }
     } catch (error) {
       console.error('Reservations fetch error:', error)
-      console.error('Error fetching reservations:', error);
     } finally {
       setLoading(false);
     }
   };
 
-  const updateStatus = async (id, status) => {
+  const handleUpdateStatus = async (id, status) => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:8080/api/pharmacy/reservations/current/${id}/status?status=${status}`, {
+      const response = await fetch(`http://localhost:8081/api/pharmacy/reservations/current/${id}/status?status=${status}`, {
         method: 'PATCH',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
+        headers: getHeaders()
       });
       if (response.ok) {
         fetchCounts()
         if (viewMode === 'details') {
-          // Refresh details if in detail view
           handleViewDetails(id)
         } else {
           fetchReservations()
@@ -90,7 +76,7 @@ export default function CurrentReservations() {
 
   const handleViewDetails = async (id) => {
     try {
-      const response = await fetch(`http://localhost:8080/api/pharmacy/reservations/current/${id}`, { headers: getHeaders() })
+      const response = await fetch(`http://localhost:8081/api/pharmacy/reservations/current/${id}`, { headers: getHeaders() })
       if (response.ok) {
         setSelectedRes(await response.json())
         setViewMode('details')
@@ -102,7 +88,6 @@ export default function CurrentReservations() {
     return (
       <Layout title="Reservation Details">
         <div className="max-w-7xl mx-auto space-y-6 pb-20">
-          {/* Header Action Bar */}
           <div className="bg-white p-6 rounded-2xl shadow-sm border flex justify-between items-center">
             <div className="flex items-center gap-4">
               <button
@@ -151,9 +136,7 @@ export default function CurrentReservations() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Left Column: Info Cards */}
             <div className="lg:col-span-1 space-y-6">
-              {/* Customer Info */}
               <div className="bg-white p-6 rounded-2xl shadow-sm border">
                 <h3 className="text-lg font-bold border-b pb-4 mb-4 flex items-center gap-2 text-gray-700">
                   <Package size={20} className="text-primary" /> Customer Information
@@ -161,7 +144,7 @@ export default function CurrentReservations() {
                 <div className="space-y-4">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-teal-50 rounded-full flex items-center justify-center text-primary">
-                      <Clipboard size={20} />
+                      <User size={20} />
                     </div>
                     <div>
                       <p className="text-xs text-gray-400 uppercase font-bold tracking-wider">Full Name</p>
@@ -189,7 +172,6 @@ export default function CurrentReservations() {
                 </div>
               </div>
 
-              {/* Reservation Info */}
               <div className="bg-white p-6 rounded-2xl shadow-sm border">
                 <h3 className="text-lg font-bold border-b pb-4 mb-4 flex items-center gap-2 text-gray-700">
                   <Info size={20} className="text-primary" /> Reservation Information
@@ -211,9 +193,7 @@ export default function CurrentReservations() {
               </div>
             </div>
 
-            {/* Right Column: Order Details */}
             <div className="lg:col-span-2 space-y-6">
-              {/* Medicines Ordered */}
               <div className="bg-white rounded-2xl shadow-sm border overflow-hidden">
                 <div className="p-6 border-b">
                   <h3 className="text-lg font-bold text-gray-700 flex items-center gap-2">
@@ -242,9 +222,7 @@ export default function CurrentReservations() {
                 </table>
               </div>
 
-              {/* Billing and Prescription */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Prescription */}
                 <div className="bg-white p-6 rounded-2xl shadow-sm border">
                   <h3 className="text-lg font-bold mb-4 text-gray-700">Prescription</h3>
                   <div className="aspect-video bg-gray-50 rounded-xl border-2 border-dashed border-gray-200 flex flex-col items-center justify-center text-gray-400">
@@ -257,7 +235,6 @@ export default function CurrentReservations() {
                   </div>
                 </div>
 
-                {/* Billing Breakdown */}
                 <div className="bg-white p-6 rounded-2xl shadow-sm border">
                   <h3 className="text-lg font-bold mb-4 text-gray-700 tracking-tight">Billing Breakdown</h3>
                   <div className="space-y-3">
@@ -283,17 +260,16 @@ export default function CurrentReservations() {
             </div>
           </div>
 
-          {/* Timeline Tracker */}
           <div className="bg-white p-10 rounded-2xl shadow-sm border">
             <h3 className="text-lg font-bold mb-8 text-gray-700 uppercase tracking-widest text-center">Timeline Tracker</h3>
-            <div className="flex items-center w-full max-w-4xl mx-auto">
+            <div className="flex items-center w-full max-w-4xl mx-auto overflow-x-auto pb-4">
               {['Pending', 'Confirmed', 'Ongoing', 'Ready', 'Collected'].map((step, i) => {
                 const currentIndex = statusCards.findIndex(c => c.status === selectedRes.status);
                 const isCompleted = i < currentIndex;
                 const isCurrent = i === currentIndex;
 
                 return (
-                  <div key={step} className="flex-1 flex items-center">
+                  <div key={step} className="flex-1 flex items-center min-w-[120px]">
                     <div className="relative">
                       <div className={`w-12 h-12 rounded-full border-4 flex items-center justify-center transition-all shadow-md
                             ${isCompleted ? 'bg-primary border-primary text-white' :
@@ -315,7 +291,6 @@ export default function CurrentReservations() {
             </div>
           </div>
 
-          {/* Footer Navigation */}
           <div className="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-md border-t p-4 flex justify-between px-12 z-50">
             <button
               onClick={() => setViewMode('list')}
@@ -342,7 +317,6 @@ export default function CurrentReservations() {
           <p className="text-2xl text-gray-500 mt-2 font-medium">Manage and process all incoming medicine reservations</p>
         </div>
 
-        {/* 6 Tabbed Cards */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
           {statusCards.map((card) => {
             const Icon = card.icon;
@@ -371,7 +345,6 @@ export default function CurrentReservations() {
           })}
         </div>
 
-        {/* Table Container */}
         <div className="bg-white rounded-[40px] shadow-3xl border border-gray-100 overflow-hidden min-h-[500px]">
           <div className="p-12 border-b bg-gradient-to-br from-teal-500/[0.03] to-primary/[0.02]">
             <h2 className="text-3xl font-black text-gray-800 flex items-center gap-4">
@@ -406,10 +379,10 @@ export default function CurrentReservations() {
                 ) : (
                   reservations.map((res) => (
                     <tr key={res.id} className="hover:bg-teal-50/30 transition-all duration-300 group">
-                      <td className="px-8 py-8 font-black text-gray-800 tracking-tighter">#{res.id}</td>
+                      <td className="px-8 py-8 font-black text-gray-800 tracking-tighter">#{res.id.substring(0, 8)}</td>
                       <td className="px-8 py-8">
                         <p className="font-extrabold text-lg text-gray-800 underline decoration-primary/20">{res.civilian?.name || 'Unknown'}</p>
-                        <p className="text-xs font-bold text-gray-400 flex items-center gap-1 mt-1"><MapPin size={10} /> {res.civilian?.email || 'N/A'}</p>
+                        <p className="text-xs font-bold text-gray-400 flex items-center gap-1 mt-1"><User size={10} /> {res.civilian?.email || 'N/A'}</p>
                       </td>
                       <td className="px-8 py-8">
                         <div className="flex flex-col gap-1">
@@ -450,135 +423,9 @@ export default function CurrentReservations() {
                 )}
               </tbody>
             </table>
-        fetchReservations();
-      }
-    } catch (error) {
-      console.error('Error updating status:', error);
-    }
-  };
-
-  return (
-    <Layout title="Current Reservations">
-      <div className="space-y-6 animate-in fade-in duration-500">
-        {loading ? (
-          <div className="flex items-center justify-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
           </div>
-        ) : reservations.length === 0 ? (
-          <div className="bg-white rounded-3xl p-20 text-center shadow-sm border border-gray-100">
-            <div className="bg-gray-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 text-gray-300">
-              <Clock size={40} />
-            </div>
-            <h3 className="text-xl font-bold text-gray-800">No active reservations</h3>
-            <p className="text-gray-500 mt-2">New reservations from customers will appear here.</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 gap-4">
-            {reservations.map((res) => (
-              <ReservationCard
-                key={res.id}
-                reservation={res}
-                onStatusUpdate={updateStatus}
-              />
-            ))}
-          </div>
-        )}
+        </div>
       </div>
     </Layout>
-  );
-}
-
-function ReservationCard({ reservation, onStatusUpdate }) {
-  const getStatusColor = (status) => {
-    switch (status) {
-      case 'PENDING': return 'bg-yellow-100 text-yellow-700 border-yellow-200';
-      case 'CONFIRMED': return 'bg-blue-100 text-blue-700 border-blue-200';
-      case 'READY': return 'bg-teal-100 text-teal-700 border-teal-200';
-      default: return 'bg-gray-100 text-gray-700 border-gray-200';
-    }
-  };
-
-  return (
-    <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-all group">
-      <div className="flex flex-col lg:flex-row justify-between gap-6">
-        <div className="flex-1 space-y-4">
-          <div className="flex items-center justify-between lg:justify-start lg:gap-4">
-            <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">Order #{reservation.id.substring(0, 8)}</span>
-            <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider border ${getStatusColor(reservation.status)}`}>
-              {reservation.status}
-            </span>
-          </div>
-
-          <div className="flex items-start gap-4">
-            <div className="bg-gray-50 p-3 rounded-2xl text-gray-400 group-hover:bg-primary/10 group-hover:text-primary transition-colors">
-              <User size={24} />
-            </div>
-            <div>
-              <h4 className="text-lg font-bold text-gray-800">{reservation.civilian?.name || 'Unknown Patient'}</h4>
-              <p className="text-sm text-gray-500 flex items-center gap-1.5">
-                <Calendar size={14} /> Registered: {new Date(reservation.reservationDate).toLocaleString()}
-              </p>
-              <p className="text-sm text-gray-500 flex items-center gap-1.5">
-                <Clock size={14} /> Preferred Pickup: {reservation.timeframe}
-              </p>
-            </div>
-          </div>
-
-          <div className="bg-gray-50/50 rounded-2xl p-4 border border-gray-100">
-            <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-3">Reserved Items</p>
-            <ul className="space-y-2">
-              {reservation.items?.map((item, idx) => (
-                <li key={idx} className="flex justify-between items-center text-sm">
-                  <span className="font-medium text-gray-700">{item.medicine?.medicineName}</span>
-                  <span className="font-bold text-primary">x{item.quantity}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-
-        <div className="flex flex-col justify-between lg:items-end gap-6 pt-4 lg:pt-0 border-t lg:border-t-0 lg:border-l border-gray-50 lg:pl-8">
-          <div className="lg:text-right">
-            <p className="text-[10px] font-black uppercase tracking-widest text-gray-400">Total Bill</p>
-            <h3 className="text-3xl font-black text-gray-900">LKR {reservation.totalAmount?.toLocaleString()}</h3>
-          </div>
-
-          <div className="flex flex-wrap gap-2 justify-end">
-            {reservation.status === 'PENDING' && (
-              <button
-                onClick={() => onStatusUpdate(reservation.id, 'CONFIRMED')}
-                className="px-5 py-2.5 rounded-xl bg-primary text-white text-sm font-bold shadow-lg shadow-primary/20 hover:scale-105 transition"
-              >
-                Confirm Order
-              </button>
-            )}
-            {reservation.status === 'CONFIRMED' && (
-              <button
-                onClick={() => onStatusUpdate(reservation.id, 'READY')}
-                className="px-5 py-2.5 rounded-xl bg-teal-500 text-white text-sm font-bold shadow-lg shadow-teal-500/20 hover:scale-105 transition"
-              >
-                Mark as Ready
-              </button>
-            )}
-            {reservation.status === 'READY' && (
-              <button
-                onClick={() => onStatusUpdate(reservation.id, 'COLLECTED')}
-                className="px-5 py-2.5 rounded-xl bg-green-500 text-white text-sm font-bold shadow-lg shadow-green-500/20 hover:scale-105 transition"
-              >
-                Mark as Collected
-              </button>
-            )}
-            {(reservation.status === 'PENDING' || reservation.status === 'CONFIRMED') && (
-              <button
-                onClick={() => onStatusUpdate(reservation.id, 'CANCELLED')}
-                className="px-5 py-2.5 rounded-xl border-2 border-red-50 text-red-500 text-sm font-bold hover:bg-red-50 transition"
-              >
-                Reject Order
-              </button>
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
   );
 }
