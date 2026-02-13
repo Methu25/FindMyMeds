@@ -14,6 +14,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import com.findmymeds.backend.config.PharmacyUserDetails;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,7 +28,11 @@ public class PharmacyMedicineInventoryService {
     private final PharmacyNotificationService notificationService;
 
     private Long getCurrentPharmacyId() {
-        return 1L; // Hardcoded for development
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.getPrincipal() instanceof PharmacyUserDetails) {
+            return ((PharmacyUserDetails) auth.getPrincipal()).getPharmacy().getId();
+        }
+        throw new RuntimeException("Unauthorized: Pharmacy access required");
     }
 
     public MedicineInventoryMetricsDTO getInventoryMetrics() {

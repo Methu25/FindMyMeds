@@ -22,17 +22,13 @@ import AdminMedicineDetails from './pages/admin/AdminMedicineDetails';
 import AdminNotificationCenter from './pages/admin/AdminNotificationCenter';
 import AdminNotificationDetails from './pages/admin/AdminNotificationDetails';
 import AdminProfilePage from './pages/admin/AdminProfilePage';
-import SystemSettings from './pages/admin/SystemSettings'; // Moved to admin
-import PharmacyManagementHome from './pages/admin/Pharmacy/PharmacyManagementHome'; // Imported PharmacyManagementHome
-import AdminPharmacyDetails from "./pages/admin/Pharmacy/AdminPharmacyDetails";
-import AdminPharmacyReview from "./pages/admin/Pharmacy/AdminPharmacyReview";
-import AdminPharmacyReports from "./pages/admin/Pharmacy/AdminPharmacyReports";
-import AdminReportDetails from "./pages/admin/Pharmacy/AdminReportDetails";
-import RejectedPharmacyTable from "./pages/admin/Pharmacy/RejectedPharmacyTable";
-import RejectedPharmacyDetails from "./pages/admin/Pharmacy/RejectedPharmacyDetails";
+import SystemSettings from './pages/admin/SystemSettings';
+import PharmacyManagementHome from './pages/admin/Pharmacy/PharmacyManagementHome';
 
 // Pharmacy Pages 
 import PharmacyDashboard from './pages/pharmacy/Dashboard';
+import PharmacyLogin from './pages/pharmacy/PharmacyLogin';
+import PharmacySignup from './pages/pharmacy/PharmacySignup';
 import MedicineInventory from './pages/pharmacy/MedicineInventory';
 import PharmacyMedicineDetails from './pages/pharmacy/MedicineDetails';
 import PharmacyNotificationCenter from './pages/pharmacy/NotificationCenter';
@@ -55,11 +51,30 @@ import { NotificationProvider } from './context/NotificationContext';
 import { ToastProvider } from './context/ToastContext';
 
 function App() {
+  useEffect(() => {
+    const applyTheme = () => {
+      const theme = localStorage.getItem('theme') || 'system';
+      const root = window.document.documentElement;
+
+      root.classList.remove('light', 'dark');
+
+      if (theme === 'dark') {
+        root.classList.add('dark');
+      } else if (theme === 'light') {
+        root.classList.add('light');
+      }
+    };
+
+    applyTheme();
+    window.addEventListener('storage', applyTheme);
+    return () => window.removeEventListener('storage', applyTheme);
+  }, []);
+
   return (
     <BrowserRouter>
       <ToastProvider>
         <Routes>
-          {/* Landing page first */}
+          {/* Landing page */}
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
 
@@ -125,24 +140,25 @@ function App() {
                 <Route path="settings" element={<PharmacySystemSettings />} />
                 <Route path="current-reservations" element={<PharmacyCurrentReservations />} />
                 <Route path="reservation-history" element={<PharmacyReservationHistory />} />
-                {/* stock-management routes back to inventory as per user request */}
-                <Route path="stock-management" element={<MedicineInventory />} />
                 <Route path="reports" element={<PharmacyReportPage />} />
                 <Route path="profile" element={<PharmacyProfile />} />
-              </Routes >
-            </NotificationProvider >
+              </Routes>
+            </NotificationProvider>
           } />
 
-          {/* Civilian Routes (Master) */}
+          {/* Civilian Routes */}
           <Route path="/civilian" element={<CivilianLayout />}>
             <Route index element={<Navigate to="activity" replace />} />
             <Route path="activity" element={<ActivityPage />} />
             <Route path="find-pharmacy" element={<FindPharmacy />} />
             <Route path="reservation" element={<ReservationPage />} />
           </Route>
-        </Routes >
+
+          {/* Fallback */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
       </ToastProvider>
-    </BrowserRouter >
+    </BrowserRouter>
   );
 }
 

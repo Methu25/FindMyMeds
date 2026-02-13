@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Layout from '../../components/pharmacy/Layout';
+import api from '../../services/api';
 import { ArrowLeft, Save, Pill, Building, Ruler, Info, DollarSign, Package, Calendar } from 'lucide-react';
 
 export default function AddMedicine() {
@@ -33,17 +34,13 @@ export default function AddMedicine() {
         setLoading(true);
 
         try {
-            const response = await fetch('http://localhost:8080/api/pharmacy/inventory', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    ...formData,
-                    stockQuantity: parseInt(formData.stockQuantity),
-                    price: parseFloat(formData.price)
-                })
+            const response = await api.post('/pharmacy/inventory', {
+                ...formData,
+                stockQuantity: parseInt(formData.stockQuantity),
+                price: parseFloat(formData.price)
             });
 
-            if (response.ok) {
+            if (response.status === 200 || response.status === 201) {
                 alert('Medicine added successfully!');
                 navigate('/pharmacy/inventory');
             } else {

@@ -32,8 +32,9 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(
-                Arrays.asList("http://localhost:5179", "http://localhost:5173", "http://localhost:5174"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+                Arrays.asList("http://localhost:5173", "http://localhost:5174", "http://localhost:5175",
+                        "http://localhost:5176", "http://localhost:5179"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -55,6 +56,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**", "/api/v1/admin/auth/**").permitAll()
                         .requestMatchers("/api/v1/civilian/auth/**", "/api/v1/pharmacy/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/pharmacies/**").permitAll()
+                        .requestMatchers("/api/pharmacy/**", "/api/notifications/**").permitAll()
+                        .requestMatchers("/api/v1/pharmacy/**").permitAll()
 
                         // 2. Super Admin Only Endpoints
                         .requestMatchers("/api/admin/dashboard/overview/super").hasRole("SUPER_ADMIN")

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Layout from '../../components/pharmacy/Layout'
+import api from '../../services/api'
 import {
     Package, CheckCircle, XCircle, Pill, TrendingUp,
     ArrowUpRight, ArrowDownRight, Zap, Bell, Clock, Plus, Settings, MessageSquare, History,
@@ -29,14 +30,9 @@ export default function Dashboard() {
     useEffect(() => {
         const fetchDashboardData = async () => {
             try {
-                const token = localStorage.getItem('token');
-                const metricsRes = await fetch('http://localhost:8080/api/pharmacy/dashboard/metrics', {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                if (metricsRes.ok) {
-                    const data = await metricsRes.json();
+                const metricsRes = await api.get('/pharmacy/dashboard/metrics');
+                if (metricsRes.data) {
+                    const data = metricsRes.data;
                     setMetrics({
                         todaysReservations: data.todaysReservations || 0,
                         pendingOrders: data.pendingOrders || 0,
@@ -52,9 +48,9 @@ export default function Dashboard() {
                 }
 
                 // Fetch inventory metrics for stock health calculation
-                const inventoryRes = await fetch('http://localhost:8080/api/pharmacy/inventory/metrics');
-                if (inventoryRes.ok) {
-                    const invData = await inventoryRes.json();
+                const inventoryRes = await api.get('/pharmacy/inventory/metrics');
+                if (inventoryRes.data) {
+                    const invData = inventoryRes.data;
                     const total = invData.totalMedicines || 1;
                     const healthyCount = invData.inStock || 0;
                     const lowCount = invData.lowStock || 0;
@@ -67,10 +63,9 @@ export default function Dashboard() {
 
                 // Fetch recent activities
                 try {
-                    const activitiesRes = await fetch('http://localhost:8080/api/pharmacy/activities/recent');
-                    if (activitiesRes.ok) {
-                        const actData = await activitiesRes.json();
-                        setActivities(actData.slice(0, 3));
+                    const activitiesRes = await api.get('/pharmacy/activities/recent');
+                    if (activitiesRes.data) {
+                        setActivities(activitiesRes.data.slice(0, 3));
                     }
                 } catch (e) {
                     console.log('Activities endpoint not available');
@@ -365,7 +360,7 @@ function QuickActionButton({ icon: Icon, label, color, bg, onClick }) {
             onClick={onClick}
             className="flex flex-col items-center justify-center p-4 rounded-3xl border border-gray-50 hover:border-primary/20 hover:shadow-lg transition-all duration-300 group h-full bg-white"
         >
-            <div className={`p - 3 rounded - 2xl ${bg} ${color} mb - 3 group - hover: scale - 110 transition - transform duration - 300 shadow - sm`}>
+            <div className={`p-3 rounded-2xl ${bg} ${color} mb-3 group-hover:scale-110 transition-transform duration-300 shadow-sm`}>
                 <Icon size={24} />
             </div>
             <span className="text-xs font-bold text-gray-600 group-hover:text-primary transition-colors text-center">{label}</span>
@@ -377,9 +372,9 @@ function ActivityItem({ user, action, detail, time, iconColor, onClick }) {
     return (
         <div
             onClick={onClick}
-            className={`flex gap - 4 items - start p - 2 rounded - 2xl transition - all duration - 300 ${onClick ? 'cursor-pointer hover:bg-primary/5 hover:translate-x-1' : ''} `}
+            className={`flex gap-4 items-start p-2 rounded-2xl transition-all duration-300 ${onClick ? 'cursor-pointer hover:bg-primary/5 hover:translate-x-1' : ''}`}
         >
-            <div className={`w - 10 h - 10 rounded - 2xl ${iconColor} flex items - center justify - center text - white shrink - 0 font - bold text - sm shadow - sm`}>
+            <div className={`w-10 h-10 rounded-2xl ${iconColor} flex items-center justify-center text-white shrink-0 font-bold text-sm shadow-sm`}>
                 {user.charAt(0)}
             </div>
             <div className="flex-1 min-w-0">

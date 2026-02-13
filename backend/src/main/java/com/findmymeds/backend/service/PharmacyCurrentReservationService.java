@@ -1,6 +1,9 @@
 package com.findmymeds.backend.service;
 
+import com.findmymeds.backend.dto.MedicineDTO;
+import com.findmymeds.backend.dto.CivilianDTO;
 import com.findmymeds.backend.dto.ReservationDTO;
+import com.findmymeds.backend.dto.ReservationItemDTO;
 import com.findmymeds.backend.model.Reservation;
 import com.findmymeds.backend.repository.ReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,31 +21,39 @@ public class PharmacyCurrentReservationService {
     @Autowired
     private ReservationRepository reservationRepository;
 
-    public List<Long> getCurrentReservationCounts() {
+    public List<Long> getCurrentReservationCounts(Long pharmacyId) {
         return List.of(
-                reservationRepository.countByStatus(com.findmymeds.backend.model.enums.ReservationStatus.PENDING),
-                reservationRepository.countByStatus(com.findmymeds.backend.model.enums.ReservationStatus.CONFIRMED),
-                reservationRepository.countByStatus(com.findmymeds.backend.model.enums.ReservationStatus.ONGOING),
-                reservationRepository.countByStatus(com.findmymeds.backend.model.enums.ReservationStatus.READY),
-                reservationRepository.countByStatus(com.findmymeds.backend.model.enums.ReservationStatus.COLLECTED),
-                reservationRepository.countByStatus(com.findmymeds.backend.model.enums.ReservationStatus.CANCELLED));
+                reservationRepository.countByPharmacyIdAndStatus(pharmacyId,
+                        com.findmymeds.backend.model.enums.ReservationStatus.PENDING),
+                reservationRepository.countByPharmacyIdAndStatus(pharmacyId,
+                        com.findmymeds.backend.model.enums.ReservationStatus.CONFIRMED),
+                reservationRepository.countByPharmacyIdAndStatus(pharmacyId,
+                        com.findmymeds.backend.model.enums.ReservationStatus.ONGOING),
+                reservationRepository.countByPharmacyIdAndStatus(pharmacyId,
+                        com.findmymeds.backend.model.enums.ReservationStatus.READY),
+                reservationRepository.countByPharmacyIdAndStatus(pharmacyId,
+                        com.findmymeds.backend.model.enums.ReservationStatus.COLLECTED),
+                reservationRepository.countByPharmacyIdAndStatus(pharmacyId,
+                        com.findmymeds.backend.model.enums.ReservationStatus.CANCELLED));
     }
 
-    public List<ReservationDTO> getCurrentReservationsByStatus(String status, int page, int size) {
+    public List<ReservationDTO> getCurrentReservationsByStatus(Long pharmacyId, String status, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return reservationRepository
-                .findByStatus(com.findmymeds.backend.model.enums.ReservationStatus.valueOf(status), pageable).stream()
+                .findByPharmacyIdAndStatus(pharmacyId,
+                        com.findmymeds.backend.model.enums.ReservationStatus.valueOf(status), pageable)
+                .stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
 
-    public void updateReservationStatus(@NonNull String id, String status) {
+    public void updateReservationStatus(@NonNull Long id, String status) {
         Reservation reservation = reservationRepository.findById(id).orElseThrow();
         reservation.setStatus(com.findmymeds.backend.model.enums.ReservationStatus.valueOf(status));
         reservationRepository.save(reservation);
     }
 
-    public ReservationDTO getReservationDetails(@NonNull String id) {
+    public ReservationDTO getReservationDetails(@NonNull Long id) {
         Reservation reservation = reservationRepository.findById(id).orElseThrow();
         return convertToDTO(reservation);
     }
@@ -69,7 +80,7 @@ public class PharmacyCurrentReservationService {
 
     private ReservationDTO convertToDTO(Reservation reservation) {
         ReservationDTO dto = new ReservationDTO();
-        dto.setId(reservation.getId());
+        dto.setId(reservation.getId().toString());
         dto.setStatus(reservation.getStatus().name());
         dto.setReservationDate(reservation.getReservationDate());
         dto.setTimeframe(reservation.getTimeframe());
@@ -78,39 +89,32 @@ public class PharmacyCurrentReservationService {
         dto.setNote(reservation.getNote());
 
         if (reservation.getCivilian() != null) {
-            com.findmymeds.backend.dto.CivilianDTO civDto = new com.findmymeds.backend.dto.CivilianDTO();
+            CivilianDTO civDto = new CivilianDTO();
             civDto.setId(reservation.getCivilian().getId());
-            civDto.setName(reservation.getCivilian().getFullName()); // Assuming fullName exists
+            civDto.setName(reservation.getCivilian().getFullName());
             civDto.setEmail(reservation.getCivilian().getEmail());
             civDto.setPhone(reservation.getCivilian().getPhone());
             dto.setCivilian(civDto);
         }
 
-        // Mapping items is skipped for brevity but should be done if frontend needs
-        // them.
-        // CurrentReservations.jsx uses item.medicine.medicineName
-        // So we need to map items too!
         if (reservation.getItems() != null) {
             dto.setItems(reservation.getItems().stream().map(item -> {
-                com.findmymeds.backend.dto.ReservationItemDTO itemDto = new com.findmymeds.backend.dto.ReservationItemDTO();
+                ReservationItemDTO itemDto = new ReservationItemDTO();
                 itemDto.setId(item.getId());
                 itemDto.setQuantity(item.getQuantity());
                 itemDto.setPrice(item.getPrice());
 
                 if (item.getMedicine() != null) {
-                    com.findmymeds.backend.dto.MedicineDTO medDto = new com.findmymeds.backend.dto.MedicineDTO();
+                    MedicineDTO medDto = new MedicineDTO();
                     medDto.setId(item.getMedicine().getId());
                     medDto.setMedicineName(item.getMedicine().getMedicineName());
-                    medDto.setBrand(item.getMedicine().getManufacturer()); // Manufacturer as brand? Or should I use
-                                                                           // manufacturer? DTO has brand. Med has
-                                                                           // manufacturer.
-                    // medDto.setPrice(item.getMedicine().getPrice());
+                    medDto.setBrand(item.getMedicine().getManufacturer());
+                    medDto.setPrice(item.getMedicine().getPrice());
                     itemDto.setMedicine(medDto);
                 }
                 return itemDto;
             }).collect(Collectors.toList()));
         }
-
         return dto;
     }
 }

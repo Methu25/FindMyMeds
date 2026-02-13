@@ -1,6 +1,9 @@
 package com.findmymeds.backend.service;
 
+import com.findmymeds.backend.dto.CivilianDTO;
+import com.findmymeds.backend.dto.MedicineDTO;
 import com.findmymeds.backend.dto.ReservationDTO;
+import com.findmymeds.backend.dto.ReservationItemDTO;
 import com.findmymeds.backend.model.Reservation;
 import com.findmymeds.backend.repository.ReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,22 +21,27 @@ public class PharmacyReservationHistoryService {
     @Autowired
     private ReservationRepository reservationRepository;
 
-    public List<Long> getReservationHistoryCounts() {
+    public List<Long> getReservationHistoryCounts(Long pharmacyId) {
         return List.of(
-                reservationRepository.countByStatus(com.findmymeds.backend.model.enums.ReservationStatus.COLLECTED),
-                reservationRepository.countByStatus(com.findmymeds.backend.model.enums.ReservationStatus.EXPIRED),
-                reservationRepository.countByStatus(com.findmymeds.backend.model.enums.ReservationStatus.CANCELLED));
+                reservationRepository.countByPharmacyIdAndStatus(pharmacyId,
+                        com.findmymeds.backend.model.enums.ReservationStatus.COLLECTED),
+                reservationRepository.countByPharmacyIdAndStatus(pharmacyId,
+                        com.findmymeds.backend.model.enums.ReservationStatus.EXPIRED),
+                reservationRepository.countByPharmacyIdAndStatus(pharmacyId,
+                        com.findmymeds.backend.model.enums.ReservationStatus.CANCELLED));
     }
 
-    public List<ReservationDTO> getReservationHistoryByType(String type, int page, int size) {
+    public List<ReservationDTO> getReservationHistoryByType(Long pharmacyId, String type, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return reservationRepository
-                .findByStatus(com.findmymeds.backend.model.enums.ReservationStatus.valueOf(type), pageable).stream()
+                .findByPharmacyIdAndStatus(pharmacyId,
+                        com.findmymeds.backend.model.enums.ReservationStatus.valueOf(type), pageable)
+                .stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
 
-    public ReservationDTO getReservationHistoryDetails(@NonNull String id) {
+    public ReservationDTO getReservationHistoryDetails(@NonNull Long id) {
         Reservation reservation = reservationRepository.findById(id).orElseThrow();
         return convertToDTO(reservation);
     }
@@ -52,7 +60,7 @@ public class PharmacyReservationHistoryService {
 
     private ReservationDTO convertToDTO(Reservation reservation) {
         ReservationDTO dto = new ReservationDTO();
-        dto.setId(reservation.getId());
+        dto.setId(reservation.getId().toString());
         dto.setStatus(reservation.getStatus().name());
         dto.setReservationDate(reservation.getReservationDate());
         dto.setTimeframe(reservation.getTimeframe());
@@ -61,7 +69,7 @@ public class PharmacyReservationHistoryService {
         dto.setNote(reservation.getNote());
 
         if (reservation.getCivilian() != null) {
-            com.findmymeds.backend.dto.CivilianDTO civDto = new com.findmymeds.backend.dto.CivilianDTO();
+            CivilianDTO civDto = new CivilianDTO();
             civDto.setId(reservation.getCivilian().getId());
             civDto.setName(reservation.getCivilian().getFullName());
             civDto.setEmail(reservation.getCivilian().getEmail());
@@ -71,16 +79,17 @@ public class PharmacyReservationHistoryService {
 
         if (reservation.getItems() != null) {
             dto.setItems(reservation.getItems().stream().map(item -> {
-                com.findmymeds.backend.dto.ReservationItemDTO itemDto = new com.findmymeds.backend.dto.ReservationItemDTO();
+                ReservationItemDTO itemDto = new ReservationItemDTO();
                 itemDto.setId(item.getId());
                 itemDto.setQuantity(item.getQuantity());
                 itemDto.setPrice(item.getPrice());
 
                 if (item.getMedicine() != null) {
-                    com.findmymeds.backend.dto.MedicineDTO medDto = new com.findmymeds.backend.dto.MedicineDTO();
+                    MedicineDTO medDto = new MedicineDTO();
                     medDto.setId(item.getMedicine().getId());
                     medDto.setMedicineName(item.getMedicine().getMedicineName());
                     medDto.setBrand(item.getMedicine().getManufacturer());
+                    medDto.setPrice(item.getMedicine().getPrice());
                     itemDto.setMedicine(medDto);
                 }
                 return itemDto;

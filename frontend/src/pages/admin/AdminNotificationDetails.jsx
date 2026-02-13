@@ -17,7 +17,7 @@ const AdminNotificationDetails = () => {
 
     const fetchNotification = async () => {
         try {
-            const res = await fetch(`http://localhost:8080/api/notifications/${id}`);
+            const res = await fetch(`http://localhost:8081/api/notifications/${id}`);
             if (res.ok) {
                 setNotification(await res.json());
             } else {
@@ -32,7 +32,7 @@ const AdminNotificationDetails = () => {
 
     const handleMarkAsRead = async () => {
         try {
-            await fetch(`http://localhost:8080/api/notifications/${id}/read`, { method: 'PUT' });
+            await fetch(`http://localhost:8081/api/notifications/${id}/read`, { method: 'PUT' });
             fetchNotification(); // Refresh state
         } catch (e) {
             console.error("Error marking as read", e);
