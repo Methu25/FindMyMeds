@@ -27,7 +27,7 @@ function ReservationPage() {
 
     const fetchMedicines = async (query) => {
         try {
-            const res = await fetch(`http://localhost:8080/api/medicines?search=${query}`);
+            const res = await fetch(`http://localhost:8081/api/medicines?search=${query}`);
             if (res.ok) {
                 const data = await res.json();
                 setMedicines(data.content || data);
@@ -40,7 +40,7 @@ function ReservationPage() {
     const fetchPharmacies = async () => {
         try {
             // Using search endpoint without query to get all, or could use nearby if location available
-            const res = await fetch('http://localhost:8080/api/pharmacies');
+            const res = await fetch('http://localhost:8081/api/pharmacies');
             if (res.ok) {
                 const data = await res.json();
                 setPharmacies(data.map(p => ({
@@ -86,7 +86,7 @@ function ReservationPage() {
         };
 
         try {
-            const res = await fetch('http://localhost:8080/api/reservations', {
+            const res = await fetch('http://localhost:8081/api/reservations', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)

@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import api from '../services/api';
 
 const NotificationContext = createContext();
 
@@ -6,37 +7,41 @@ export function NotificationProvider({ children }) {
     const [notifications, setNotifications] = useState([]);
     const [unreadCount, setUnreadCount] = useState(0);
 
-    const fetchNotifications = () => {
-        fetch('http://localhost:8080/api/pharmacy/notifications?page=0&size=100')
-            .then(res => res.json())
-            .then(data => {
-                if (data.content) {
-                    const mapped = data.content.map(notif => ({
-                        id: notif.id.toString(),
-                        title: notif.title,
-                        message: notif.message,
-                        timestamp: notif.createdAt,
-                        status: notif.read ? 'Read' : 'Unread',
-                        priority: mapPriority(notif.priority),
-                        category: mapTypeToCategory(notif.type),
-                        link: mapTypeToLink(notif.type, notif.relatedEntityId),
-                        data: {
-                            id: notif.id,
-                            relatedId: notif.relatedEntityId,
-                            type: notif.type
-                        }
-                    }));
-                    setNotifications(mapped);
-                }
-            })
-            .catch(err => console.error("Error fetching notifications:", err));
+    const fetchNotifications = async () => {
+        try {
+            const response = await api.get('/pharmacy/notifications', {
+                params: { page: 0, size: 100 }
+            });
+            if (response.data?.content) {
+                const mapped = response.data.content.map(notif => ({
+                    id: notif.id.toString(),
+                    title: notif.title,
+                    message: notif.message,
+                    timestamp: notif.createdAt,
+                    status: notif.read ? 'Read' : 'Unread',
+                    priority: mapPriority(notif.priority),
+                    category: mapTypeToCategory(notif.type),
+                    link: mapTypeToLink(notif.type, notif.relatedEntityId),
+                    data: {
+                        id: notif.id,
+                        relatedId: notif.relatedEntityId,
+                        type: notif.type
+                    }
+                }));
+                setNotifications(mapped);
+            }
+        } catch (err) {
+            console.error("Error fetching notifications:", err);
+        }
     };
 
-    const fetchUnreadCount = () => {
-        fetch('http://localhost:8080/api/pharmacy/notifications/unread-count')
-            .then(res => res.json())
-            .then(data => setUnreadCount(data))
-            .catch(err => console.error("Error fetching unread count:", err));
+    const fetchUnreadCount = async () => {
+        try {
+            const response = await api.get('/pharmacy/notifications/unread-count');
+            setUnreadCount(response.data);
+        } catch (err) {
+            console.error("Error fetching unread count:", err);
+        }
     };
 
     useEffect(() => {
@@ -49,15 +54,16 @@ export function NotificationProvider({ children }) {
         return () => clearInterval(interval);
     }, []);
 
-    const markAsRead = (id) => {
-        fetch(`http://localhost:8080/api/pharmacy/notifications/${id}/read`, { method: 'PUT' })
-            .then(res => {
-                if (res.ok) {
-                    fetchNotifications();
-                    fetchUnreadCount();
-                }
-            })
-            .catch(err => console.error("Error marking as read:", err));
+    const markAsRead = async (id) => {
+        try {
+            const res = await api.put(`/pharmacy/notifications/${id}/read`);
+            if (res.status === 200 || res.status === 204) {
+                fetchNotifications();
+                fetchUnreadCount();
+            }
+        } catch (err) {
+            console.error("Error marking as read:", err);
+        }
     };
 
     const mapPriority = (p) => {

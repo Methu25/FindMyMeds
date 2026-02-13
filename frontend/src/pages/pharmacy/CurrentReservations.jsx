@@ -47,15 +47,15 @@ export default function CurrentReservations() {
     try {
       const response = await fetch(`http://localhost:8080/api/pharmacy/reservations/current?status=${activeStatus}&page=0&size=10`, { headers: getHeaders() })
       if (response.ok) {
-        const data = await response.json();
-        setReservations(data);
+        const data = await response.json()
+        setReservations(data)
       }
     } catch (error) {
       console.error('Reservations fetch error:', error)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const handleUpdateStatus = async (id, status) => {
     try {
@@ -83,6 +83,8 @@ export default function CurrentReservations() {
       }
     } catch (error) { console.error('Details fetch error:', error) }
   }
+
+
 
   if (viewMode === 'details' && selectedRes) {
     return (
@@ -165,7 +167,7 @@ export default function CurrentReservations() {
                       <MapPin size={20} />
                     </div>
                     <div>
-                      <p className="text-xs text-gray-400 uppercase font-bold tracking-wider">Address</p>
+                      <p className="text-xs text-gray-400 uppercase font-bold tracking-wider">Email</p>
                       <p className="font-bold text-gray-800 leading-tight">{selectedRes.civilian?.email || 'N/A'}</p>
                     </div>
                   </div>

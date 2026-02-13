@@ -19,11 +19,13 @@ const FindPharmacy = () => {
         setLoading(true);
         setError('');
         try {
-            const data = await searchPharmacies(query);
-            setPharmacies(data);
-        } catch (err) {
-            console.error("Failed to fetch pharmacies", err);
-            setError('Failed to load pharmacies. Please try again.');
+            const response = await fetch(`http://localhost:8080/api/pharmacies/nearby?lat=${lat}&lng=${lng}&radius=15`);
+            if (response.ok) {
+                const data = await response.json();
+                setPharmacies(data);
+            }
+        } catch (error) {
+            console.error("Error fetching pharmacies", error);
         } finally {
             setLoading(false);
         }

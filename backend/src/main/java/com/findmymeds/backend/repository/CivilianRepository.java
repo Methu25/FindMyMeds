@@ -18,6 +18,10 @@ public interface CivilianRepository extends JpaRepository<Civilian, Long> {
 
   boolean existsByEmail(String email);
 
+  java.util.Optional<Civilian> findByEmail(String email);
+
+  java.util.Optional<Civilian> findByNicNumber(String nicNumber);
+
   @Query("""
           SELECT c FROM Civilian c
           WHERE (:status IS NULL OR c.accountStatus = :status)

@@ -1,7 +1,7 @@
 package com.findmymeds.backend.config;
 
-import com.findmymeds.backend.model.Pharmacy;
-import com.findmymeds.backend.model.enums.PharmacyStatus;
+import com.findmymeds.backend.model.Civilian;
+import com.findmymeds.backend.model.enums.AccountStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -11,27 +11,23 @@ import java.util.Collection;
 import java.util.List;
 
 @RequiredArgsConstructor
-public class PharmacyUserDetails implements UserDetails {
+public class CivilianUserDetails implements UserDetails {
 
-    private final Pharmacy pharmacy;
-
-    public Pharmacy getPharmacy() {
-        return pharmacy;
-    }
+    private final Civilian civilian;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_PHARMACY"));
+        return List.of(new SimpleGrantedAuthority("ROLE_CIVILIAN"));
     }
 
     @Override
     public String getPassword() {
-        return pharmacy.getPasswordHash();
+        return civilian.getPasswordHash();
     }
 
     @Override
     public String getUsername() {
-        return pharmacy.getLicenseNumber(); // Uses License Number as username
+        return civilian.getEmail();
     }
 
     @Override
@@ -41,7 +37,7 @@ public class PharmacyUserDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return pharmacy.getStatus() != PharmacyStatus.REJECTED;
+        return civilian.getAccountStatus() != AccountStatus.PERMANENT_BANNED;
     }
 
     @Override
@@ -51,7 +47,6 @@ public class PharmacyUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return (pharmacy.getStatus() == PharmacyStatus.ACTIVE || pharmacy.getStatus() == PharmacyStatus.APPROVED)
-                && !Boolean.TRUE.equals(pharmacy.getIsDeleted());
+        return !civilian.getIsLoginDisabled();
     }
 }
