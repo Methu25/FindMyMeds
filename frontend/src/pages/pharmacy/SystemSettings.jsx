@@ -22,7 +22,7 @@ export default function SystemSettings() {
         const fetchSettings = async () => {
             try {
                 const token = localStorage.getItem('pharmacyToken');
-                const response = await fetch('http://localhost:8081/api/pharmacy/settings', {
+                const response = await fetch('http://localhost:8080/api/pharmacy/settings', {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -82,7 +82,7 @@ export default function SystemSettings() {
         setSaving(true);
         try {
             const token = localStorage.getItem('pharmacyToken');
-            const response = await fetch('http://localhost:8081/api/pharmacy/settings', {
+            const response = await fetch('http://localhost:8080/api/pharmacy/settings', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

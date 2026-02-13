@@ -23,7 +23,12 @@ export default function MedicineDetails() {
 
     const fetchDetails = async () => {
         try {
-            const res = await fetch(`http://localhost:8080/api/pharmacy/inventory/${id}`);
+            const token = localStorage.getItem('pharmacyToken');
+            const res = await fetch(`http://localhost:8080/api/pharmacy/inventory/${id}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
             if (res.ok) {
                 const data = await res.json();
                 setMedicine(data);
@@ -67,7 +72,13 @@ export default function MedicineDetails() {
                     return;
             }
 
-            const res = await fetch(url, { method });
+            const token = localStorage.getItem('pharmacyToken');
+            const res = await fetch(url, {
+                method,
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
             if (res.ok) {
                 if (activeModal === 'DELETE') {
                     navigate('/pharmacy/inventory');

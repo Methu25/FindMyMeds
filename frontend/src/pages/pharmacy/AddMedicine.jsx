@@ -33,9 +33,13 @@ export default function AddMedicine() {
         setLoading(true);
 
         try {
+            const token = localStorage.getItem('pharmacyToken');
             const response = await fetch('http://localhost:8080/api/pharmacy/inventory', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
                 body: JSON.stringify({
                     ...formData,
                     stockQuantity: parseInt(formData.stockQuantity),

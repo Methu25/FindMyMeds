@@ -14,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/admin/pharmacy-reports")
-@CrossOrigin(origins = "http://localhost:5173")
+
 public class AdminPharmacyReportController {
 
     @Autowired

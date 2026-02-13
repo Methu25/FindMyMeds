@@ -12,7 +12,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/medicines")
-@CrossOrigin(origins = { "http://localhost:5173", "http://localhost:5174" }) // Allow frontend access
+
 public class AdminMedicineController {
 
     private final AdminMedicineService medicineService;

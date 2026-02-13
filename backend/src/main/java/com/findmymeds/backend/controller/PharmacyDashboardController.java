@@ -15,9 +15,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.Map;
 
+import org.springframework.security.access.prepost.PreAuthorize;
+
 @RestController
 @RequestMapping("/api/pharmacy")
 @RequiredArgsConstructor
+@PreAuthorize("hasRole('PHARMACY')")
 public class PharmacyDashboardController {
 
     private final PharmacyDashboardService pharmacyDashboardService;

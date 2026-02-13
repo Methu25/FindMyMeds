@@ -33,7 +33,7 @@ export default function PharmacyProfile() {
     const fetchProfile = async () => {
         try {
             const token = localStorage.getItem('pharmacyToken');
-            const res = await fetch('http://localhost:8081/api/pharmacy/profile', {
+            const res = await fetch('http://localhost:8080/api/pharmacy/profile', {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -65,7 +65,7 @@ export default function PharmacyProfile() {
 
         try {
             const token = localStorage.getItem('pharmacyToken');
-            const res = await fetch('http://localhost:8081/api/pharmacy/profile/upload-logo', {
+            const res = await fetch('http://localhost:8080/api/pharmacy/profile/upload-logo', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -91,7 +91,7 @@ export default function PharmacyProfile() {
         setSaving(true);
         try {
             const token = localStorage.getItem('pharmacyToken');
-            const res = await fetch('http://localhost:8081/api/pharmacy/profile', {
+            const res = await fetch('http://localhost:8080/api/pharmacy/profile', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -125,7 +125,7 @@ export default function PharmacyProfile() {
     const getImageUrl = (path) => {
         if (!path) return null;
         if (path.startsWith('http')) return path;
-        return `http://localhost:8081${path}`;
+        return `http://localhost:8080${path}`;
     };
 
     return (

@@ -31,8 +31,8 @@ export default function AdminCenter() {
             const headers = { 'Authorization': `Bearer ${token}` };
 
             const [profileRes, historyRes] = await Promise.all([
-                fetch('http://localhost:8081/api/pharmacy/center/profile', { headers }),
-                fetch('http://localhost:8081/api/pharmacy/reports/history', { headers })
+                fetch('http://localhost:8080/api/pharmacy/center/profile', { headers }),
+                fetch('http://localhost:8080/api/pharmacy/reports/history', { headers })
             ]);
 
             if (profileRes.ok) setProfile(await profileRes.json());
@@ -70,7 +70,7 @@ export default function AdminCenter() {
         setSubmitting(true);
         try {
             const token = localStorage.getItem('pharmacyToken');
-            const response = await fetch('http://localhost:8081/api/pharmacy/reports', {
+            const response = await fetch('http://localhost:8080/api/pharmacy/reports', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -88,7 +88,7 @@ export default function AdminCenter() {
                     description: ''
                 });
                 // Refresh history
-                const historyRes = await fetch('http://localhost:8081/api/pharmacy/reports/history', {
+                const historyRes = await fetch('http://localhost:8080/api/pharmacy/reports/history', {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 if (historyRes.ok) setHistory(await historyRes.json());

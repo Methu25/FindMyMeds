@@ -37,9 +37,8 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(
-                Arrays.asList("http://localhost:5179", "http://localhost:5173", "http://localhost:5174"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedOriginPatterns(Arrays.asList("*")); // Allow all origins including localhost/127.0.0.1
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -57,6 +56,9 @@ public class SecurityConfig {
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
+                        // 0. Temporary Cleanup Endpoint
+                        .requestMatchers("/api/debug/**").permitAll()
+
                         // 1. Public Endpoints (Authentication & Public Pharmacy Search)
                         .requestMatchers("/api/auth/**", "/api/v1/admin/auth/**", "/api/pharmacy/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/pharmacies/**").permitAll()

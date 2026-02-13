@@ -24,7 +24,8 @@ const PharmacyLogin = () => {
         setError('');
 
         try {
-            const response = await fetch('http://localhost:8081/api/pharmacy/auth/login', {
+            console.log('Attempting login to:', 'http://localhost:8080/api/pharmacy/auth/login');
+            const response = await fetch('http://localhost:8080/api/pharmacy/auth/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -34,18 +35,24 @@ const PharmacyLogin = () => {
 
             if (response.ok) {
                 const data = await response.json();
+                console.log('Login successful:', data.id);
                 localStorage.setItem('pharmacyToken', data.token);
                 localStorage.setItem('pharmacyId', data.id);
                 localStorage.setItem('role', 'PHARMACY');
                 navigate('/pharmacy');
             } else {
-                const errorData = await response.text(); // or json depending on backend
-                // Backend returns "Invalid credentials" string usually or object
-                setError('Login failed: ' + (errorData || 'Invalid credentials'));
+                let errorMessage = 'Invalid credentials';
+                try {
+                    const errorText = await response.text();
+                    errorMessage = errorText || errorMessage;
+                } catch (e) {
+                    console.error('Failed to parse error response:', e);
+                }
+                setError('Login failed: ' + errorMessage);
             }
         } catch (err) {
-            setError('Something went wrong. Please try again.');
-            console.error(err);
+            console.error('Login request failed:', err);
+            setError('Connection error: Please check if the backend is running on port 8080.');
         } finally {
             setLoading(false);
         }
