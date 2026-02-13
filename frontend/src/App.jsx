@@ -77,6 +77,16 @@ function App() {
 
           {/* Admin Routes */}
           <Route path="/admin" element={<AdminLayout />}>
+            <Route path="pharmacies/:pharmacyId" element={<AdminPharmacyDetails />} />
+            {/* Pharmacy Reports & Inquiries Routes */}
+            <Route path="reports" element={<AdminPharmacyReports />} />
+            <Route path="reports/:reportId" element={<AdminReportDetails />} />
+            <Route path="pharmacy/rejected" element={<RejectedPharmacyTable />} />
+            <Route path="pharmacy/rejected/:id" element={<RejectedPharmacyDetails />} />
+
+            <Route path="pharmacy-review/:pharmacyId" element={<AdminPharmacyReview />} />
+
+            {/* When visiting /admin -> go to /admin/dashboard */}
             <Route index element={<Navigate to="dashboard" replace />} />
             <Route path="dashboard" element={<AdminDashboard />} />
             <Route path="administrators" element={<AdminManagement />} />

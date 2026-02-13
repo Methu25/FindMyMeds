@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import Layout from '../../components/pharmacy/Layout';
+import api from '../../services/api';
 import {
     Save, Building, MapPin, Phone, Mail, Clock, FileText, CheckCircle, AlertCircle, Upload
 } from 'lucide-react';
@@ -32,20 +33,14 @@ export default function PharmacyProfile() {
 
     const fetchProfile = async () => {
         try {
-            const token = localStorage.getItem('pharmacyToken');
-            const res = await fetch('http://localhost:8080/api/pharmacy/profile', {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-            if (res.ok) {
-                const data = await res.json();
-                setProfile(data);
+            const res = await api.get('/pharmacy/profile');
+            if (res.data) {
+                setProfile(res.data);
             } else {
-                console.error('Failed to fetch profile');
+                console.error('Failed to fetch profile: No data');
             }
         } catch (error) {
-            console.error('Error:', error);
+            console.error('Error fetching profile:', error);
         } finally {
             setLoading(false);
         }
@@ -90,23 +85,15 @@ export default function PharmacyProfile() {
         e.preventDefault();
         setSaving(true);
         try {
-            const token = localStorage.getItem('pharmacyToken');
-            const res = await fetch('http://localhost:8080/api/pharmacy/profile', {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify(profile)
-            });
-            if (res.ok) {
+            const res = await api.put('/pharmacy/profile', profile);
+            if (res.status === 200 || res.status === 204) {
                 alert('Profile updated successfully!');
             } else {
                 alert('Failed to update profile.');
             }
         } catch (error) {
             console.error('Error updating profile:', error);
-            alert('An error occurred.');
+            alert(error.response?.data?.message || 'An error occurred while updating profile.');
         } finally {
             setSaving(false);
         }

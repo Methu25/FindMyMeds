@@ -2,9 +2,9 @@ import axios from "axios";
 
 // IMPORTANT:
 // If you use Vite proxy, set baseURL to "" and use "/api" URLs.
-// Otherwise set baseURL to "http://localhost:8080".
+// Otherwise set baseURL to "http://localhost:8081".
 const adminClient = axios.create({
-  baseURL: "http://localhost:8080",
+  baseURL: "http://localhost:8081",
   timeout: 20000,
 });
 

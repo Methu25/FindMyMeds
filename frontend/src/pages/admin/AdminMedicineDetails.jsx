@@ -26,7 +26,7 @@ const AdminMedicineDetails = () => {
 
     const fetchMedicine = async () => {
         try {
-            const res = await fetch(`http://localhost:8080/api/medicines/${id}`);
+            const res = await fetch(`http://localhost:8081/api/medicines/${id}`);
             if (res.ok) {
                 const data = await res.json();
                 setMedicine(data);
@@ -45,11 +45,11 @@ const AdminMedicineDetails = () => {
         setActionLoading(true);
         try {
             if (activeModal === 'REMOVE') {
-                await fetch(`http://localhost:8080/api/medicines/${id}`, { method: 'DELETE' });
+                await fetch(`http://localhost:8081/api/medicines/${id}`, { method: 'DELETE' });
                 navigate('/admin/medicines');
             } else {
                 const status = activeModal === 'ACTIVATE' ? 'ACTIVE' : 'INACTIVE';
-                await fetch(`http://localhost:8080/api/medicines/${id}/status?status=${status}`, { method: 'PATCH' });
+                await fetch(`http://localhost:8081/api/medicines/${id}/status?status=${status}`, { method: 'PATCH' });
                 fetchMedicine(); // Refresh
                 setActiveModal(null);
             }
@@ -64,7 +64,7 @@ const AdminMedicineDetails = () => {
         e.preventDefault();
         setActionLoading(true);
         try {
-            const res = await fetch(`http://localhost:8080/api/medicines/${id}`, {
+            const res = await fetch(`http://localhost:8081/api/medicines/${id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(updateForm)
