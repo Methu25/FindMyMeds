@@ -17,7 +17,7 @@ import org.springframework.security.core.Authentication;
 @RestController
 @RequestMapping("/api/pharmacy")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:5173")
+
 public class PharmacyAdminCenterController {
 
     private final PharmacyAdminCenterService pharmacyAdminCenterService;

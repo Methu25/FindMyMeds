@@ -1,6 +1,6 @@
 // src/Service/Admin/PharmacyService.jsx
 
-const API_BASE = "http://localhost:8080/api/admin/pharmacies";
+const API_BASE = "http://localhost:8081/api/admin/pharmacies";
 
 async function handleResponse(response) {
   if (!response.ok) {
@@ -54,28 +54,28 @@ export async function updatePharmacy(pharmacyId, pharmacy) {
 
 export async function activatePharmacy(pharmacyId) {
   // Added headers and empty body to satisfy server-side validation
-  const response = await fetch(`${API_BASE}/${pharmacyId}/activate`, { 
+  const response = await fetch(`${API_BASE}/${pharmacyId}/activate`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({}) 
+    body: JSON.stringify({})
   });
   return handleResponse(response);
 }
 
 export async function suspendPharmacy(pharmacyId) {
-  const response = await fetch(`${API_BASE}/${pharmacyId}/suspend`, { 
+  const response = await fetch(`${API_BASE}/${pharmacyId}/suspend`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({}) 
+    body: JSON.stringify({})
   });
   return handleResponse(response);
 }
 
 export async function removePharmacy(pharmacyId) {
-  const response = await fetch(`${API_BASE}/${pharmacyId}/remove`, { 
+  const response = await fetch(`${API_BASE}/${pharmacyId}/remove`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({}) 
+    body: JSON.stringify({})
   });
   return handleResponse(response);
 }

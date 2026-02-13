@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import {
   Package, CheckCircle, XCircle, Clock, Truck, Clipboard,
-  ArrowLeft, Printer, Download, MapPin, Phone, Mail, FileText,
+  ArrowLeft, Printer, Download, MapPin, Phone, FileText,
   ChevronRight, Info, User, Calendar
 } from 'lucide-react'
 import Layout from '../../components/pharmacy/Layout'
@@ -24,7 +24,7 @@ export default function CurrentReservations() {
   ]
 
   const getHeaders = () => ({
-    'Authorization': `Bearer ${localStorage.getItem('token')}`
+    'Authorization': `Bearer ${localStorage.getItem('pharmacyToken')}`
   })
 
   useEffect(() => {
@@ -35,11 +35,15 @@ export default function CurrentReservations() {
   const fetchCounts = async () => {
     try {
       const response = await fetch('http://localhost:8080/api/pharmacy/reservations/current/counts', { headers: getHeaders() })
-      if (response.ok) setCounts(await response.json())
+      if (response.ok) {
+        const data = await response.json()
+        setCounts(data)
+      }
     } catch (error) { console.error('Counts fetch error:', error) }
   }
 
   const fetchReservations = async () => {
+    setLoading(true)
     try {
       const response = await fetch(`http://localhost:8080/api/pharmacy/reservations/current?status=${activeStatus}&page=0&size=10`, { headers: getHeaders() })
       if (response.ok) {
@@ -53,12 +57,12 @@ export default function CurrentReservations() {
     }
   }
 
-  const updateStatus = async (id, status) => {
+  const handleUpdateStatus = async (id, status) => {
     try {
       const response = await fetch(`http://localhost:8080/api/pharmacy/reservations/current/${id}/status?status=${status}`, {
         method: 'PATCH',
         headers: getHeaders()
-      })
+      });
       if (response.ok) {
         fetchCounts()
         if (viewMode === 'details') {
@@ -88,7 +92,6 @@ export default function CurrentReservations() {
     return (
       <Layout title="Reservation Details">
         <div className="max-w-7xl mx-auto space-y-6 pb-20">
-          {/* Header Action Bar */}
           <div className="bg-white p-6 rounded-2xl shadow-sm border flex justify-between items-center">
             <div className="flex items-center gap-4">
               <button
@@ -137,9 +140,7 @@ export default function CurrentReservations() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Left Column: Info Cards */}
             <div className="lg:col-span-1 space-y-6">
-              {/* Customer Info */}
               <div className="bg-white p-6 rounded-2xl shadow-sm border">
                 <h3 className="text-lg font-bold border-b pb-4 mb-4 flex items-center gap-2 text-gray-700">
                   <Package size={20} className="text-primary" /> Customer Information
@@ -147,7 +148,7 @@ export default function CurrentReservations() {
                 <div className="space-y-4">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-teal-50 rounded-full flex items-center justify-center text-primary">
-                      <Clipboard size={20} />
+                      <User size={20} />
                     </div>
                     <div>
                       <p className="text-xs text-gray-400 uppercase font-bold tracking-wider">Full Name</p>
@@ -175,7 +176,6 @@ export default function CurrentReservations() {
                 </div>
               </div>
 
-              {/* Reservation Info */}
               <div className="bg-white p-6 rounded-2xl shadow-sm border">
                 <h3 className="text-lg font-bold border-b pb-4 mb-4 flex items-center gap-2 text-gray-700">
                   <Info size={20} className="text-primary" /> Reservation Information
@@ -197,9 +197,7 @@ export default function CurrentReservations() {
               </div>
             </div>
 
-            {/* Right Column: Order Details */}
             <div className="lg:col-span-2 space-y-6">
-              {/* Medicines Ordered */}
               <div className="bg-white rounded-2xl shadow-sm border overflow-hidden">
                 <div className="p-6 border-b">
                   <h3 className="text-lg font-bold text-gray-700 flex items-center gap-2">
@@ -228,9 +226,7 @@ export default function CurrentReservations() {
                 </table>
               </div>
 
-              {/* Billing and Prescription */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Prescription */}
                 <div className="bg-white p-6 rounded-2xl shadow-sm border">
                   <h3 className="text-lg font-bold mb-4 text-gray-700">Prescription</h3>
                   <div className="aspect-video bg-gray-50 rounded-xl border-2 border-dashed border-gray-200 flex flex-col items-center justify-center text-gray-400">
@@ -243,7 +239,6 @@ export default function CurrentReservations() {
                   </div>
                 </div>
 
-                {/* Billing Breakdown */}
                 <div className="bg-white p-6 rounded-2xl shadow-sm border">
                   <h3 className="text-lg font-bold mb-4 text-gray-700 tracking-tight">Billing Breakdown</h3>
                   <div className="space-y-3">
@@ -269,17 +264,16 @@ export default function CurrentReservations() {
             </div>
           </div>
 
-          {/* Timeline Tracker */}
           <div className="bg-white p-10 rounded-2xl shadow-sm border">
             <h3 className="text-lg font-bold mb-8 text-gray-700 uppercase tracking-widest text-center">Timeline Tracker</h3>
-            <div className="flex items-center w-full max-w-4xl mx-auto">
+            <div className="flex items-center w-full max-w-4xl mx-auto overflow-x-auto pb-4">
               {['Pending', 'Confirmed', 'Ongoing', 'Ready', 'Collected'].map((step, i) => {
                 const currentIndex = statusCards.findIndex(c => c.status === selectedRes.status);
                 const isCompleted = i < currentIndex;
                 const isCurrent = i === currentIndex;
 
                 return (
-                  <div key={step} className="flex-1 flex items-center">
+                  <div key={step} className="flex-1 flex items-center min-w-[120px]">
                     <div className="relative">
                       <div className={`w-12 h-12 rounded-full border-4 flex items-center justify-center transition-all shadow-md
                             ${isCompleted ? 'bg-primary border-primary text-white' :
@@ -301,7 +295,6 @@ export default function CurrentReservations() {
             </div>
           </div>
 
-          {/* Footer Navigation */}
           <div className="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-md border-t p-4 flex justify-between px-12 z-50">
             <button
               onClick={() => setViewMode('list')}
@@ -328,7 +321,6 @@ export default function CurrentReservations() {
           <p className="text-2xl text-gray-500 mt-2 font-medium">Manage and process all incoming medicine reservations</p>
         </div>
 
-        {/* 6 Tabbed Cards */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
           {statusCards.map((card) => {
             const Icon = card.icon;
@@ -357,7 +349,6 @@ export default function CurrentReservations() {
           })}
         </div>
 
-        {/* Table Container */}
         <div className="bg-white rounded-[40px] shadow-3xl border border-gray-100 overflow-hidden min-h-[500px]">
           <div className="p-12 border-b bg-gradient-to-br from-teal-500/[0.03] to-primary/[0.02]">
             <h2 className="text-3xl font-black text-gray-800 flex items-center gap-4">
@@ -392,10 +383,10 @@ export default function CurrentReservations() {
                 ) : (
                   reservations.map((res) => (
                     <tr key={res.id} className="hover:bg-teal-50/30 transition-all duration-300 group">
-                      <td className="px-8 py-8 font-black text-gray-800 tracking-tighter">#{res.id}</td>
+                      <td className="px-8 py-8 font-black text-gray-800 tracking-tighter">#{res.id.substring(0, 8)}</td>
                       <td className="px-8 py-8">
                         <p className="font-extrabold text-lg text-gray-800 underline decoration-primary/20">{res.civilian?.name || 'Unknown'}</p>
-                        <p className="text-xs font-bold text-gray-400 flex items-center gap-1 mt-1"><MapPin size={10} /> {res.civilian?.email || 'N/A'}</p>
+                        <p className="text-xs font-bold text-gray-400 flex items-center gap-1 mt-1"><User size={10} /> {res.civilian?.email || 'N/A'}</p>
                       </td>
                       <td className="px-8 py-8">
                         <div className="flex flex-col gap-1">
@@ -440,5 +431,5 @@ export default function CurrentReservations() {
         </div>
       </div>
     </Layout>
-  )
+  );
 }

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import Layout from '../../components/pharmacy/Layout';
+import api from '../../services/api';
 import {
     User, Mail, Phone, MapPin, BadgeCheck,
     Clock, Calendar, FileText, Send, History,
@@ -27,18 +28,21 @@ export default function AdminCenter() {
     const fetchData = async () => {
         setLoading(true);
         try {
+            const token = localStorage.getItem('pharmacyToken');
+            const headers = { 'Authorization': `Bearer ${token}` };
+
             const [profileRes, historyRes] = await Promise.all([
-                fetch('http://localhost:8080/api/pharmacy/profile'),
-                fetch('http://localhost:8080/api/pharmacy/reports/history')
+                api.get('/pharmacy/profile'),
+                api.get('/pharmacy/reports/history')
             ]);
 
-            if (profileRes.ok) setProfile(await profileRes.json());
-            if (historyRes.ok) setHistory(await historyRes.json());
+            if (profileRes.data) setProfile(profileRes.data);
+            if (historyRes.data) setHistory(historyRes.data);
         } catch (error) {
             console.error('Error fetching data:', error);
             // Set empty profile instead of mock data
             setProfile({
-                name: 'Loading...',
+                name: 'Loading Error',
                 licenseNumber: '-',
                 registrationNo: '-',
                 ownerName: '-',
@@ -66,12 +70,8 @@ export default function AdminCenter() {
         e.preventDefault();
         setSubmitting(true);
         try {
-            const response = await fetch('http://localhost:8080/api/pharmacy/reports', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
-            });
-            if (response.ok) {
+            const response = await api.post('/pharmacy/reports', formData);
+            if (response.status === 200 || response.status === 201) {
                 alert('Report submitted successfully!');
                 setFormData({
                     type: 'Report',
@@ -81,11 +81,11 @@ export default function AdminCenter() {
                     description: ''
                 });
                 // Refresh history
-                const historyRes = await fetch('http://localhost:8080/api/pharmacy/reports/history');
-                if (historyRes.ok) setHistory(await historyRes.json());
+                const historyRes = await api.get('/pharmacy/reports/history');
+                if (historyRes.data) setHistory(historyRes.data);
             }
         } catch (error) {
-            alert('Failed to submit report');
+            alert(error.response?.data?.message || 'Failed to submit report');
         } finally {
             setSubmitting(false);
         }

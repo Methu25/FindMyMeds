@@ -84,4 +84,51 @@ public class PharmacyProfileService {
 
         pharmacyProfileRepository.save(profile);
     }
+
+    @Transactional
+    public String uploadLogo(Long pharmacyId, org.springframework.web.multipart.MultipartFile file) {
+        if (pharmacyId == null) {
+            throw new IllegalArgumentException("Pharmacy ID cannot be null");
+        }
+
+        try {
+            // Create uploads directory if not exists
+            String uploadDir = "uploads/pharmacy-logos/";
+            java.nio.file.Path uploadPath = java.nio.file.Paths.get(uploadDir);
+            if (!java.nio.file.Files.exists(uploadPath)) {
+                java.nio.file.Files.createDirectories(uploadPath);
+            }
+
+            // Save file
+            String originalFilename = file.getOriginalFilename();
+            String extension = originalFilename != null && originalFilename.contains(".")
+                    ? originalFilename.substring(originalFilename.lastIndexOf("."))
+                    : ".jpg";
+
+            String filename = "pharmacy_" + pharmacyId + "_logo_" + System.currentTimeMillis() + extension;
+            java.nio.file.Path filePath = uploadPath.resolve(filename);
+
+            java.nio.file.Files.copy(file.getInputStream(), filePath,
+                    java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+
+            // Update profile
+            PharmacyProfile profile = pharmacyProfileRepository.findByPharmacyId(pharmacyId)
+                    .orElse(new PharmacyProfile());
+
+            if (profile.getPharmacy() == null) {
+                Pharmacy pharmacy = pharmacyRepository.findById(pharmacyId)
+                        .orElseThrow(() -> new RuntimeException("Pharmacy not found"));
+                profile.setPharmacy(pharmacy);
+            }
+
+            String logoUrl = "/uploads/pharmacy-logos/" + filename;
+            profile.setLogoPath(logoUrl);
+            pharmacyProfileRepository.save(profile);
+
+            return logoUrl;
+
+        } catch (java.io.IOException e) {
+            throw new RuntimeException("Failed to upload logo", e);
+        }
+    }
 }

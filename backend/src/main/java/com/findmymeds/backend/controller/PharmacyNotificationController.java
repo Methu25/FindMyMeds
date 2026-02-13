@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/pharmacy/notifications")
-@CrossOrigin(origins = { "http://localhost:5173", "http://localhost:5174" }, allowCredentials = "true")
+
 @lombok.RequiredArgsConstructor
 public class PharmacyNotificationController {
 

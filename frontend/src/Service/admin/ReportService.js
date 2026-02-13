@@ -1,7 +1,7 @@
 // Service/Admin/ReportService.js
 import axios from "axios";
 
-const API_BASE_URL = "http://localhost:8080/admin/pharmacy-reports";
+const API_BASE_URL = "http://localhost:8081/admin/pharmacy-reports";
 
 const normalizeReport = (report) => ({
     id: report?.id,

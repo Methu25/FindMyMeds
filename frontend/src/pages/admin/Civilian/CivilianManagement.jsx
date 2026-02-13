@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Search, RefreshCcw, Filter, Eye, ChevronLeft, ChevronRight, Calendar } from 'lucide-react';
 import { fetchCivilianMetrics, fetchCivilians } from "../../../api/civilianAdminApi";
-import { setBasicAuth } from "../../../api/adminClient";
+
 import MetricCard from "../../../components/admin/HomeMetricCard";
 
 const MOCK_CIVILIANS = [
@@ -42,11 +42,11 @@ export default function CivilianManagement() {
   async function loadTable() {
     setLoading(true);
     try {
-      const data = await fetchCivilians({ 
-        status: status || null, 
-        search: search || null, 
-        page: pageInfo.page, 
-        size: pageInfo.size 
+      const data = await fetchCivilians({
+        status: status || null,
+        search: search || null,
+        page: pageInfo.page,
+        size: pageInfo.size
       });
       setRows(data.content);
       setPageInfo({
@@ -77,8 +77,8 @@ export default function CivilianManagement() {
         <MetricCard label="Temp Banned" value={metrics.tempBannedCivilians} borderColor="#f59e0b" />
         <MetricCard label="Perm Banned" value={metrics.permanentBannedCivilians} borderColor="#ef4444" />
         <div onClick={() => navigate("/admin/civilian-reports")} className="bg-[#FF7A45] rounded-xl p-4 text-white flex flex-col justify-between h-[110px] shadow-sm cursor-pointer hover:brightness-95 transition-all">
-             <span className="text-[10px] font-bold uppercase opacity-80">Reports & Inquiries</span>
-             <span className="text-xl font-extrabold uppercase">View</span>
+          <span className="text-[10px] font-bold uppercase opacity-80">Reports & Inquiries</span>
+          <span className="text-xl font-extrabold uppercase">View</span>
         </div>
       </div>
 
@@ -87,19 +87,19 @@ export default function CivilianManagement() {
         <div className="flex flex-1 gap-3 items-center">
           <div className="relative flex-1 max-w-md">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
-            <input 
-              type="text" 
+            <input
+              type="text"
               value={search}
               onChange={(e) => {
                 setSearch(e.target.value);
                 setPageInfo(prev => ({ ...prev, page: 0 })); // Reset page on search
               }}
-              placeholder="Search name / email / NIC..." 
+              placeholder="Search name / email / NIC..."
               className="w-full pl-9 pr-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:ring-1 focus:ring-[#2FA4A9] outline-none text-xs"
             />
           </div>
-          <select 
-            value={status} 
+          <select
+            value={status}
             onChange={(e) => {
               setStatus(e.target.value);
               setPageInfo(prev => ({ ...prev, page: 0 })); // Reset page on status change
@@ -116,7 +116,7 @@ export default function CivilianManagement() {
           <button onClick={loadTable} className="flex items-center gap-2 px-5 py-2.5 bg-[#2FA4A9] text-white rounded-lg font-bold text-xs hover:bg-[#268e93] transition-all shadow-sm">
             <Filter size={14} /> Apply
           </button>
-          <button onClick={() => { setSearch(""); setStatus(""); }} className="p-2.5 text-slate-400 hover:bg-slate-50 rounded-lg border border-slate-200"><RefreshCcw size={16}/></button>
+          <button onClick={() => { setSearch(""); setStatus(""); }} className="p-2.5 text-slate-400 hover:bg-slate-50 rounded-lg border border-slate-200"><RefreshCcw size={16} /></button>
         </div>
       </div>
 
@@ -142,9 +142,9 @@ export default function CivilianManagement() {
             </thead>
             <tbody className="divide-y divide-slate-50">
               {loading ? (
-                 <tr><td colSpan="7" className="p-8 text-center text-slate-400 text-xs">Loading records...</td></tr>
+                <tr><td colSpan="7" className="p-8 text-center text-slate-400 text-xs">Loading records...</td></tr>
               ) : rows.length === 0 ? (
-                 <tr><td colSpan="7" className="p-8 text-center text-slate-400 text-xs">No civilians found.</td></tr>
+                <tr><td colSpan="7" className="p-8 text-center text-slate-400 text-xs">No civilians found.</td></tr>
               ) : rows.map((r) => (
                 <tr key={r.id} className="hover:bg-slate-50/50 transition-colors">
                   <td className="px-4 py-4 font-bold text-slate-400 text-xs">#{r.id}</td>
@@ -171,7 +171,7 @@ export default function CivilianManagement() {
                     </div>
                   </td>
                   <td className="px-4 py-4 text-right">
-                    <button 
+                    <button
                       onClick={() => navigate(`/admin/civilians/${r.id}`)}
                       className="px-3 py-1.5 border border-slate-200 text-[#2FA4A9] text-[10px] font-extrabold uppercase rounded-lg hover:bg-[#2FA4A9] hover:text-white transition-all shadow-sm"
                     >
@@ -190,19 +190,19 @@ export default function CivilianManagement() {
             Page {pageInfo.page + 1} of {pageInfo.totalPages || 1}
           </span>
           <div className="flex gap-2">
-            <button 
+            <button
               onClick={() => handlePageChange(pageInfo.page - 1)}
               disabled={pageInfo.page === 0}
               className="p-2 rounded-lg border border-slate-200 bg-white hover:text-[#2FA4A9] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <ChevronLeft size={16}/>
+              <ChevronLeft size={16} />
             </button>
-            <button 
+            <button
               onClick={() => handlePageChange(pageInfo.page + 1)}
               disabled={pageInfo.page >= pageInfo.totalPages - 1}
               className="p-2 rounded-lg border border-slate-200 bg-white hover:text-[#2FA4A9] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <ChevronRight size={16}/>
+              <ChevronRight size={16} />
             </button>
           </div>
         </div>

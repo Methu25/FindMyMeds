@@ -8,10 +8,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.security.access.prepost.PreAuthorize;
+
 @RestController
 @RequestMapping("/api/pharmacy/inventory")
-@CrossOrigin(origins = { "http://localhost:5173", "http://localhost:5174" }, allowCredentials = "true")
 @lombok.RequiredArgsConstructor
+@PreAuthorize("hasRole('PHARMACY')")
 public class PharmacyMedicineInventoryController {
 
     private final PharmacyMedicineInventoryService inventoryService;

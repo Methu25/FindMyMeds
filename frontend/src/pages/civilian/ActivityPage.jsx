@@ -17,7 +17,7 @@ function ActivityPage() {
 
     const fetchReservations = async () => {
         try {
-            const response = await fetch('http://localhost:8080/api/reservations');
+            const response = await fetch('http://localhost:8081/api/reservations');
             if (response.ok) {
                 const data = await response.json();
 
