@@ -15,7 +15,7 @@ export default function ReservationHistory() {
   const fetchHistory = async () => {
     try {
       const token = localStorage.getItem('pharmacyToken');
-      const response = await fetch('http://localhost:8081/api/pharmacy/reservations/history', {
+      const response = await fetch('http://localhost:8080/api/pharmacy/reservations/history', {
         headers: {
           'Authorization': `Bearer ${token}`
         }

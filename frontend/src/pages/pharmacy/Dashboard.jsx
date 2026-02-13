@@ -30,7 +30,7 @@ export default function Dashboard() {
         const fetchDashboardData = async () => {
             try {
                 const token = localStorage.getItem('pharmacyToken');
-                const metricsRes = await fetch('http://localhost:8081/api/pharmacy/dashboard/metrics', {
+                const metricsRes = await fetch('http://localhost:8080/api/pharmacy/dashboard/metrics', {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -52,7 +52,7 @@ export default function Dashboard() {
                 }
 
                 // Fetch inventory metrics for stock health calculation
-                const inventoryRes = await fetch('http://localhost:8081/api/pharmacy/inventory/metrics', {
+                const inventoryRes = await fetch('http://localhost:8080/api/pharmacy/inventory/metrics', {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -71,7 +71,7 @@ export default function Dashboard() {
 
                 // Fetch recent activities
                 try {
-                    const activitiesRes = await fetch('http://localhost:8081/api/pharmacy/activities/recent', {
+                    const activitiesRes = await fetch('http://localhost:8080/api/pharmacy/activities/recent', {
                         headers: {
                             'Authorization': `Bearer ${token}`
                         }

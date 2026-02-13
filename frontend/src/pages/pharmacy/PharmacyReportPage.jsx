@@ -41,7 +41,7 @@ export default function PharmacyReportPage() {
         const fetchAnalytics = async () => {
             try {
                 const token = localStorage.getItem('pharmacyToken');
-                const response = await fetch('http://localhost:8081/api/pharmacy/data-summary', {
+                const response = await fetch('http://localhost:8080/api/pharmacy/data-summary', {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }

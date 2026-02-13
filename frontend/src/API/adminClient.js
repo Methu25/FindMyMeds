@@ -8,10 +8,23 @@ const adminClient = axios.create({
   timeout: 20000,
 });
 
-// Basic Auth helper (for your Spring Security generated password)
-export function setBasicAuth(username, password) {
-  const token = btoa(`${username}:${password}`);
-  adminClient.defaults.headers.common["Authorization"] = `Basic ${token}`;
-}
+// Add a request interceptor to attach the JWT token
+adminClient.interceptors.request.use(
+  (config) => {
+    // Try to get token from various possible storage keys
+    const token =
+      localStorage.getItem("token") ||
+      localStorage.getItem("pharmacyToken") ||
+      localStorage.getItem("adminToken");
+
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
 export default adminClient;

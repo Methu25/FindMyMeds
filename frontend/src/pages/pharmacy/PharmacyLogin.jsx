@@ -24,8 +24,8 @@ const PharmacyLogin = () => {
         setError('');
 
         try {
-            console.log('Attempting login to:', 'http://localhost:8081/api/pharmacy/auth/login');
-            const response = await fetch('http://localhost:8081/api/pharmacy/auth/login', {
+            console.log('Attempting login to:', 'http://localhost:8080/api/pharmacy/auth/login');
+            const response = await fetch('http://localhost:8080/api/pharmacy/auth/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -52,7 +52,7 @@ const PharmacyLogin = () => {
             }
         } catch (err) {
             console.error('Login request failed:', err);
-            setError('Connection error: Please check if the backend is running on port 8081.');
+            setError('Connection error: Please check if the backend is running on port 8080.');
         } finally {
             setLoading(false);
         }

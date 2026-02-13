@@ -24,7 +24,7 @@ export default function MedicineDetails() {
     const fetchDetails = async () => {
         try {
             const token = localStorage.getItem('pharmacyToken');
-            const res = await fetch(`http://localhost:8081/api/pharmacy/inventory/${id}`, {
+            const res = await fetch(`http://localhost:8080/api/pharmacy/inventory/${id}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -46,7 +46,7 @@ export default function MedicineDetails() {
     const handleAction = async () => {
         setActionLoading(true);
         try {
-            let url = `http://localhost:8081/api/pharmacy/inventory/${medicine.inventoryId}`;
+            let url = `http://localhost:8080/api/pharmacy/inventory/${medicine.inventoryId}`;
             let method = 'PATCH';
             let queryParams = '';
 

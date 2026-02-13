@@ -23,7 +23,7 @@ export default function MedicineInventory() {
     // Fetch Metrics
     useEffect(() => {
         const token = localStorage.getItem('pharmacyToken');
-        fetch('http://localhost:8081/api/pharmacy/inventory/metrics', {
+        fetch('http://localhost:8080/api/pharmacy/inventory/metrics', {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -44,7 +44,7 @@ export default function MedicineInventory() {
             filter: activeFilter
         })
 
-        fetch(`http://localhost:8081/api/pharmacy/inventory?${queryParams}`, {
+        fetch(`http://localhost:8080/api/pharmacy/inventory?${queryParams}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }

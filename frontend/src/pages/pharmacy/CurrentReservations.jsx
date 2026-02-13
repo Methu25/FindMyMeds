@@ -34,7 +34,7 @@ export default function CurrentReservations() {
 
   const fetchCounts = async () => {
     try {
-      const response = await fetch('http://localhost:8081/api/pharmacy/reservations/current/counts', { headers: getHeaders() })
+      const response = await fetch('http://localhost:8080/api/pharmacy/reservations/current/counts', { headers: getHeaders() })
       if (response.ok) {
         const data = await response.json()
         setCounts(data)
@@ -45,7 +45,7 @@ export default function CurrentReservations() {
   const fetchReservations = async () => {
     setLoading(true)
     try {
-      const response = await fetch(`http://localhost:8081/api/pharmacy/reservations/current?status=${activeStatus}&page=0&size=10`, { headers: getHeaders() })
+      const response = await fetch(`http://localhost:8080/api/pharmacy/reservations/current?status=${activeStatus}&page=0&size=10`, { headers: getHeaders() })
       if (response.ok) {
         const data = await response.json();
         setReservations(data);
@@ -59,7 +59,7 @@ export default function CurrentReservations() {
 
   const handleUpdateStatus = async (id, status) => {
     try {
-      const response = await fetch(`http://localhost:8081/api/pharmacy/reservations/current/${id}/status?status=${status}`, {
+      const response = await fetch(`http://localhost:8080/api/pharmacy/reservations/current/${id}/status?status=${status}`, {
         method: 'PATCH',
         headers: getHeaders()
       });
@@ -76,7 +76,7 @@ export default function CurrentReservations() {
 
   const handleViewDetails = async (id) => {
     try {
-      const response = await fetch(`http://localhost:8081/api/pharmacy/reservations/current/${id}`, { headers: getHeaders() })
+      const response = await fetch(`http://localhost:8080/api/pharmacy/reservations/current/${id}`, { headers: getHeaders() })
       if (response.ok) {
         setSelectedRes(await response.json())
         setViewMode('details')
