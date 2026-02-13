@@ -64,7 +64,7 @@ const CivilianReservation = () => {
                     longitude: p.longitude,
                     available: p.availableQuantity,
                     address: p.location,
-                    price: 0 // Placeholder
+                    price: p.price // Real price from backend
                 }));
                 setPharmacies(mapped);
             }
@@ -219,7 +219,7 @@ const CivilianReservation = () => {
                                 <span className={`text-xs px-2 py-1 rounded-full ${pharmacy.available >= quantity ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
                                     {pharmacy.available} in stock
                                 </span>
-                                {pharmacy.price > 0 && <span className="text-sm font-bold text-slate-700">${pharmacy.price}</span>}
+                                {pharmacy.price && <span className="text-sm font-bold text-slate-700">${pharmacy.price}</span>}
                             </div>
                         </div>
                     ))}

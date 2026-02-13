@@ -4,6 +4,21 @@ import { MapPin, BookOpen, MessageCircle, Bell, Flame } from 'lucide-react';
 
 const HomePage = () => {
   const navigate = useNavigate();
+  const [stats, setStats] = React.useState({
+    pharmaciesNearby: 0,
+    activeReservations: 0,
+    pendingInquiries: 0
+  });
+
+  // Mock ID for now, replace with Auth Context later
+  const civilianId = 1;
+
+  React.useEffect(() => {
+    fetch(`http://localhost:8080/api/civilians/${civilianId}/dashboard-stats`)
+      .then(res => res.json())
+      .then(data => setStats(data))
+      .catch(err => console.error("Failed to fetch dashboard stats", err));
+  }, []);
 
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-8">
@@ -42,7 +57,7 @@ const HomePage = () => {
               </div>
             </div>
             <div>
-              <div className="text-4xl font-bold text-slate-900">12</div>
+              <div className="text-4xl font-bold text-slate-900">{stats.pharmaciesNearby}</div>
             </div>
             <div className="text-sm font-medium text-emerald-600 flex items-center gap-1">
               View Map <span>→</span>
@@ -75,7 +90,7 @@ const HomePage = () => {
                 </div>
               </div>
               <div>
-                <div className="text-2xl font-bold text-slate-900">3</div>
+                <div className="text-2xl font-bold text-slate-900">{stats.pendingInquiries}</div>
                 <p className="text-xs text-gray-500">Pending responses</p>
               </div>
             </div>

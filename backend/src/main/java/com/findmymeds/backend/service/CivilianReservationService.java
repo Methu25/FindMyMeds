@@ -29,6 +29,9 @@ public class CivilianReservationService {
     private CivilianRepository civilianRepository;
 
     @Autowired
+    private NotificationRepository notificationRepository;
+
+    @Autowired
     private ReservationRepository reservationRepository;
 
     // Step 1: Search Medicines
@@ -51,8 +54,37 @@ public class CivilianReservationService {
             map.put("location", p.getDistrict() != null ? p.getDistrict() : "Unknown");
             map.put("latitude", p.getLatitude() != null ? p.getLatitude() : 0.0);
             map.put("longitude", p.getLongitude() != null ? p.getLongitude() : 0.0);
+            map.put("price", inv.getPrice());
             return map;
         }).collect(Collectors.toList());
+    }
+
+    public Map<String, Object> getDashboardStats(Long civilianId) {
+        Map<String, Object> stats = new java.util.HashMap<>();
+        // Pharmacies Nearby (For now, just count all active pharmacies)
+        long pharmaciesCount = pharmacyRepository.count();
+        stats.put("pharmaciesNearby", pharmaciesCount);
+
+        // My Inquiries (Pending) - Placeholder for now
+        stats.put("pendingInquiries", 0);
+
+        // Notifications (Unread provided by NotificationRepository or derived)
+        // For simplicity, we can fetch all and filter or add a count method.
+        // Let's just return a mock count if the repo method isn't ready, but we added
+        // one.
+        // Actually, let's use the repo to count unread if possible, or just return 0 if
+        // not Critical.
+        // The NotificationRepository has countUnreadByTypes but that is for Pharmacy.
+        // We will just use 0 for now or fetch all.
+        stats.put("activeReservations",
+                reservationRepository.countByCivilianIdAndStatus(civilianId, ReservationStatus.PENDING));
+
+        return stats;
+    }
+
+    public List<Notification> getNotifications(Long civilianId) {
+        return notificationRepository.findByUserIdAndUserTypeOrderByCreatedAtDesc(civilianId,
+                com.findmymeds.backend.model.enums.UserType.CIVILIAN);
     }
 
     // Step 5: Confirm Reservation

@@ -20,4 +20,17 @@ public class CivilianController {
         // In a real app, you might want pagination here
         return civilianRepository.findAll();
     }
+
+    @Autowired
+    private com.findmymeds.backend.service.CivilianReservationService civilianReservationService;
+
+    @GetMapping("/{id}/dashboard-stats")
+    public org.springframework.http.ResponseEntity<?> getDashboardStats(@PathVariable Long id) {
+        return org.springframework.http.ResponseEntity.ok(civilianReservationService.getDashboardStats(id));
+    }
+
+    @GetMapping("/{id}/notifications")
+    public org.springframework.http.ResponseEntity<?> getNotifications(@PathVariable Long id) {
+        return org.springframework.http.ResponseEntity.ok(civilianReservationService.getNotifications(id));
+    }
 }
