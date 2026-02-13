@@ -7,6 +7,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 // Landing Page 
 import Home from './pages/Home';
 import Login from './pages/Login';
+import CivilianRegistration from './pages/civilian/CivilianRegistration';
 
 // Admin Pages 
 import AdminDashboard from './pages/admin/AdminDashboard';
@@ -85,6 +86,11 @@ function App() {
           {/* Landing page */}
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<CivilianRegistration />} />
+          <Route path="/register" element={<CivilianRegistration />} />
+          {/* <Route path="/pharmacy-login" element={<PharmacyLogin />} /> - Deprecated */}
+          <Route path="/pharmacy-signup" element={<PharmacySignup />} />
+          <Route path="/pharmacy-signup" element={<PharmacySignup />} />
 
           {/* Hidden Admin Login */}
           <Route path="/admin/u/login" element={<AdminLogin />} />

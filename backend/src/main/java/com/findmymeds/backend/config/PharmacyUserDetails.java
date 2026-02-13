@@ -51,6 +51,7 @@ public class PharmacyUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return pharmacy.getStatus() == PharmacyStatus.ACTIVE && !Boolean.TRUE.equals(pharmacy.getIsDeleted());
+        return (pharmacy.getStatus() == PharmacyStatus.ACTIVE || pharmacy.getStatus() == PharmacyStatus.APPROVED)
+                && !Boolean.TRUE.equals(pharmacy.getIsDeleted());
     }
 }

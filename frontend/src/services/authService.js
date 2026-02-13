@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:8081/api/v1';
+const API_URL = 'http://localhost:8080/api/v1';
 
 export const authService = {
     // Civilian Login
@@ -21,10 +21,10 @@ export const authService = {
     },
 
     // Pharmacy Login
-    loginPharmacy: async (licenseNumber, password) => {
+    loginPharmacy: async (email, password) => {
         try {
-            const response = await axios.post(`${API_URL}/pharmacy/auth/login`, {
-                licenseNumber,
+            const response = await axios.post(`http://localhost:8080/api/v1/pharmacy/auth/login`, {
+                email,
                 password
             });
             if (response.data.token) {

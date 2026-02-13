@@ -54,8 +54,8 @@ const Login = () => {
     switch (activeTab) {
       case 'pharmacy':
         return {
-          idLabel: 'License ID',
-          idPlaceholder: 'Enter your pharmacy license ID'
+          idLabel: 'Email Address',
+          idPlaceholder: 'pharmacy@example.com'
         };
       default: // civilian
         return {
@@ -131,10 +131,10 @@ const Login = () => {
               <label className="block text-xs font-bold text-gray-700 mb-2 uppercase tracking-wide group-focus-within:text-[#2FA4A9] transition-colors">{config.idLabel}</label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400 group-focus-within:text-[#2FA4A9] transition-colors">
-                  {activeTab === 'civilian' ? <Mail size={18} /> : <FileText size={18} />}
+                  <Mail size={18} />
                 </div>
                 <input
-                  type={activeTab === 'civilian' ? 'email' : 'text'}
+                  type="email"
                   name="identifier"
                   value={formData.identifier}
                   onChange={handleInputChange}
@@ -177,8 +177,12 @@ const Login = () => {
             <div className="flex items-center justify-center mt-6">
               <p className="text-xs font-medium text-gray-500">
                 Don't have an account?{' '}
-                <button type="button" className="font-bold text-[#2FA4A9] hover:text-[#1E8A8E] hover:underline transition-colors">
-                  Sign up for free
+                <button
+                  type="button"
+                  onClick={() => navigate(activeTab === 'pharmacy' ? '/pharmacy-signup' : '/register')}
+                  className="font-bold text-[#2FA4A9] hover:text-[#1E8A8E] hover:underline transition-colors"
+                >
+                  {activeTab === 'pharmacy' ? 'Register the Pharmacy' : 'Sign up for free'}
                 </button>
               </p>
             </div>

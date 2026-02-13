@@ -20,6 +20,37 @@ public class CivilianAuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 
+    public AuthenticationResponse register(com.findmymeds.backend.dto.CivilianSignupRequest request) { // Use DTO
+        if (civilianRepository.findByEmail(request.getEmail()).isPresent()) {
+            throw new RuntimeException("Email already taken");
+        }
+        // Check NIC?
+        if (civilianRepository.findByNicNumber(request.getNicNumber()).isPresent()) {
+            throw new RuntimeException("NIC already registered");
+        }
+
+        var civilian = new Civilian();
+        civilian.setFullName(request.getFullName());
+        civilian.setEmail(request.getEmail());
+        civilian.setPhone(request.getPhone());
+        civilian.setNicNumber(request.getNicNumber());
+        civilian.setPasswordHash(passwordEncoder.encode(request.getPassword()));
+        civilian.setAccountStatus(com.findmymeds.backend.model.enums.AccountStatus.ACTIVE);
+        civilian.setCreatedAt(java.time.LocalDateTime.now());
+
+        // Generate masked fields for VIVO/Privacy protocols if needed or leave null
+        // civilian.setMaskedEmail(...)
+
+        civilianRepository.save(civilian);
+
+        CivilianUserDetails userDetails = new CivilianUserDetails(civilian);
+        String token = jwtService.generateToken(userDetails);
+
+        return AuthenticationResponse.builder()
+                .token(token)
+                .build();
+    }
+
     public AuthenticationResponse login(LoginRequest request) {
         Civilian civilian = civilianRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException("Civilian not found"));

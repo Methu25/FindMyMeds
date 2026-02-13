@@ -57,11 +57,11 @@ const Home = () => {
         </button>
 
         {/* Role Cards */}
-        <div className="mt-24 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl px-6 w-full text-left">
+        <div className="mt-24 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl px-6 w-full text-left">
 
           {/* Civilian */}
           <div
-            onClick={() => navigate('/civilian')}
+            onClick={() => navigate('/login')}
             className="cursor-pointer p-8 bg-white/60 backdrop-blur-xl border border-white/20 rounded-3xl shadow-lg shadow-indigo-100 hover:shadow-indigo-200 hover:-translate-y-1 transition-all"
           >
             <div className="w-12 h-12 bg-blue-100 rounded-2xl flex items-center justify-center text-blue-600 mb-6">
@@ -75,7 +75,7 @@ const Home = () => {
 
           {/* Pharmacy */}
           <div
-            onClick={() => navigate('/pharmacy-login')}
+            onClick={() => navigate('/login')}
             className="cursor-pointer p-8 bg-white/60 backdrop-blur-xl border border-white/20 rounded-3xl shadow-lg shadow-indigo-100 hover:shadow-indigo-200 hover:-translate-y-1 transition-all"
           >
             <div className="w-12 h-12 bg-teal-100 rounded-2xl flex items-center justify-center text-teal-600 mb-6">
@@ -84,20 +84,6 @@ const Home = () => {
             <h3 className="text-xl font-bold text-gray-900 mb-2">For Pharmacies</h3>
             <p className="text-gray-500">
               Manage inventory, process reservations, and ensure stock visibility.
-            </p>
-          </div>
-
-          {/* Admin */}
-          <div
-            onClick={() => navigate('/admin')}
-            className="cursor-pointer p-8 bg-white/60 backdrop-blur-xl border border-white/20 rounded-3xl shadow-lg shadow-indigo-100 hover:shadow-indigo-200 hover:-translate-y-1 transition-all"
-          >
-            <div className="w-12 h-12 bg-purple-100 rounded-2xl flex items-center justify-center text-purple-600 mb-6">
-              <ShieldCheck size={24} />
-            </div>
-            <h3 className="text-xl font-bold text-gray-900 mb-2">For Admins</h3>
-            <p className="text-gray-500">
-              Oversee the ecosystem, verify users, and manage the registry.
             </p>
           </div>
 

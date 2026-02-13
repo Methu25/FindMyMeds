@@ -17,9 +17,20 @@ public class PharmacyAuthController {
 
     private final PharmacyAuthService service;
 
+    @PostMapping("/signup")
+    public ResponseEntity<AuthenticationResponse> signup(
+            @RequestBody com.findmymeds.backend.dto.PharmacySignupRequest request) {
+        return ResponseEntity.ok(service.register(request));
+    }
+
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> login(
             @RequestBody PharmacyLoginRequestDto request) {
-        return ResponseEntity.ok(service.login(request));
+        try {
+            return ResponseEntity.ok(service.login(request));
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
     }
 }

@@ -17,6 +17,12 @@ public class CivilianAuthController {
 
     private final CivilianAuthService service;
 
+    @PostMapping("/register")
+    public ResponseEntity<AuthenticationResponse> register(
+            @RequestBody com.findmymeds.backend.dto.CivilianSignupRequest request) {
+        return ResponseEntity.ok(service.register(request));
+    }
+
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> login(
             @RequestBody LoginRequest request) {

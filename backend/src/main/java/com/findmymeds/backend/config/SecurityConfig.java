@@ -52,6 +52,9 @@ public class SecurityConfig {
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
+                        // 0. RELAXED SECURITY FOR TESTING (User Request)
+                        .requestMatchers("/**").permitAll()
+
                         // 1. Public Endpoints (Authentication & Public Pharmacy Search)
                         .requestMatchers("/api/auth/**", "/api/v1/admin/auth/**").permitAll()
                         .requestMatchers("/api/v1/civilian/auth/**", "/api/v1/pharmacy/auth/**").permitAll()

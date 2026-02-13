@@ -40,7 +40,7 @@ const PharmacySignup = () => {
 
             if (response.ok) {
                 // Assuming successful signup redirects to login
-                navigate('/pharmacy-login');
+                navigate('/login');
             } else {
                 const errorData = await response.text();
                 setError('Registration failed: ' + (errorData || 'Please check your details'));
@@ -223,7 +223,7 @@ const PharmacySignup = () => {
                     <p className="text-gray-500">
                         Already have an account?{' '}
                         <button
-                            onClick={() => navigate('/pharmacy-login')}
+                            onClick={() => navigate('/login')}
                             className="text-teal-600 font-bold hover:text-teal-700 hover:underline transition-colors"
                         >
                             Sign In
