@@ -3,11 +3,15 @@ package com.findmymeds.backend.dto;
 import com.findmymeds.backend.model.enums.AccountStatus;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class AdminCivilianDetailsDTO {
 
     private Long id;

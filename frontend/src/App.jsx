@@ -55,6 +55,10 @@ import ActivityPage from './pages/civilian/ActivityPage';
 import FindPharmacy from './pages/civilian/FindPharmacy';
 import ReservationPage from './pages/civilian/ReservationPage';
 
+import CivilianReservation from './pages/civilian/CivilianReservation';
+import HomePage from './pages/civilian/HomePage';
+import NotificationPage from './pages/civilian/NotificationPage';
+
 import { NotificationProvider } from './context/NotificationContext';
 import { ToastProvider } from './context/ToastContext';
 
@@ -162,10 +166,13 @@ function App() {
 
           {/* Civilian Routes */}
           <Route path="/civilian" element={<CivilianLayout />}>
-            <Route index element={<Navigate to="activity" replace />} />
+            <Route index element={<Navigate to="home" replace />} />
+            <Route path="home" element={<HomePage />} />
+            <Route path="dashboard" element={<ActivityPage />} />
             <Route path="activity" element={<ActivityPage />} />
             <Route path="find-pharmacy" element={<FindPharmacy />} />
-            <Route path="reservation" element={<ReservationPage />} />
+            <Route path="reservation" element={<CivilianReservation />} />
+            <Route path="notifications" element={<NotificationPage />} />
           </Route>
 
           {/* Fallback */}

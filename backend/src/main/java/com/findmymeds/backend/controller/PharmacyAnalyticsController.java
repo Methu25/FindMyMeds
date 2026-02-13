@@ -15,6 +15,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 @RequiredArgsConstructor
 public class PharmacyAnalyticsController {
 
+    // Controller to fetch pharmacy analytics data
+
     private final PharmacyAnalyticsService analyticsService;
 
     private Long getCurrentPharmacyId() {

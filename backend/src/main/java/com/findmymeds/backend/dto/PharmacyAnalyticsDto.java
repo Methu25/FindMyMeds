@@ -11,6 +11,7 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PharmacyAnalyticsDto {
+    // Data Transfer Object for Analytics
     private double totalRevenue;
     private Map<String, Long> reservationStatusCounts;
     private Map<String, Long> inventoryStatusCounts;

@@ -26,4 +26,7 @@ public interface MedicineRepository extends JpaRepository<Medicine, Long>,
 
     // Basic fetches
     Optional<Medicine> findByIdAndRemovedFalse(Long id);
+
+    List<Medicine> findByMedicineNameContainingIgnoreCaseAndStatusAndRemovedFalse(String name,
+            Medicine.MedicineStatus status);
 }
