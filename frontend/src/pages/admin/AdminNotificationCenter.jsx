@@ -28,11 +28,11 @@ const AdminNotificationCenter = () => {
     const fetchData = async () => {
         try {
             // Fetch Metrics
-            const metricsRes = await fetch(`http://localhost:8080/api/notifications/metrics?role=${USER_ROLE}`);
+            const metricsRes = await fetch(`http://localhost:8081/api/notifications/metrics?role=${USER_ROLE}`);
             if (metricsRes.ok) setMetrics(await metricsRes.json());
 
             // Fetch Notifications
-            const notifRes = await fetch(`http://localhost:8080/api/notifications?role=${USER_ROLE}`);
+            const notifRes = await fetch(`http://localhost:8081/api/notifications?role=${USER_ROLE}`);
             if (notifRes.ok) setNotifications(await notifRes.json());
         } catch (e) {
             console.error("Failed to fetch notifications", e);

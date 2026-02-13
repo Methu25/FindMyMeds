@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import Layout from '../../components/pharmacy/Layout';
+import api from '../../services/api';
 import {
     TrendingUp, Package, Calendar, Clock, CheckCircle2,
     XCircle, AlertTriangle, Pill, FileText, Download,
@@ -18,6 +19,8 @@ import {
     ArcElement,
 } from 'chart.js';
 import { Line, Doughnut, Bar } from 'react-chartjs-2';
+import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 ChartJS.register(
     CategoryScale,
@@ -40,31 +43,24 @@ export default function PharmacyReportPage() {
     useEffect(() => {
         const fetchAnalytics = async () => {
             try {
-                const token = localStorage.getItem('pharmacyToken');
-                const response = await fetch('http://localhost:8080/api/pharmacy/data-summary', {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
+                const response = await api.get('/pharmacy/data-summary');
 
-                if (response.ok) {
-                    const data = await response.json();
+                if (response.data) {
                     setAnalytics({
                         dailyRevenue: [],
                         reservationStatusCounts: {},
                         inventoryStatusCounts: {},
                         topSellingMedicines: [],
                         totalRevenue: 0,
-                        ...data
+                        ...response.data
                     });
                 } else {
-                    const errorText = await response.text();
-                    console.error('Analytics API error:', response.status, response.statusText, errorText);
-                    setError(`Error ${response.status}: ${response.statusText}`);
+                    console.error('Analytics API error: No data received');
+                    setError('No data received from server');
                 }
             } catch (error) {
                 console.error('Failed to fetch analytics:', error);
-                setError(error.message || 'Network error or server unreachable');
+                setError(error.response?.data?.message || error.message || 'Network error or server unreachable');
             } finally {
                 setLoading(false);
             }
@@ -72,6 +68,102 @@ export default function PharmacyReportPage() {
 
         fetchAnalytics();
     }, []);
+
+    const handleExport = () => {
+        if (!analytics || (analytics.dailyRevenue.length === 0 && Object.keys(analytics.reservationStatusCounts).length === 0)) {
+            alert('Analytics data is empty. Nothing to export.');
+            return;
+        }
+
+        const doc = new jsPDF();
+        const dateStr = new Date().toLocaleDateString();
+
+        // Title & Header
+        doc.setFontSize(22);
+        doc.setTextColor(47, 164, 169); // #2FA4A9
+        doc.text("FindMyMeds - Pharmacy Analytics", 14, 20);
+
+        doc.setFontSize(10);
+        doc.setTextColor(100);
+        doc.text(`Time Range: Last ${timeRange === '7d' ? '7 Days' : timeRange === '30d' ? '30 Days' : '90 Days'}`, 14, 28);
+        doc.text(`Generated on: ${dateStr}`, 14, 33);
+
+        // Summary Statistics
+        doc.setFontSize(14);
+        doc.setTextColor(0);
+        doc.text("Performance Summary", 14, 45);
+
+        autoTable(doc, {
+            startY: 50,
+            head: [['Metric', 'Value']],
+            body: [
+                ['Total Gross Revenue', `LKR ${analytics.totalRevenue.toLocaleString()}`],
+                ['Completed Orders', analytics.reservationStatusCounts['COLLECTED'] || 0],
+                ['Low Stock Warning', analytics.inventoryStatusCounts['Low Stock'] || 0],
+                ['Potential Revenue Loss', `LKR ${(analytics.inventoryStatusCounts['Out of Stock'] * 1250 || 0).toLocaleString()}`]
+            ],
+            theme: 'striped',
+            headStyles: { fillColor: [47, 164, 169] }
+        });
+
+        // Daily Revenue Table
+        doc.setFontSize(14);
+        doc.text("Daily Revenue Trends", 14, doc.lastAutoTable.finalY + 15);
+        autoTable(doc, {
+            startY: doc.lastAutoTable.finalY + 20,
+            head: [['Date', 'Revenue (LKR)']],
+            body: analytics.dailyRevenue.map(item => [
+                new Date(item.date).toLocaleDateString(),
+                item.revenue.toLocaleString()
+            ]),
+            theme: 'grid',
+            headStyles: { fillColor: [47, 164, 169] }
+        });
+
+        // Check for page break or add sections
+        doc.addPage();
+
+        // Top Performing Medicines
+        doc.setFontSize(14);
+        doc.text("Top Performing Medicines", 14, 20);
+        autoTable(doc, {
+            startY: 25,
+            head: [['Medicine Name', 'Quantity Sold', 'Revenue (LKR)']],
+            body: analytics.topSellingMedicines.map(med => [
+                med.medicineName,
+                med.quantitySold,
+                med.totalRevenue.toLocaleString()
+            ]),
+            theme: 'striped',
+            headStyles: { fillColor: [47, 164, 169] }
+        });
+
+        // Reservation & Inventory Status Counts
+        doc.setFontSize(14);
+        doc.text("Operational Distribution", 14, doc.lastAutoTable.finalY + 15);
+
+        const resBody = Object.entries(analytics.reservationStatusCounts).map(([k, v]) => [k, v]);
+        const invBody = Object.entries(analytics.inventoryStatusCounts).map(([k, v]) => [k, v]);
+
+        autoTable(doc, {
+            startY: doc.lastAutoTable.finalY + 20,
+            head: [['Reservation Status', 'Count']],
+            body: resBody,
+            theme: 'grid',
+            headStyles: { fillColor: [47, 164, 169] }
+        });
+
+        autoTable(doc, {
+            startY: doc.lastAutoTable.finalY + 10,
+            head: [['Inventory Status', 'Count']],
+            body: invBody,
+            theme: 'grid',
+            headStyles: { fillColor: [47, 164, 169] }
+        });
+
+        // Save the PDF
+        doc.save(`Pharmacy_Report_${timeRange}_${new Date().toISOString().split('T')[0]}.pdf`);
+    };
 
     if (loading) {
         return (
@@ -92,7 +184,7 @@ export default function PharmacyReportPage() {
                         {error ? `Failed to load analytics: ${error}` : 'Failed to load analytics data. Please try again later.'}
                     </div>
                     <div className="text-[10px] text-gray-400 mt-2">
-                        Tip: Make sure your Spring Boot backend is running on port 8080.
+                        Tip: Make sure your Spring Boot backend is running on port 8081.
                     </div>
                     <button
                         onClick={() => window.location.reload()}
@@ -179,7 +271,10 @@ export default function PharmacyReportPage() {
                             <option value="30d">Last 30 Days</option>
                             <option value="90d">Last 90 Days</option>
                         </select>
-                        <button className="flex items-center gap-2 bg-primary text-white px-5 py-2 rounded-xl font-bold text-sm shadow-lg shadow-primary/20 hover:-translate-y-0.5 transition">
+                        <button
+                            onClick={handleExport}
+                            className="flex items-center gap-2 bg-primary text-white px-5 py-2 rounded-xl font-bold text-sm shadow-lg shadow-primary/20 hover:-translate-y-0.5 transition"
+                        >
                             <Download size={16} /> Export Report
                         </button>
                     </div>

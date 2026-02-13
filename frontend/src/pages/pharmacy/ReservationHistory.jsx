@@ -14,15 +14,9 @@ export default function ReservationHistory() {
 
   const fetchHistory = async () => {
     try {
-      const token = localStorage.getItem('pharmacyToken');
-      const response = await fetch('http://localhost:8080/api/pharmacy/reservations/history', {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      if (response.ok) {
-        const data = await response.json();
-        setReservations(data);
+      const response = await api.get('/pharmacy/reservations/history');
+      if (response.data) {
+        setReservations(response.data);
       }
     } catch (error) {
       console.error('Error fetching reservation history:', error);
