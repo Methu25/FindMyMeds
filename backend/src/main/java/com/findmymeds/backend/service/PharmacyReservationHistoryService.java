@@ -41,7 +41,7 @@ public class PharmacyReservationHistoryService {
                 .collect(Collectors.toList());
     }
 
-    public ReservationDTO getReservationHistoryDetails(@NonNull String id) {
+    public ReservationDTO getReservationHistoryDetails(@NonNull Long id) {
         Reservation reservation = reservationRepository.findById(id).orElseThrow();
         return convertToDTO(reservation);
     }

@@ -49,14 +49,14 @@ public class PharmacyCurrentReservationController {
 
     @PatchMapping("/{id}/status")
     @PreAuthorize("hasRole('PHARMACY')")
-    public ResponseEntity<Void> updateReservationStatus(@PathVariable @NonNull String id, @RequestParam String status) {
+    public ResponseEntity<Void> updateReservationStatus(@PathVariable @NonNull Long id, @RequestParam String status) {
         reservationService.updateReservationStatus(id, status);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('PHARMACY')")
-    public ResponseEntity<ReservationDTO> getReservationDetails(@PathVariable @NonNull String id) {
+    public ResponseEntity<ReservationDTO> getReservationDetails(@PathVariable @NonNull Long id) {
         return ResponseEntity.ok(reservationService.getReservationDetails(id));
     }
 }

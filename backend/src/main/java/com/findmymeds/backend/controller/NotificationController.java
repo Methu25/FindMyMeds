@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 
-import javax.management.Notification;
+import com.findmymeds.backend.model.Notification;
 import java.util.List;
 import java.util.Map;
 

@@ -24,21 +24,20 @@ public class CivilianNotificationService {
     // GET by type
     public List<CivilianNotification> getByType(
             Integer userId,
-            CivilianNotificationType type
-    ) {
+            CivilianNotificationType type) {
         return repository.findByUserIdAndType(userId, type);
     }
 
     // GET by read status
     public List<CivilianNotification> getByReadStatus(
             Integer userId,
-            Boolean isRead
-    ) {
+            Boolean isRead) {
         return repository.findByUserIdAndIsRead(userId, isRead);
     }
 
     // GET single notification
-    public CivilianNotification getOne(Integer id, Integer userId) {
+    public CivilianNotification getOne(@org.springframework.lang.NonNull Integer id,
+            @org.springframework.lang.NonNull Integer userId) {
         return repository.findById(id)
                 .filter(n -> n.getUserId().equals(userId))
                 .orElseThrow(() -> new RuntimeException("Notification not found"));
@@ -50,6 +49,5 @@ public class CivilianNotificationService {
         notification.setIsRead(true);
         repository.save(notification);
     }
-
 
 }

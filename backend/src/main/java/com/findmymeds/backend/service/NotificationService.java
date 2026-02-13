@@ -8,7 +8,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.management.Notification;
+import com.findmymeds.backend.model.Notification;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;

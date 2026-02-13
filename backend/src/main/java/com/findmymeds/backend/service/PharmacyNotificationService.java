@@ -12,7 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import javax.management.Notification;
+import com.findmymeds.backend.model.Notification;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
