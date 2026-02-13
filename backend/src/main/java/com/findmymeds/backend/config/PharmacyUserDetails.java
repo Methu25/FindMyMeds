@@ -15,6 +15,10 @@ public class PharmacyUserDetails implements UserDetails {
 
     private final Pharmacy pharmacy;
 
+    public Pharmacy getPharmacy() {
+        return pharmacy;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_PHARMACY"));

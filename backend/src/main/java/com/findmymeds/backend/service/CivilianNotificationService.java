@@ -17,34 +17,33 @@ public class CivilianNotificationService {
     }
 
     // GET all notifications
-    public List<CivilianNotification> getAll(Integer userId) {
+    public List<CivilianNotification> getAll(int userId) {
         return repository.findByUserIdOrderByCreatedAtDesc(userId);
     }
 
     // GET by type
     public List<CivilianNotification> getByType(
-            Integer userId,
+            int userId,
             CivilianNotificationType type) {
         return repository.findByUserIdAndType(userId, type);
     }
 
     // GET by read status
     public List<CivilianNotification> getByReadStatus(
-            Integer userId,
+            int userId,
             Boolean isRead) {
         return repository.findByUserIdAndIsRead(userId, isRead);
     }
 
     // GET single notification
-    public CivilianNotification getOne(@org.springframework.lang.NonNull Integer id,
-            @org.springframework.lang.NonNull Integer userId) {
+    public CivilianNotification getOne(int id, int userId) {
         return repository.findById(id)
-                .filter(n -> n.getUserId().equals(userId))
+                .filter(n -> n.getUserId() != null && n.getUserId().equals(userId))
                 .orElseThrow(() -> new RuntimeException("Notification not found"));
     }
 
     // MARK AS READ
-    public void markAsRead(Integer id, Integer userId) {
+    public void markAsRead(int id, int userId) {
         CivilianNotification notification = getOne(id, userId);
         notification.setIsRead(true);
         repository.save(notification);
