@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { useEffect } from 'react';
 import AdminLayout from './components/admin/AdminLayout';
 import AdminLogin from './pages/admin/AdminLogin';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -24,6 +25,12 @@ import AdminNotificationDetails from './pages/admin/AdminNotificationDetails';
 import AdminProfilePage from './pages/admin/AdminProfilePage';
 import SystemSettings from './pages/admin/SystemSettings';
 import PharmacyManagementHome from './pages/admin/Pharmacy/PharmacyManagementHome';
+import AdminPharmacyDetails from './pages/admin/Pharmacy/AdminPharmacyDetails';
+import AdminPharmacyReports from './pages/admin/Pharmacy/AdminPharmacyReports';
+import AdminReportDetails from './pages/admin/Pharmacy/AdminReportDetails';
+import RejectedPharmacyTable from './pages/admin/Pharmacy/RejectedPharmacyTable';
+import RejectedPharmacyDetails from './pages/admin/Pharmacy/RejectedPharmacyDetails';
+import AdminPharmacyReview from './pages/admin/Pharmacy/AdminPharmacyReview';
 
 // Pharmacy Pages 
 import PharmacyDashboard from './pages/pharmacy/Dashboard';
