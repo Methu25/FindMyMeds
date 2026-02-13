@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import Layout from '../../components/pharmacy/Layout';
+import api from '../../services/api';
 import {
     ArrowLeft, Package, DollarSign, Calendar, Info,
     AlertTriangle, CheckCircle, Trash2, Power, Edit
@@ -23,9 +24,9 @@ export default function MedicineDetails() {
 
     const fetchDetails = async () => {
         try {
-            const res = await fetch(`http://localhost:8080/api/pharmacy/inventory/${id}`);
-            if (res.ok) {
-                const data = await res.json();
+            const res = await api.get(`/pharmacy/inventory/${id}`);
+            if (res.data) {
+                const data = res.data;
                 setMedicine(data);
                 setFormData({ price: data.price, quantity: data.availableQuantity });
             } else {
@@ -33,6 +34,7 @@ export default function MedicineDetails() {
             }
         } catch (error) {
             console.error("Error fetching medicine details:", error);
+            navigate('/pharmacy/inventory');
         } finally {
             setLoading(false);
         }
@@ -41,18 +43,18 @@ export default function MedicineDetails() {
     const handleAction = async () => {
         setActionLoading(true);
         try {
-            let url = `http://localhost:8080/api/pharmacy/inventory/${medicine.inventoryId}`;
-            let method = 'PATCH';
-            let queryParams = '';
+            let url = `/pharmacy/inventory/${medicine.inventoryId}`;
+            let method = 'patch';
+            let params = {};
 
             switch (activeModal) {
                 case 'PRICE':
-                    queryParams = `?price=${formData.price}`;
-                    url += `/price${queryParams}`;
+                    params = { price: formData.price };
+                    url += `/price`;
                     break;
                 case 'QUANTITY':
-                    queryParams = `?quantity=${formData.quantity}`;
-                    url += `/quantity${queryParams}`;
+                    params = { quantity: formData.quantity };
+                    url += `/quantity`;
                     break;
                 case 'DEACTIVATE':
                     url += `/deactivate`;
@@ -61,14 +63,14 @@ export default function MedicineDetails() {
                     url += `/activate`;
                     break;
                 case 'DELETE':
-                    method = 'DELETE';
+                    method = 'delete';
                     break;
                 default:
                     return;
             }
 
-            const res = await fetch(url, { method });
-            if (res.ok) {
+            const res = await api({ method, url, params });
+            if (res.status === 200 || res.status === 204) {
                 if (activeModal === 'DELETE') {
                     navigate('/pharmacy/inventory');
                 } else {
@@ -80,8 +82,9 @@ export default function MedicineDetails() {
             }
         } catch (error) {
             console.error("Error performing action:", error);
-            alert("An error occurred.");
+            alert(error.response?.data?.message || "An error occurred.");
         } finally {
+            setLoading(false); // Should be setActionLoading(false)? Fixed in next step or now
             setActionLoading(false);
         }
     };
@@ -217,7 +220,7 @@ export default function MedicineDetails() {
                                 </thead>
                                 <tbody className="divide-y divide-gray-50">
                                     <tr>
-                                        <td className="px-8 py-6 font-bold text-gray-700">{medicine.batchNumber || 'B-001'}</td>
+                                        <td className="px-8 py-6 font-bold text-gray-700">{medicine.batchNumber || 'N/A'}</td>
                                         <td className="px-8 py-6 font-bold text-gray-900">{medicine.availableQuantity}</td>
                                         <td className="px-8 py-6 text-gray-600">{medicine.expiryDate ? new Date(medicine.expiryDate).toLocaleDateString() : 'N/A'}</td>
                                         <td className="px-8 py-6">

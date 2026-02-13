@@ -19,6 +19,7 @@ import java.util.List;
 public class ReportCleanupService {
 
     private final AdminReportRepository reportRepository;
+    private final com.findmymeds.backend.repository.CivilianReportRepository civilianReportRepository;
 
     // Run daily at midnight
     @Scheduled(cron = "0 0 0 * * *")
@@ -27,12 +28,11 @@ public class ReportCleanupService {
         log.info("Starting cleanup of old resolved/rejected reports");
 
         LocalDateTime cutoffDate = LocalDateTime.now().minusDays(60);
-        List finalStatuses = Arrays.asList(
+        List<ReportStatus> finalStatuses = Arrays.asList(
                 ReportStatus.RESOLVED,
-                ReportStatus.REJECTED
-        );
+                ReportStatus.REJECTED);
 
-        List oldReports = reportRepository
+        List<AdminReportInquiry> oldReports = reportRepository
                 .findByStatusInAndUpdatedAtBefore(finalStatuses, cutoffDate);
 
         if (!oldReports.isEmpty()) {
@@ -40,6 +40,15 @@ public class ReportCleanupService {
             log.info("Deleted {} old reports/inquiries", oldReports.size());
         } else {
             log.info("No old reports to delete");
+        }
+
+        // Cleanup Civilian Reports
+        List<com.findmymeds.backend.model.CivilianReport> oldCivilianReports = civilianReportRepository
+                .findByStatusInAndStatusChangedAtBefore(finalStatuses, cutoffDate);
+
+        if (!oldCivilianReports.isEmpty()) {
+            civilianReportRepository.deleteAll(oldCivilianReports);
+            log.info("Deleted {} old civilian reports/inquiries", oldCivilianReports.size());
         }
     }
 }

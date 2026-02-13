@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class CivilianReservationService {
@@ -16,9 +15,7 @@ public class CivilianReservationService {
     private CivilianReservationRepository reservationRepository;
 
     public Reservation createReservation(Reservation reservation) {
-        if (reservation.getId() == null) {
-            reservation.setId(UUID.randomUUID().toString());
-        }
+        // JPA with IDENTITY strategy will handle ID generation
         reservation.setReservationDate(LocalDateTime.now());
         // Calculate total amount if needed, or trust frontend
         // Persist items logic might be needed here to link back reference if not
@@ -31,5 +28,9 @@ public class CivilianReservationService {
 
     public List<Reservation> getAllReservations() {
         return reservationRepository.findAll();
+    }
+
+    public List<Reservation> getReservationsByCivilian(Long civilianId) {
+        return reservationRepository.findByCivilianId(civilianId);
     }
 }

@@ -1,12 +1,10 @@
 package com.findmymeds.backend.model;
 
 import jakarta.persistence.*;
-import com.findmymeds.backend.model.Civilian;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import com.findmymeds.backend.model.enums.ReservationStatus;
 
@@ -16,8 +14,10 @@ import com.findmymeds.backend.model.enums.ReservationStatus;
 @AllArgsConstructor
 public class Reservation {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String reservationCode;
 
     @ManyToOne
     private Pharmacy pharmacy;
@@ -26,8 +26,15 @@ public class Reservation {
     private Civilian civilian;
 
     private Double totalAmount;
-    private LocalDateTime reservationDate;
+    private Integer totalQuantity;
+    private Integer totalMedicinesCount;
+    private java.time.LocalDateTime reservationDate;
+    private java.time.LocalDate pickupDate;
     private String timeframe; // e.g. "10:00 AM - 6:00 PM"
+    private String prescriptionImageUrl;
+
+    @Column(columnDefinition = "TEXT")
+    private String note;
 
     @Enumerated(EnumType.STRING)
     private ReservationStatus status;

@@ -6,6 +6,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.findmymeds.backend.config.PharmacyUserDetails;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+
 @RestController
 @RequestMapping("/api/pharmacy/settings")
 @RequiredArgsConstructor
@@ -13,16 +17,22 @@ public class PharmacySystemSettingsController {
 
     private final PharmacySystemSettingsService pharmacySystemSettingsService;
 
+    private Long getCurrentPharmacyId() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.getPrincipal() instanceof PharmacyUserDetails) {
+            return ((PharmacyUserDetails) auth.getPrincipal()).getPharmacy().getId();
+        }
+        throw new RuntimeException("Unauthorized: User is not a pharmacy");
+    }
+
     @GetMapping
     public ResponseEntity<SystemSettingsDto> getSettings() {
-        Long pharmacyId = 1L; // Mock ID
-        return ResponseEntity.ok(pharmacySystemSettingsService.getSettings(pharmacyId));
+        return ResponseEntity.ok(pharmacySystemSettingsService.getSettings(getCurrentPharmacyId()));
     }
 
     @PutMapping
     public ResponseEntity<Void> saveSettings(@RequestBody SystemSettingsDto settings) {
-        Long pharmacyId = 1L; // Mock ID
-        pharmacySystemSettingsService.saveSettings(pharmacyId, settings);
+        pharmacySystemSettingsService.saveSettings(getCurrentPharmacyId(), settings);
         return ResponseEntity.ok().build();
     }
 }

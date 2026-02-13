@@ -9,7 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/reservations")
-@CrossOrigin(origins = "http://localhost:5173")
+
 public class CivilianReservationController {
 
     @Autowired
@@ -23,5 +23,10 @@ public class CivilianReservationController {
     @GetMapping
     public List<Reservation> getAllReservations() {
         return reservationService.getAllReservations();
+    }
+
+    @GetMapping("/civilian/{civilianId}")
+    public List<Reservation> getReservationsByCivilian(@PathVariable Long civilianId) {
+        return reservationService.getReservationsByCivilian(civilianId);
     }
 }

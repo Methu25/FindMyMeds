@@ -2,6 +2,8 @@ import { useState, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Layout from '../../components/pharmacy/Layout'
 import MetricCard from '../../components/pharmacy/MetricCard'
+import api from '../../services/api'
+import { Pill, CheckCircle2, AlertTriangle, PackageX, Skull, CalendarClock, CircleOff } from 'lucide-react'
 
 export default function MedicineInventory() {
     const navigate = useNavigate()
@@ -21,26 +23,25 @@ export default function MedicineInventory() {
 
     // Fetch Metrics
     useEffect(() => {
-        fetch('http://localhost:8080/api/pharmacy/inventory/metrics')
-            .then(res => res.json())
-            .then(data => setMetrics(data))
+        api.get('/pharmacy/inventory/metrics')
+            .then(res => setMetrics(res.data))
             .catch(err => console.error("Error fetching metrics:", err))
     }, [])
 
     // Fetch Inventory
     useEffect(() => {
         setLoading(true)
-        const queryParams = new URLSearchParams({
+        const params = {
             page: 0,
-            size: 100, // Fetching more to allow client-side filtering for now
-            search: searchQuery
-        })
+            size: 100,
+            search: searchQuery,
+            filter: activeFilter
+        }
 
-        fetch(`http://localhost:8080/api/pharmacy/inventory?${queryParams}`)
-            .then(res => res.json())
-            .then(data => {
-                if (data.content) {
-                    setInventory(data.content)
+        api.get('/pharmacy/inventory', { params })
+            .then(res => {
+                if (res.data && res.data.content) {
+                    setInventory(res.data.content)
                 }
                 setLoading(false)
             })
@@ -48,40 +49,19 @@ export default function MedicineInventory() {
                 console.error("Error fetching inventory:", err)
                 setLoading(false)
             })
-    }, [searchQuery])
+    }, [searchQuery, activeFilter])
 
-    // Filter Logic
-    const filteredInventory = useMemo(() => {
-        return inventory.filter(item => {
-            // Search filter
-            const matchesSearch = searchQuery === '' ||
-                item.medicineName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                item.genericName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                (item.dosageForm && item.dosageForm.toLowerCase().includes(searchQuery.toLowerCase())) ||
-                item.manufacturer.toLowerCase().includes(searchQuery.toLowerCase());
-
-            if (!matchesSearch) return false;
-
-            // Metric card filter
-            if (activeFilter === 'All' || activeFilter === 'Total Medicines') return true;
-            if (activeFilter === 'In Stock') return item.status === 'In Stock';
-            if (activeFilter === 'Low Stock') return item.status === 'Low Stock';
-            if (activeFilter === 'Out of Stock') return item.status === 'Out of Stock';
-            if (activeFilter === 'Expired') return item.status === 'Expired';
-            if (activeFilter === 'Expiring Soon') return item.status === 'Expiring Soon';
-            if (activeFilter === 'Deactivated Medicines') return item.status === 'Deactivated';
-            return true;
-        })
-    }, [inventory, activeFilter, searchQuery])
+    // Use inventory directly (filtering is now done on backend)
+    const filteredInventory = inventory;
 
     const metricCards = [
-        { title: 'Total Medicines', value: metrics.totalMedicines || 0 },
-        { title: 'In Stock', value: metrics.inStock || 0 },
-        { title: 'Low Stock', value: metrics.lowStock || 0 },
-        { title: 'Out of Stock', value: metrics.outOfStock || 0 },
-        { title: 'Expired', value: metrics.expired || 0 },
-        { title: 'Expiring Soon', value: metrics.expiringSoon || 0 },
-        { title: 'Deactivated Medicines', value: metrics.deactivated || 0 },
+        { title: 'Total Medicines', value: metrics.totalMedicines || 0, icon: Pill, colorScheme: 'teal', subtext: 'In Stock' },
+        { title: 'In Stock', value: metrics.inStock || 0, icon: CheckCircle2, colorScheme: 'blue', subtext: 'In Stock' },
+        { title: 'Low Stock', value: metrics.lowStock || 0, icon: AlertTriangle, colorScheme: 'orange', subtext: 'In Stock' },
+        { title: 'Out of Stock', value: metrics.outOfStock || 0, icon: PackageX, colorScheme: 'purple', subtext: 'Expired' },
+        { title: 'Expired', value: metrics.expired || 0, icon: Skull, colorScheme: 'red', subtext: 'Expired' },
+        { title: 'Expiring Soon', value: metrics.expiringSoon || 0, icon: CalendarClock, colorScheme: 'yellow', subtext: '(33 days)' },
+        { title: 'Deactivated', value: metrics.deactivated || 0, icon: CircleOff, colorScheme: 'gray', subtext: 'Inactive' },
     ]
 
     return (
@@ -94,6 +74,9 @@ export default function MedicineInventory() {
                             key={card.title}
                             title={card.title}
                             value={card.value}
+                            icon={card.icon}
+                            colorScheme={card.colorScheme}
+                            subtext={card.subtext}
                             onClick={() => setActiveFilter(card.title)}
                             isActive={activeFilter === card.title}
                         />
@@ -166,11 +149,11 @@ export default function MedicineInventory() {
                                             <td className="px-6 py-6 border-b border-gray-50 font-bold text-gray-900">{item.price}</td>
                                             <td className="px-6 py-6 border-b border-gray-50">
                                                 <span className={`inline-flex items-center justify-center px-4 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider w-full text-center border-2 ${item.status === 'In Stock' ? 'bg-green-50 text-green-700 border-green-100' :
-                                                        item.status === 'Low Stock' ? 'bg-orange-50 text-orange-700 border-orange-100' :
-                                                            item.status === 'Out of Stock' ? 'bg-red-50 text-red-700 border-red-100' :
-                                                                item.status === 'Expired' ? 'bg-purple-100 text-purple-700 border-purple-200' :
-                                                                    item.status === 'Expiring Soon' ? 'bg-yellow-50 text-yellow-700 border-yellow-100' :
-                                                                        'bg-gray-100 text-gray-700 border-gray-200'
+                                                    item.status === 'Low Stock' ? 'bg-orange-50 text-orange-700 border-orange-100' :
+                                                        item.status === 'Out of Stock' ? 'bg-red-50 text-red-700 border-red-100' :
+                                                            item.status === 'Expired' ? 'bg-purple-100 text-purple-700 border-purple-200' :
+                                                                item.status === 'Expiring Soon' ? 'bg-yellow-50 text-yellow-700 border-yellow-100' :
+                                                                    'bg-gray-100 text-gray-700 border-gray-200'
                                                     }`}>
                                                     {item.status}
                                                 </span>

@@ -4,6 +4,7 @@ import com.findmymeds.backend.model.enums.ReportStatus;
 import com.findmymeds.backend.model.enums.ReportType;
 import com.findmymeds.backend.model.enums.IssueCategory;
 import com.findmymeds.backend.model.enums.Priority;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDateTime;
@@ -19,6 +20,7 @@ public class PharmacyReport {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pharmacy_id", nullable = false)
+    @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
     private Pharmacy pharmacy;
 
     @Enumerated(EnumType.STRING)
