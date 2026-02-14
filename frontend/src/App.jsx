@@ -61,7 +61,8 @@ import NotificationPage from './pages/civilian/NotificationPage';
 
 import { NotificationProvider } from './context/NotificationContext';
 import { ToastProvider } from './context/ToastContext';
-
+import CivilianNotificationDetails from './pages/civilian/CivilianNotificationDetails';
+import ReservationDetailsPage from './pages/civilian/ReservationDetailsPage';
 function App() {
   useEffect(() => {
     const applyTheme = () => {
@@ -170,9 +171,11 @@ function App() {
             <Route path="home" element={<HomePage />} />
             <Route path="dashboard" element={<ActivityPage />} />
             <Route path="activity" element={<ActivityPage />} />
+            <Route path="activity/reservation/:id" element={<ReservationDetailsPage />} />
             <Route path="find-pharmacy" element={<FindPharmacy />} />
             <Route path="reservation" element={<CivilianReservation />} />
             <Route path="notifications" element={<NotificationPage />} />
+            <Route path="notifications/:id" element={<CivilianNotificationDetails />} />
           </Route>
 
           {/* Fallback */}

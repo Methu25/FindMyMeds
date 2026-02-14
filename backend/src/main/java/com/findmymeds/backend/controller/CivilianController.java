@@ -25,12 +25,18 @@ public class CivilianController {
     private com.findmymeds.backend.service.CivilianReservationService civilianReservationService;
 
     @GetMapping("/{id}/dashboard-stats")
-    public org.springframework.http.ResponseEntity<?> getDashboardStats(@PathVariable Long id) {
+    public org.springframework.http.ResponseEntity<?> getDashboardStats(
+            @PathVariable @org.springframework.lang.NonNull Long id) {
         return org.springframework.http.ResponseEntity.ok(civilianReservationService.getDashboardStats(id));
     }
 
     @GetMapping("/{id}/notifications")
-    public org.springframework.http.ResponseEntity<?> getNotifications(@PathVariable Long id) {
+    public org.springframework.http.ResponseEntity<?> getNotifications(
+            @PathVariable @org.springframework.lang.NonNull Long id) {
+        // Validate that the civilian exists
+        if (!civilianRepository.existsById(id)) {
+            return org.springframework.http.ResponseEntity.notFound().build();
+        }
         return org.springframework.http.ResponseEntity.ok(civilianReservationService.getNotifications(id));
     }
 }

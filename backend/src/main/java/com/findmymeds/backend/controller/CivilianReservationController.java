@@ -5,7 +5,13 @@ import com.findmymeds.backend.service.CivilianReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import com.findmymeds.backend.config.CivilianUserDetails;
+import com.findmymeds.backend.dto.ActivityResponse;
+import com.findmymeds.backend.dto.ReservationDetailDTO;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/reservations")
@@ -16,7 +22,7 @@ public class CivilianReservationController {
     private CivilianReservationService reservationService;
 
     @PostMapping
-    public Reservation createReservation(@RequestBody Reservation reservation) {
+    public Reservation createReservation(@RequestBody @org.springframework.lang.NonNull Reservation reservation) {
         return reservationService.createReservation(reservation);
     }
 
@@ -26,7 +32,8 @@ public class CivilianReservationController {
     }
 
     @GetMapping("/civilian/{civilianId}")
-    public List<Reservation> getReservationsByCivilian(@PathVariable Long civilianId) {
+    public List<Reservation> getReservationsByCivilian(
+            @PathVariable @org.springframework.lang.NonNull Long civilianId) {
         return reservationService.getReservationsByCivilian(civilianId);
     }
 
@@ -61,7 +68,44 @@ public class CivilianReservationController {
 
         java.time.LocalDate pickupDate = java.time.LocalDate.parse(pickupDateStr);
 
-        return reservationService.confirmReservation(civilianId, medicineId, pharmacyId, quantity, pickupDate, notes,
+        return reservationService.confirmReservation(
+                java.util.Objects.requireNonNull(civilianId),
+                java.util.Objects.requireNonNull(medicineId),
+                java.util.Objects.requireNonNull(pharmacyId),
+                quantity, pickupDate, notes,
                 prescriptionFile);
+    }
+
+    @GetMapping("/activity")
+    public ResponseEntity<ActivityResponse> getActivity(@AuthenticationPrincipal CivilianUserDetails userDetails) {
+        if (userDetails == null) {
+            return ResponseEntity.status(401).build();
+        }
+        return ResponseEntity.ok(reservationService.getActivity(userDetails.getCivilian().getId()));
+    }
+
+    @GetMapping("/{reservationId}/details")
+    public ResponseEntity<ReservationDetailDTO> getReservationDetails(
+            @PathVariable @org.springframework.lang.NonNull Long reservationId,
+            @AuthenticationPrincipal CivilianUserDetails userDetails) {
+        if (userDetails == null) {
+            return ResponseEntity.status(401).build();
+        }
+        return ResponseEntity
+                .ok(reservationService.getReservationDetails(
+                        java.util.Objects.requireNonNull(reservationId),
+                        java.util.Objects.requireNonNull(userDetails.getCivilian().getId())));
+    }
+
+    @PostMapping("/{reservationId}/cancel")
+    public ResponseEntity<?> cancelReservation(
+            @PathVariable @org.springframework.lang.NonNull Long reservationId,
+            @AuthenticationPrincipal CivilianUserDetails userDetails) {
+        if (userDetails == null) {
+            return ResponseEntity.status(401).build();
+        }
+        reservationService.cancelReservation(java.util.Objects.requireNonNull(reservationId),
+                java.util.Objects.requireNonNull(userDetails.getCivilian().getId()));
+        return ResponseEntity.ok(Map.of("message", "Reservation cancelled successfully", "status", "CANCELLED"));
     }
 }
