@@ -44,10 +44,16 @@ public class AdminController {
     public ResponseEntity<AdminResponse> createAdmin(
             @Valid @RequestBody CreateAdminRequest request,
             Authentication authentication) {
-
-        Long currentAdminId = getCurrentAdminId(authentication);
-        AdminResponse response = adminService.createAdmin(request, currentAdminId);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        try {
+            System.out.println("DEBUG: createAdmin called by " + authentication.getName());
+            String currentAdminEmail = authentication.getName();
+            AdminResponse response = adminService.createAdmin(request, currentAdminEmail);
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        } catch (Exception e) {
+            System.out.println("DEBUG: Exception in createAdmin: " + e.getMessage());
+            e.printStackTrace();
+            throw e;
+        }
     }
 
     @PatchMapping("/{id}/email")
@@ -57,8 +63,8 @@ public class AdminController {
             @Valid @RequestBody UpdateAdminEmailRequest request,
             Authentication authentication) {
 
-        Long currentAdminId = getCurrentAdminId(authentication);
-        AdminResponse response = adminService.updateAdminEmail(id, request, currentAdminId);
+        String currentAdminEmail = authentication.getName();
+        AdminResponse response = adminService.updateAdminEmail(id, request, currentAdminEmail);
         return ResponseEntity.ok(response);
     }
 
@@ -80,18 +86,13 @@ public class AdminController {
             @PathVariable @org.springframework.lang.NonNull Long id,
             Authentication authentication) {
 
-        Long currentAdminId = getCurrentAdminId(authentication);
-        adminService.deleteAdmin(id, currentAdminId);
+        String currentAdminEmail = authentication.getName();
+        adminService.deleteAdmin(id, currentAdminEmail);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/me")
     public AdminProfileDTO getMyProfile() {
         return adminService.getCurrentAdminProfile();
-    }
-
-
-    private long getCurrentAdminId(Authentication authentication) {
-        return Long.parseLong(authentication.getName());
     }
 }

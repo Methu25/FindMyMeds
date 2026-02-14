@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { 
-  ArrowLeft, MapPin, Phone, Mail, FileText, 
+import {
+  ArrowLeft, MapPin, Phone, Mail, FileText,
   ShieldCheck, Building2, Send, CheckCircle, AlertCircle
 } from 'lucide-react';
 
@@ -10,20 +10,21 @@ import ActivatePharmacyModal from "../../../components/admin/Pharmacy/ActivatePh
 import RejectPharmacyModal from "../../../components/admin/Pharmacy/RejectPharmacyModal";
 
 /* Service */
-import { getPharmacyDetails } from "../../../Service/Admin/PharmacyService";
+import { getPharmacyDetails } from "../../../Service/admin/pharmacyService";
 
 const AdminPharmacyReview = () => {
   const { pharmacyId } = useParams();
   const navigate = useNavigate();
-  
+
   // DYNAMIC ROLE: Pulls from your auth storage (ADMIN or SUPER_ADMIN)
-  const userRole = localStorage.getItem('role'); 
+  const userRole = localStorage.getItem('userType');
 
   const [pharmacy, setPharmacy] = useState(null);
   const [loading, setLoading] = useState(true);
-  
+
   const [openApprove, setOpenApprove] = useState(false);
   const [openReject, setOpenReject] = useState(false);
+  const [targetStatus, setTargetStatus] = useState('ACTIVE');
 
   const fetchDetails = async () => {
     setLoading(true);
@@ -68,19 +69,19 @@ const AdminPharmacyReview = () => {
 
   return (
     <div className="flex-1 space-y-6 pb-12 animate-in fade-in duration-500">
-      
+
       {/* 1. TOP ACTION BAR */}
       <div className="flex items-center justify-between bg-white p-5 rounded-[2rem] border border-slate-100 shadow-sm">
-        <button 
+        <button
           onClick={() => navigate(-1)}
           className="group flex items-center gap-2 text-slate-500 hover:text-[#2FA4A9] transition-all font-bold text-sm"
         >
-          <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" /> 
+          <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
           Back to Approval Queue
         </button>
-        
+
         <div className="flex gap-3">
-          <button 
+          <button
             onClick={() => setOpenReject(true)}
             className="px-6 py-2.5 bg-rose-50 text-rose-500 rounded-xl font-black text-[10px] uppercase tracking-widest border border-rose-100 hover:bg-rose-500 hover:text-white transition-all shadow-sm"
           >
@@ -88,8 +89,11 @@ const AdminPharmacyReview = () => {
           </button>
 
           {userRole === "ADMIN" && (
-            <button 
-              onClick={() => setOpenApprove(true)}
+            <button
+              onClick={() => {
+                setTargetStatus('APPROVED');
+                setOpenApprove(true);
+              }}
               className="px-6 py-2.5 bg-indigo-600 text-white rounded-xl font-black text-[10px] uppercase tracking-widest flex items-center gap-2 shadow-lg shadow-indigo-100 hover:scale-105 transition-all"
             >
               <Send size={14} /> Send to Super Admin
@@ -97,8 +101,11 @@ const AdminPharmacyReview = () => {
           )}
 
           {userRole === "SUPER_ADMIN" && (
-            <button 
-              onClick={() => setOpenApprove(true)}
+            <button
+              onClick={() => {
+                setTargetStatus('ACTIVE');
+                setOpenApprove(true);
+              }}
               className="px-6 py-2.5 bg-[#2FA4A9] text-white rounded-xl font-black text-[10px] uppercase tracking-widest flex items-center gap-2 shadow-lg shadow-[#2FA4A9]/20 hover:scale-105 transition-all"
             >
               <CheckCircle size={14} /> Add to the System
@@ -142,13 +149,13 @@ const AdminPharmacyReview = () => {
               <div className="h-3 w-3 rounded-full bg-amber-400 animate-pulse"></div>
               <h4 className="text-2xl font-black uppercase tracking-tight">{pharmacy.status.replace('_', ' ')}</h4>
             </div>
-            
+
             <div className="space-y-4 pt-6 border-t border-white/10">
               <div className="flex items-start gap-3">
                 <AlertCircle size={16} className="text-[#2FA4A9] mt-1 shrink-0" />
                 <p className="text-xs text-slate-400 leading-relaxed font-medium">
-                  {userRole === "ADMIN" 
-                    ? "Escalating this will move it to the Super Admin's pending queue." 
+                  {userRole === "ADMIN"
+                    ? "Escalating this will move it to the Super Admin's pending queue."
                     : "Approval will activate the pharmacy and grant system-wide access."}
                 </p>
               </div>
@@ -158,18 +165,19 @@ const AdminPharmacyReview = () => {
       </div>
 
       {/* MODALS WITH REDIRECT LOGIC */}
-      <ActivatePharmacyModal 
-        open={openApprove} 
-        pharmacy={pharmacy} 
-        onClose={() => setOpenApprove(false)} 
-        refresh={() => handleAfterAction('APPROVE')} 
+      <ActivatePharmacyModal
+        open={openApprove}
+        pharmacy={pharmacy}
+        onClose={() => setOpenApprove(false)}
+        refresh={() => handleAfterAction('APPROVE')}
+        targetStatus={targetStatus}
       />
-      
-      <RejectPharmacyModal 
-        open={openReject} 
-        pharmacy={pharmacy} 
-        onClose={() => setOpenReject(false)} 
-        refresh={() => handleAfterAction('REJECT')} 
+
+      <RejectPharmacyModal
+        open={openReject}
+        pharmacy={pharmacy}
+        onClose={() => setOpenReject(false)}
+        refresh={() => handleAfterAction('REJECT')}
       />
     </div>
   );

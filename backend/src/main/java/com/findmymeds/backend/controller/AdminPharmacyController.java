@@ -64,6 +64,12 @@ public class AdminPharmacyController {
         return pharmacyService.updatePharmacyStatus(id, PharmacyStatus.ACTIVE);
     }
 
+    // 🔹 PENDING → APPROVED (Sent to Super Admin)
+    @PatchMapping("/{id}/approve")
+    public Pharmacy approvePharmacy(@PathVariable Long id) {
+        return pharmacyService.updatePharmacyStatus(id, PharmacyStatus.APPROVED);
+    }
+
     // 🔹 ANY → REMOVED
     @PatchMapping("/{id}/remove")
     public Pharmacy removePharmacy(@PathVariable Long id) {
