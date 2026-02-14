@@ -18,6 +18,7 @@ import CivilianVivo from "./pages/admin/Civilian/CivilianVivo";
 import CivilianReports from "./pages/admin/Civilian/CivilianReports";
 import CivilianReportDetails from "./pages/admin/Civilian/CivilianReportDetails";
 import AppealDetails from "./pages/admin/Appeal/AppealDetails";
+import CivilianAppeals from "./pages/admin/Civilian/CivilianAppeals";
 import AdminMedicineRegistry from './pages/admin/AdminMedicineRegistry';
 import AdminAddMedicine from './pages/admin/AdminAddMedicine';
 import AdminMedicineDetails from './pages/admin/AdminMedicineDetails';
@@ -58,6 +59,7 @@ import ReservationPage from './pages/civilian/ReservationPage';
 import CivilianReservation from './pages/civilian/CivilianReservation';
 import HomePage from './pages/civilian/HomePage';
 import NotificationPage from './pages/civilian/NotificationPage';
+import AppealsAndReports from './pages/civilian/AppealsAndReports';
 
 import { NotificationProvider } from './context/NotificationContext';
 import { ToastProvider } from './context/ToastContext';
@@ -128,6 +130,7 @@ function App() {
                 {/* Pharmacies placeholder */}
                 <Route path="pharmacies" element={<PharmacyManagementHome />} />
 
+<<<<<<< HEAD
                 {/* Civilians */}
                 <Route path="civilians" element={<CivilianManagement />} />
                 <Route path="civilians/:id" element={<CivilianDetails />} />
@@ -135,6 +138,17 @@ function App() {
                 <Route path="civilian-reports" element={<CivilianReports />} />
                 <Route path="civilian-reports/:id" element={<CivilianReportDetails />} />
                 <Route path="appeals" element={<AppealDetails />} />
+=======
+              {/* Civilians */}
+              <Route path="civilians" element={<CivilianManagement />} />
+              <Route path="civilians/:id" element={<CivilianDetails />} />
+              <Route path="civilians/:id/vivo" element={<CivilianVivo />} />
+              <Route path="civilian-reports" element={<CivilianReports />} />
+              <Route path="civilian-reports/:id" element={<CivilianReportDetails />} />
+              <Route path="appeals" element={<AppealDetails />} />
+              <Route path="appeals/:id" element={<AppealDetails />} />
+              <Route path="civilian-appeals" element={<CivilianAppeals />} />
+>>>>>>> 7a607ad250beb6b88357c55488f99588a90ff33d
 
                 {/* Notifications */}
                 <Route path="notifications" element={<AdminNotificationCenter />} />
@@ -167,6 +181,7 @@ function App() {
               </NotificationProvider>
             } />
 
+<<<<<<< HEAD
             {/* Civilian Routes */}
             <Route path="/civilian" element={<CivilianLayout />}>
               <Route index element={<Navigate to="home" replace />} />
@@ -179,6 +194,21 @@ function App() {
               <Route path="notifications" element={<NotificationPage />} />
               <Route path="notifications/:id" element={<CivilianNotificationDetails />} />
             </Route>
+=======
+          {/* Civilian Routes */}
+          <Route path="/civilian" element={<CivilianLayout />}>
+            <Route index element={<Navigate to="home" replace />} />
+            <Route path="home" element={<HomePage />} />
+            <Route path="dashboard" element={<ActivityPage />} />
+            <Route path="activity" element={<ActivityPage />} />
+            <Route path="activity/reservation/:id" element={<ReservationDetailsPage />} />
+            <Route path="find-pharmacy" element={<FindPharmacy />} />
+            <Route path="reservation" element={<CivilianReservation />} />
+            <Route path="notifications" element={<NotificationPage />} />
+            <Route path="notifications/:id" element={<CivilianNotificationDetails />} />
+            <Route path="appeals-reports" element={<AppealsAndReports />} />
+          </Route>
+>>>>>>> 7a607ad250beb6b88357c55488f99588a90ff33d
 
             {/* Fallback */}
             <Route path="*" element={<Navigate to="/" replace />} />
