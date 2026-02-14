@@ -12,4 +12,7 @@ public class CivilianDTO {
     private String name;
     private String email;
     private String phone;
+    private com.findmymeds.backend.model.enums.AccountStatus accountStatus;
+    private String banReason;
+    private java.time.LocalDateTime banDate;
 }

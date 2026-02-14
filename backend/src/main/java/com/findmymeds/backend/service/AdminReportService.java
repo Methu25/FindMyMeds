@@ -1,7 +1,11 @@
 package com.findmymeds.backend.service;
 
 import com.findmymeds.backend.model.AdminNotFoundException;
-import com.findmymeds.backend.model.*;
+import com.findmymeds.backend.model.AdminReportInquiry;
+import com.findmymeds.backend.model.CreateReportRequest;
+import com.findmymeds.backend.model.ReportMetricsResponse;
+import com.findmymeds.backend.model.ReportResponse;
+import com.findmymeds.backend.model.UpdateReportStatusRequest;
 import com.findmymeds.backend.model.enums.ReportStatus;
 import com.findmymeds.backend.repository.AdminReportRepository;
 import com.findmymeds.backend.repository.AdminRepository;

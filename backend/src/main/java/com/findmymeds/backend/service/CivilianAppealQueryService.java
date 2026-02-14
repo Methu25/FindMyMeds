@@ -22,6 +22,39 @@ public class CivilianAppealQueryService {
         private final ReservationRepository reservationRepository;
 
         @Transactional(readOnly = true)
+        public org.springframework.data.domain.Page<AdminAppealDetailsDTO> getAllAppeals(String status, String search,
+                        @org.springframework.lang.NonNull org.springframework.data.domain.Pageable pageable) {
+                // Simplified implementation: Filter by status if provided, ignore search for
+                // now or implement specification
+                // Ideally use Specification or repository query
+                org.springframework.data.domain.Page<CivilianAppeal> page;
+                if (status != null && !status.isEmpty()) {
+                        try {
+                                com.findmymeds.backend.model.enums.AppealStatus s = com.findmymeds.backend.model.enums.AppealStatus
+                                                .valueOf(status);
+                                page = appealRepository.findByStatus(s, pageable);
+                        } catch (IllegalArgumentException e) {
+                                page = appealRepository.findAll(pageable);
+                        }
+                } else {
+                        page = appealRepository.findAll(pageable);
+                }
+
+                return page.map(appeal -> {
+                        Civilian c = appeal.getCivilian();
+                        return AdminAppealDetailsDTO.builder()
+                                        .appealId(appeal.getId())
+                                        .banType(appeal.getBanType())
+                                        .status(appeal.getStatus())
+                                        .createdAt(appeal.getCreatedAt())
+                                        .appealReason(appeal.getAppealReason())
+                                        .civilianId(c.getId())
+                                        .civilianName(c.getFullName())
+                                        .build();
+                });
+        }
+
+        @Transactional(readOnly = true)
         public AdminAppealDetailsDTO getAppealDetails(Long appealId) {
                 if (appealId == null) {
                         throw new IllegalArgumentException("Appeal ID cannot be null");

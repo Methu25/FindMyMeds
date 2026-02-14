@@ -16,12 +16,12 @@ export default function AppealDetails() {
     // Or we update CivilianDetails to fetch appealId first.
     // Let's support `?appealId=` or `?civilianId=` (and fetch latest).
 
+    const { id } = useParams();
     const [searchParams] = useSearchParams();
     const civilianId = searchParams.get("civilianId");
-    const appealIdParam = searchParams.get("id"); // or route param
+    // Prioritize route param ID, then query param ID
+    const appealIdParam = id || searchParams.get("id");
 
-    // For this implementation, I'll fetch by civilianId and show the latest appeal, or fetch by appealId if available.
-    // Since the previous page passed `civilianId`, I will use it to find the appeal.
     console.log("AppealDetails mounted. civilianId:", civilianId, "appealIdParam:", appealIdParam);
 
     // WAIT: The design shows "Appeal ID #APP-88421".

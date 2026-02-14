@@ -13,6 +13,9 @@ export const authService = {
             if (response.data.token) {
                 localStorage.setItem('token', response.data.token);
                 localStorage.setItem('userType', 'CIVILIAN');
+                if (response.data.userDetails) {
+                    localStorage.setItem('civilian_user', JSON.stringify(response.data.userDetails));
+                }
             }
             return response.data;
         } catch (error) {

@@ -46,8 +46,18 @@ public class CivilianAuthService {
         CivilianUserDetails userDetails = new CivilianUserDetails(civilian);
         String token = jwtService.generateToken(userDetails);
 
+        var civilianDTO = new com.findmymeds.backend.dto.CivilianDTO();
+        civilianDTO.setId(civilian.getId());
+        civilianDTO.setName(civilian.getFullName());
+        civilianDTO.setEmail(civilian.getEmail());
+        civilianDTO.setPhone(civilian.getPhone());
+        civilianDTO.setAccountStatus(civilian.getAccountStatus());
+        civilianDTO.setBanReason(civilian.getBanReason());
+        civilianDTO.setBanDate(civilian.getBanDate());
+
         return AuthenticationResponse.builder()
                 .token(token)
+                .userDetails(civilianDTO)
                 .build();
     }
 
@@ -62,8 +72,18 @@ public class CivilianAuthService {
         CivilianUserDetails userDetails = new CivilianUserDetails(civilian);
         String token = jwtService.generateToken(userDetails);
 
+        var civilianDTO = new com.findmymeds.backend.dto.CivilianDTO();
+        civilianDTO.setId(civilian.getId());
+        civilianDTO.setName(civilian.getFullName());
+        civilianDTO.setEmail(civilian.getEmail());
+        civilianDTO.setPhone(civilian.getPhone());
+        civilianDTO.setAccountStatus(civilian.getAccountStatus());
+        civilianDTO.setBanReason(civilian.getBanReason());
+        civilianDTO.setBanDate(civilian.getBanDate());
+
         return AuthenticationResponse.builder()
                 .token(token)
+                .userDetails(civilianDTO)
                 .build();
     }
 }
