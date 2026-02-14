@@ -107,7 +107,10 @@ const HomePage = () => {
 
             {/* Sub Cards Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="bg-white p-8 rounded-[2rem] border border-[#2FA4A9]/10 shadow-sm hover:border-[#2FA4A9]/30 transition-all cursor-pointer group">
+              <div
+                className="bg-white p-8 rounded-[2rem] border border-[#2FA4A9]/10 shadow-sm hover:border-[#2FA4A9]/30 transition-all cursor-pointer group"
+                onClick={() => navigate("/civilian/drug-dictionary")}
+              >
                 <div className="flex justify-between items-start mb-6">
                   <div className="p-3 bg-teal-50 text-[#2FA4A9] rounded-xl group-hover:rotate-12 transition-transform">
                     <BookOpen size={24} />

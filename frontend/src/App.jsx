@@ -58,6 +58,7 @@ import ReservationPage from './pages/civilian/ReservationPage';
 import CivilianReservation from './pages/civilian/CivilianReservation';
 import HomePage from './pages/civilian/HomePage';
 import NotificationPage from './pages/civilian/NotificationPage';
+import CivilianDrugDictionary from './pages/civilian/CivilianDrugDictionary';
 
 import { NotificationProvider } from './context/NotificationContext';
 import { ToastProvider } from './context/ToastContext';
@@ -174,6 +175,7 @@ function App() {
             <Route path="activity/reservation/:id" element={<ReservationDetailsPage />} />
             <Route path="find-pharmacy" element={<FindPharmacy />} />
             <Route path="reservation" element={<CivilianReservation />} />
+            <Route path="drug-dictionary" element={<CivilianDrugDictionary />} />
             <Route path="notifications" element={<NotificationPage />} />
             <Route path="notifications/:id" element={<CivilianNotificationDetails />} />
           </Route>
