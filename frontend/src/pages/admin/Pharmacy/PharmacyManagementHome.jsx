@@ -15,7 +15,7 @@ import ActivatePharmacyModal from "../../../components/admin/Pharmacy/ActivatePh
 import RejectPharmacyModal from "../../../components/admin/Pharmacy/RejectPharmacyModal";
 import RemovePharmacyModal from "../../../components/admin/Pharmacy/RemovePharmacyModal";
 import SuspendPharmacyModal from "../../../components/admin/Pharmacy/SuspendPharmacyModal";
-import { getPharmacies } from "../../../Service/Admin/PharmacyService";
+import { getPharmacies } from "../../../Service/admin/pharmacyService";
 
 const PharmacyManagementHome = () => {
   const navigate = useNavigate();
@@ -95,10 +95,10 @@ const PharmacyManagementHome = () => {
         FILTERED PHARMACIES
   ======================= */
   const filteredPharmacies = pharmacies.filter(p => {
-    const matchesSearch = p.pharmacy_name?.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                          p.location?.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = activeFilter === "TOTAL" 
-      ? true 
+    const matchesSearch = p.pharmacy_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      p.location?.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = activeFilter === "TOTAL"
+      ? true
       : (p.status === activeFilter || p.pharmacy_type === activeFilter);
     return matchesSearch && matchesCategory;
   });
@@ -115,11 +115,11 @@ const PharmacyManagementHome = () => {
         <section className="space-y-3">
           <h2 className="text-xs font-black uppercase tracking-[0.3em] text-slate-400">Overview</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
-          <MetricCard title="Total" count={pharmacies.length} icon={Activity} isActive={activeFilter === "TOTAL"} onClick={() => handleFilterClick("TOTAL")} />
-          <MetricCard title="Active" count={pharmacies.filter(p => p.status === "ACTIVE").length} icon={CheckCircle} color="#10B981" isActive={activeFilter === "ACTIVE"} onClick={() => handleFilterClick("ACTIVE")} />
-          <MetricCard title="Pending" count={pharmacies.filter(p => p.status === "PENDING").length} icon={Clock} color="#3B82F6" isActive={activeFilter === "PENDING"} onClick={() => handleFilterClick("PENDING")} />
-          <MetricCard title="Suspended" count={pharmacies.filter(p => p.status === "SUSPENDED").length} icon={AlertTriangle} color="#F59E0B" isActive={activeFilter === "SUSPENDED"} onClick={() => handleFilterClick("SUSPENDED")} />
-          <MetricCard title="Removed" count={pharmacies.filter(p => p.status === "REMOVED").length} icon={Clock} color="#EF4444" isActive={activeFilter === "REMOVED"} onClick={() => handleFilterClick("REMOVED")} />
+            <MetricCard title="Total" count={pharmacies.length} icon={Activity} isActive={activeFilter === "TOTAL"} onClick={() => handleFilterClick("TOTAL")} />
+            <MetricCard title="Active" count={pharmacies.filter(p => p.status === "ACTIVE").length} icon={CheckCircle} color="#10B981" isActive={activeFilter === "ACTIVE"} onClick={() => handleFilterClick("ACTIVE")} />
+            <MetricCard title="Pending" count={pharmacies.filter(p => p.status === "PENDING").length} icon={Clock} color="#3B82F6" isActive={activeFilter === "PENDING"} onClick={() => handleFilterClick("PENDING")} />
+            <MetricCard title="Suspended" count={pharmacies.filter(p => p.status === "SUSPENDED").length} icon={AlertTriangle} color="#F59E0B" isActive={activeFilter === "SUSPENDED"} onClick={() => handleFilterClick("SUSPENDED")} />
+            <MetricCard title="Removed" count={pharmacies.filter(p => p.status === "REMOVED").length} icon={Clock} color="#EF4444" isActive={activeFilter === "REMOVED"} onClick={() => handleFilterClick("REMOVED")} />
           </div>
         </section>
 
@@ -139,9 +139,9 @@ const PharmacyManagementHome = () => {
             <h2 className="text-xl font-black text-slate-800 capitalize">{activeFilter.toLowerCase()} Pharmacies</h2>
             <div className="relative w-full md:w-96">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-              <input 
-                type="text" 
-                placeholder="Search pharmacies..." 
+              <input
+                type="text"
+                placeholder="Search pharmacies..."
                 className="w-full pl-12 pr-4 py-3 bg-white border border-slate-100 rounded-2xl outline-none focus:ring-4 focus:ring-[#2FA4A9]/10 focus:border-[#2FA4A9] font-bold text-sm"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -149,14 +149,14 @@ const PharmacyManagementHome = () => {
             </div>
           </div>
 
-          <PharmacyTable 
-            pharmacies={filteredPharmacies} 
-            loading={loading} 
-            onView={handleView} 
-            onActivate={handleActivate} 
-            onReject={handleReject} 
-            onRemove={handleRemove} 
-            onSuspend={handleSuspend} 
+          <PharmacyTable
+            pharmacies={filteredPharmacies}
+            loading={loading}
+            onView={handleView}
+            onActivate={handleActivate}
+            onReject={handleReject}
+            onRemove={handleRemove}
+            onSuspend={handleSuspend}
           />
         </div>
 

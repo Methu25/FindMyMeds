@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { X, AlertCircle, CheckCircle2, MailQuestion, SendHorizontal } from "lucide-react";
-import { rejectPharmacy } from "../../../Service/Admin/PharmacyService";
+import { rejectPharmacy } from "../../../Service/admin/pharmacyService";
 
 const RejectPharmacyModal = ({ open, pharmacy, onClose, refresh }) => {
   const [reason, setReason] = useState("");
@@ -23,10 +23,10 @@ const RejectPharmacyModal = ({ open, pharmacy, onClose, refresh }) => {
     try {
       // 1. Backend Call: Updates status to 'REJECTED' in DB
       await rejectPharmacy(idToUse, reason);
-      
+
       // 2. Trigger the "Epic" Success Animation
       setShowSuccess(true);
-      
+
       // 3. Delay the redirect so the admin can see the success state
       setTimeout(async () => {
         setShowSuccess(false);
@@ -34,7 +34,7 @@ const RejectPharmacyModal = ({ open, pharmacy, onClose, refresh }) => {
         onClose();
         if (refresh) await refresh(); // This will trigger the navigation in ReviewPage
       }, 2300);
-      
+
     } catch (err) {
       console.error("Rejection failed:", err);
       alert("System failed to update pharmacy status. Please check your connection.");
@@ -45,7 +45,7 @@ const RejectPharmacyModal = ({ open, pharmacy, onClose, refresh }) => {
   return (
     <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md flex justify-center items-center z-[1000] p-4">
       <div className="bg-white rounded-[3rem] w-full max-w-md shadow-2xl border border-white overflow-hidden animate-in zoom-in duration-300">
-        
+
         {!showSuccess ? (
           <>
             {/* --- HEADER --- */}
@@ -85,7 +85,7 @@ const RejectPharmacyModal = ({ open, pharmacy, onClose, refresh }) => {
                 value={reason}
                 onChange={(e) => setReason(e.target.value)}
               />
-              
+
               <div className="mt-6 p-4 bg-amber-50 rounded-2xl border border-amber-100 flex items-start gap-3">
                 <SendHorizontal size={16} className="text-amber-500 mt-0.5" />
                 <p className="text-[10px] text-amber-700 font-bold leading-relaxed uppercase tracking-tight">
@@ -96,16 +96,16 @@ const RejectPharmacyModal = ({ open, pharmacy, onClose, refresh }) => {
 
             {/* --- ACTIONS --- */}
             <div className="px-10 pb-10 flex items-center gap-4">
-              <button 
-                onClick={onClose} 
+              <button
+                onClick={onClose}
                 className="flex-1 py-4 rounded-2xl font-black text-slate-400 text-[10px] uppercase tracking-widest hover:bg-slate-50 transition-all"
                 disabled={loading}
               >
                 Cancel
               </button>
-              
-              <button 
-                onClick={handleReject} 
+
+              <button
+                onClick={handleReject}
                 disabled={loading}
                 className="flex-[2] py-4 rounded-2xl bg-slate-900 text-white font-black uppercase text-[10px] tracking-[0.2em] shadow-2xl shadow-slate-200 hover:bg-rose-600 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
               >
@@ -122,10 +122,10 @@ const RejectPharmacyModal = ({ open, pharmacy, onClose, refresh }) => {
                 <CheckCircle2 size={56} />
               </div>
             </div>
-            
+
             <h2 className="text-3xl font-[1000] text-slate-800 uppercase tracking-tighter mb-2">Application Rejected</h2>
             <p className="text-slate-400 text-xs font-bold uppercase tracking-[0.2em] mb-8">Database Updated</p>
-            
+
             <div className="inline-flex items-center gap-3 px-6 py-3 bg-emerald-500 text-white rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg shadow-emerald-200">
               <div className="w-2 h-2 rounded-full bg-white animate-pulse" />
               Rejection Email Dispatched

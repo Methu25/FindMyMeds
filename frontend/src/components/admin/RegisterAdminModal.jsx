@@ -5,7 +5,6 @@ import { X, UserPlus, Mail, Lock, User, Shield } from 'lucide-react';
 
 const RegisterAdminModal = ({ isOpen, onClose, onSuccess }) => {
     const [formData, setFormData] = useState({
-        username: '',
         email: '',
         password: '',
         fullName: '',
@@ -28,7 +27,6 @@ const RegisterAdminModal = ({ isOpen, onClose, onSuccess }) => {
             onClose();   // Close modal
             // Reset form
             setFormData({
-                username: '',
                 email: '',
                 password: '',
                 fullName: '',
@@ -36,7 +34,21 @@ const RegisterAdminModal = ({ isOpen, onClose, onSuccess }) => {
             });
         } catch (err) {
             console.error("Failed to register admin", err);
-            setError(err.response?.data?.message || "Failed to register new administrator.");
+            console.log("Error Response Data:", err.response?.data); // Log for debugging
+
+            let errorMessage = "Failed to register new administrator.";
+            if (err.response?.data) {
+                if (typeof err.response.data === 'string') {
+                    errorMessage = err.response.data;
+                } else if (err.response.data.message) {
+                    errorMessage = err.response.data.message;
+                } else if (typeof err.response.data === 'object') {
+                    // Handle validation errors map
+                    const messages = Object.values(err.response.data).join(', ');
+                    if (messages) errorMessage = messages;
+                }
+            }
+            setError(errorMessage);
         } finally {
             setLoading(false);
         }
@@ -73,21 +85,7 @@ const RegisterAdminModal = ({ isOpen, onClose, onSuccess }) => {
                     )}
 
                     <div className="space-y-4">
-                        {/* Username */}
-                        <div className="space-y-1.5">
-                            <label className="text-xs font-bold text-slate-500 uppercase tracking-wide ml-1">Username</label>
-                            <div className="relative">
-                                <User className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-                                <input
-                                    type="text"
-                                    required
-                                    className="w-full pl-11 pr-4 py-3 bg-slate-50 border-none rounded-xl text-slate-900 font-semibold focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-slate-400"
-                                    placeholder="jdoe123"
-                                    value={formData.username}
-                                    onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-                                />
-                            </div>
-                        </div>
+
 
                         {/* Full Name */}
                         <div className="space-y-1.5">

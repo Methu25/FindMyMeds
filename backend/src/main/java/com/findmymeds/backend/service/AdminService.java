@@ -55,7 +55,7 @@ public class AdminService {
 
     @Transactional
     public AdminResponse createAdmin(CreateAdminRequest request,
-            Long currentAdminId) {
+            String currentAdminEmail) {
         if (adminRepository.existsByEmail(request.getEmail())) {
             throw new DuplicateEmailException("Email already exists: " + request.getEmail());
         }
@@ -69,7 +69,8 @@ public class AdminService {
 
         Admin savedAdmin = adminRepository.save(admin);
 
-        logAction(currentAdminId, "CREATE_ADMIN", "admins", savedAdmin.getId(),
+        Long initiatorId = getAdminIdByEmail(currentAdminEmail);
+        logAction(initiatorId, "CREATE_ADMIN", "admins", savedAdmin.getId(),
                 "Created new admin: " + savedAdmin.getFullName());
 
         return mapToResponse(savedAdmin);
@@ -79,7 +80,7 @@ public class AdminService {
 
     public AdminResponse updateAdminEmail(Long adminId,
             UpdateAdminEmailRequest request,
-            Long currentAdminId) {
+            String currentAdminEmail) {
         Admin admin = adminRepository.findById(adminId)
                 .orElseThrow(() -> new AdminNotFoundException("Admin not found with id: " + adminId));
 
@@ -92,7 +93,8 @@ public class AdminService {
         admin.setEmail(request.getEmail());
         Admin updatedAdmin = adminRepository.save(admin);
 
-        logAction(currentAdminId, "UPDATE_ADMIN_EMAIL", "admins", adminId,
+        Long initiatorId = getAdminIdByEmail(currentAdminEmail);
+        logAction(initiatorId, "UPDATE_ADMIN_EMAIL", "admins", adminId,
                 "Updated email from " + oldEmail + " to " + request.getEmail());
 
         return mapToResponse(updatedAdmin);
@@ -117,18 +119,20 @@ public class AdminService {
 
     @Transactional
     public void deleteAdmin(Long adminId,
-            Long currentAdminId) {
+            String currentAdminEmail) {
         Admin admin = adminRepository.findById(adminId)
                 .orElseThrow(() -> new AdminNotFoundException("Admin not found with id: " + adminId));
 
-        if (adminId.equals(currentAdminId)) {
+        Long initiatorId = getAdminIdByEmail(currentAdminEmail);
+
+        if (adminId.equals(initiatorId)) {
             throw new IllegalArgumentException("Cannot delete your own account");
         }
 
         String adminName = admin.getFullName();
         adminRepository.delete(admin);
 
-        logAction(currentAdminId, "DELETE_ADMIN", "admins", adminId,
+        logAction(initiatorId, "DELETE_ADMIN", "admins", adminId,
                 "Deleted admin: " + adminName);
     }
 
@@ -164,5 +168,11 @@ public class AdminService {
         return new AdminProfileDTO(
                 admin.getFullName(),
                 admin.getRole());
+    }
+
+    private Long getAdminIdByEmail(String email) {
+        return adminRepository.findByEmail(email)
+                .map(Admin::getId)
+                .orElseThrow(() -> new AdminNotFoundException("Initiating admin not found: " + email));
     }
 }
