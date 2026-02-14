@@ -17,13 +17,13 @@ import org.springframework.security.core.Authentication;
 @RestController
 @RequestMapping("/api/pharmacy")
 @RequiredArgsConstructor
-
 public class PharmacyAdminCenterController {
 
     private final PharmacyAdminCenterService pharmacyAdminCenterService;
     private final PharmacyRepository pharmacyRepository;
 
     @GetMapping("/center/profile")
+    @SuppressWarnings("null")
     public ResponseEntity<PharmacyProfileDto> getProfile() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
@@ -32,7 +32,7 @@ public class PharmacyAdminCenterController {
                 .orElseThrow(() -> new RuntimeException("Logged in pharmacy not found"));
 
         return ResponseEntity
-                .ok(pharmacyAdminCenterService.getProfile(java.util.Objects.requireNonNull(pharmacy.getId())));
+                .ok(pharmacyAdminCenterService.getProfile(pharmacy.getId()));
     }
 
     @PostMapping("/reports")

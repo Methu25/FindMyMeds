@@ -1,6 +1,9 @@
 package com.findmymeds.backend.controller;
 
-import com.findmymeds.backend.model.*;
+import com.findmymeds.backend.model.CreateReportRequest;
+import com.findmymeds.backend.model.ReportMetricsResponse;
+import com.findmymeds.backend.model.ReportResponse;
+import com.findmymeds.backend.model.UpdateReportStatusRequest;
 import com.findmymeds.backend.model.enums.ReportStatus;
 import com.findmymeds.backend.service.AdminReportService;
 import jakarta.validation.Valid;

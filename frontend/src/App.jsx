@@ -18,6 +18,7 @@ import CivilianVivo from "./pages/admin/Civilian/CivilianVivo";
 import CivilianReports from "./pages/admin/Civilian/CivilianReports";
 import CivilianReportDetails from "./pages/admin/Civilian/CivilianReportDetails";
 import AppealDetails from "./pages/admin/Appeal/AppealDetails";
+import CivilianAppeals from "./pages/admin/Civilian/CivilianAppeals";
 import AdminMedicineRegistry from './pages/admin/AdminMedicineRegistry';
 import AdminAddMedicine from './pages/admin/AdminAddMedicine';
 import AdminMedicineDetails from './pages/admin/AdminMedicineDetails';
@@ -58,6 +59,7 @@ import ReservationPage from './pages/civilian/ReservationPage';
 import CivilianReservation from './pages/civilian/CivilianReservation';
 import HomePage from './pages/civilian/HomePage';
 import NotificationPage from './pages/civilian/NotificationPage';
+import AppealsAndReports from './pages/civilian/AppealsAndReports';
 
 import { NotificationProvider } from './context/NotificationContext';
 import { ToastProvider } from './context/ToastContext';
@@ -133,6 +135,8 @@ function App() {
               <Route path="civilian-reports" element={<CivilianReports />} />
               <Route path="civilian-reports/:id" element={<CivilianReportDetails />} />
               <Route path="appeals" element={<AppealDetails />} />
+              <Route path="appeals/:id" element={<AppealDetails />} />
+              <Route path="civilian-appeals" element={<CivilianAppeals />} />
 
               {/* Notifications */}
               <Route path="notifications" element={<AdminNotificationCenter />} />
@@ -176,6 +180,7 @@ function App() {
             <Route path="reservation" element={<CivilianReservation />} />
             <Route path="notifications" element={<NotificationPage />} />
             <Route path="notifications/:id" element={<CivilianNotificationDetails />} />
+            <Route path="appeals-reports" element={<AppealsAndReports />} />
           </Route>
 
           {/* Fallback */}
