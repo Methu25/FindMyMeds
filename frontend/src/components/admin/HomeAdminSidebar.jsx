@@ -119,11 +119,18 @@ const Sidebar = () => {
       </nav>
 
       {/* Logout Button */}
-      <button className="flex items-center gap-4 px-4 py-3 text-sm font-bold text-slate-500 hover:text-red-500 transition-colors mt-auto group">
+      <button
+        onClick={() => {
+          localStorage.removeItem('token');
+          localStorage.removeItem('role');
+          navigate('/admin/u/login');
+        }}
+        className="flex items-center gap-4 px-4 py-3 text-sm font-bold text-slate-500 hover:text-red-500 transition-colors mt-auto group"
+      >
         <i className="fa-solid fa-right-from-bracket group-hover:-translate-x-1 transition-transform"></i>
         Logout
       </button>
-    </aside>
+    </aside >
   );
 };
 

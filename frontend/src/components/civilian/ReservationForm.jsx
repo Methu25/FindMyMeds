@@ -8,9 +8,9 @@ function ReservationForm({ selectedPharmacy, orderItems, onSubmit }) {
     const [confirmed, setConfirmed] = useState(false);
     const fileInputRef = useRef(null);
 
-    const subtotal = 11.00;
-    const serviceFee = 2.00;
-    const total = 13.00;
+    const subtotal = orderItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const serviceFee = 200.00; // Rs. 200 service fee
+    const total = subtotal + serviceFee;
 
     const handleFileChange = (e) => {
         const selectedFile = e.target.files[0];
@@ -45,14 +45,16 @@ function ReservationForm({ selectedPharmacy, orderItems, onSubmit }) {
             <span className="section-label">Order Summary</span>
             <div className="order-summary">
                 <div className="summary-list">
-                    <div className="order-item" style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0' }}>
-                        <span>Amocatemol 500mg</span>
-                        <span>x 2</span>
-                    </div>
-                    <div className="order-item" style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: 'none' }}>
-                        <span>Vitamin C 500mg</span>
-                        <span>x 1</span>
-                    </div>
+                    {orderItems.length > 0 ? (
+                        orderItems.map((item, index) => (
+                            <div key={index} className="order-item" style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: index < orderItems.length - 1 ? '1px solid #eee' : 'none' }}>
+                                <span>{item.name}</span>
+                                <span>x {item.quantity}</span>
+                            </div>
+                        ))
+                    ) : (
+                        <div className="text-gray-400 text-sm py-2">No items selected</div>
+                    )}
                 </div>
             </div>
 
@@ -66,6 +68,7 @@ function ReservationForm({ selectedPharmacy, orderItems, onSubmit }) {
                         value={pickupDate}
                         onChange={(e) => setPickupDate(e.target.value)}
                         required
+                        min={new Date().toISOString().split('T')[0]}
                     />
                 </div>
 
@@ -104,7 +107,7 @@ function ReservationForm({ selectedPharmacy, orderItems, onSubmit }) {
                     <div style={{ position: 'relative' }}>
                         <input
                             type="text"
-                            value={selectedPharmacy ? `${selectedPharmacy.name} (${selectedPharmacy.distance}km)` : "Select from list..."}
+                            value={selectedPharmacy ? `${selectedPharmacy.name} (${selectedPharmacy.distance || 0}km)` : "Select from list..."}
                             readOnly
                             style={{ paddingRight: 35, cursor: 'default' }}
                         />
@@ -125,21 +128,19 @@ function ReservationForm({ selectedPharmacy, orderItems, onSubmit }) {
 
                 <div className="billing-section">
                     <span className="section-label" style={{ marginBottom: 10, color: '#64748b' }}>Billing Breakdown (Estimated)</span>
-                    <div className="billing-row">
-                        <span>Amocatemol</span>
-                        <span className="price">$5.00</span>
-                    </div>
-                    <div className="billing-row">
-                        <span>Vitamin C</span>
-                        <span className="price">$6.00</span>
-                    </div>
+                    {orderItems.map((item, index) => (
+                        <div key={index} className="billing-row">
+                            <span>{item.name}</span>
+                            <span className="price">Rs. {(item.price * item.quantity).toFixed(2)}</span>
+                        </div>
+                    ))}
                     <div className="billing-row">
                         <span>Service Fee</span>
-                        <span className="price">$2.00</span>
+                        <span className="price">Rs. {serviceFee.toFixed(2)}</span>
                     </div>
                     <div className="billing-row total">
                         <span>Total</span>
-                        <span className="price">$13.00</span>
+                        <span className="price">Rs. {total.toFixed(2)}</span>
                     </div>
                 </div>
 

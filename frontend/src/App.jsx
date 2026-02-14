@@ -61,6 +61,7 @@ import NotificationPage from './pages/civilian/NotificationPage';
 
 import { NotificationProvider } from './context/NotificationContext';
 import { ToastProvider } from './context/ToastContext';
+import { AuthProvider } from './context/AuthContext';
 import CivilianNotificationDetails from './pages/civilian/CivilianNotificationDetails';
 import ReservationDetailsPage from './pages/civilian/ReservationDetailsPage';
 function App() {
@@ -87,100 +88,102 @@ function App() {
     <BrowserRouter>
 
       <ToastProvider>
-        <Routes>
-          {/* Landing page */}
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<CivilianRegistration />} />
-          <Route path="/register" element={<CivilianRegistration />} />
-          {/* <Route path="/pharmacy-login" element={<PharmacyLogin />} /> - Deprecated */}
-          <Route path="/pharmacy-signup" element={<PharmacySignup />} />
-          <Route path="/pharmacy-signup" element={<PharmacySignup />} />
+        <AuthProvider>
+          <Routes>
+            {/* Landing page */}
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<CivilianRegistration />} />
+            <Route path="/register" element={<CivilianRegistration />} />
+            {/* <Route path="/pharmacy-login" element={<PharmacyLogin />} /> - Deprecated */}
+            <Route path="/pharmacy-signup" element={<PharmacySignup />} />
+            <Route path="/pharmacy-signup" element={<PharmacySignup />} />
 
-          {/* Hidden Admin Login */}
-          <Route path="/admin/u/login" element={<AdminLogin />} />
+            {/* Hidden Admin Login */}
+            <Route path="/admin/u/login" element={<AdminLogin />} />
 
-          {/*  Admin Routes - Protected */}
-          <Route element={<ProtectedRoute allowedRoles={['ADMIN', 'SUPER_ADMIN']} />}>
-            <Route path="/admin" element={<AdminLayout />}>
-              <Route path="pharmacies/:pharmacyId" element={<AdminPharmacyDetails />} />
-              {/* Pharmacy Reports & Inquiries Routes */}
-              <Route path="reports" element={<AdminPharmacyReports />} />
-              <Route path="reports/:reportId" element={<AdminReportDetails />} />
-              <Route path="pharmacy/rejected" element={<RejectedPharmacyTable />} />
-              <Route path="pharmacy/rejected/:id" element={<RejectedPharmacyDetails />} />
-              <Route path="pharmacy-review/:pharmacyId" element={<AdminPharmacyReview />} />
+            {/*  Admin Routes - Protected */}
+            <Route element={<ProtectedRoute allowedRoles={['ADMIN', 'SUPER_ADMIN']} />}>
+              <Route path="/admin" element={<AdminLayout />}>
+                <Route path="pharmacies/:pharmacyId" element={<AdminPharmacyDetails />} />
+                {/* Pharmacy Reports & Inquiries Routes */}
+                <Route path="reports" element={<AdminPharmacyReports />} />
+                <Route path="reports/:reportId" element={<AdminReportDetails />} />
+                <Route path="pharmacy/rejected" element={<RejectedPharmacyTable />} />
+                <Route path="pharmacy/rejected/:id" element={<RejectedPharmacyDetails />} />
+                <Route path="pharmacy-review/:pharmacyId" element={<AdminPharmacyReview />} />
 
-              {/* When visiting /admin -> go to /admin/dashboard */}
-              <Route index element={<Navigate to="dashboard" replace />} />
+                {/* When visiting /admin -> go to /admin/dashboard */}
+                <Route index element={<Navigate to="dashboard" replace />} />
 
-              <Route path="dashboard" element={<AdminDashboard />} />
-              <Route path="administrators" element={<AdminManagement />} />
-              <Route path="settings" element={<SystemSettings />} />
+                <Route path="dashboard" element={<AdminDashboard />} />
+                <Route path="administrators" element={<AdminManagement />} />
+                <Route path="settings" element={<SystemSettings />} />
 
-              {/* Medicines */}
-              <Route path="medicines" element={<AdminMedicineRegistry />} />
-              <Route path="medicines/add" element={<AdminAddMedicine />} />
-              <Route path="medicines/:id" element={<AdminMedicineDetails />} />
+                {/* Medicines */}
+                <Route path="medicines" element={<AdminMedicineRegistry />} />
+                <Route path="medicines/add" element={<AdminAddMedicine />} />
+                <Route path="medicines/:id" element={<AdminMedicineDetails />} />
 
-              {/* Pharmacies placeholder */}
-              <Route path="pharmacies" element={<PharmacyManagementHome />} />
+                {/* Pharmacies placeholder */}
+                <Route path="pharmacies" element={<PharmacyManagementHome />} />
 
-              {/* Civilians */}
-              <Route path="civilians" element={<CivilianManagement />} />
-              <Route path="civilians/:id" element={<CivilianDetails />} />
-              <Route path="civilians/:id/vivo" element={<CivilianVivo />} />
-              <Route path="civilian-reports" element={<CivilianReports />} />
-              <Route path="civilian-reports/:id" element={<CivilianReportDetails />} />
-              <Route path="appeals" element={<AppealDetails />} />
+                {/* Civilians */}
+                <Route path="civilians" element={<CivilianManagement />} />
+                <Route path="civilians/:id" element={<CivilianDetails />} />
+                <Route path="civilians/:id/vivo" element={<CivilianVivo />} />
+                <Route path="civilian-reports" element={<CivilianReports />} />
+                <Route path="civilian-reports/:id" element={<CivilianReportDetails />} />
+                <Route path="appeals" element={<AppealDetails />} />
 
-              {/* Notifications */}
-              <Route path="notifications" element={<AdminNotificationCenter />} />
-              <Route path="notifications/:id" element={<AdminNotificationDetails />} />
+                {/* Notifications */}
+                <Route path="notifications" element={<AdminNotificationCenter />} />
+                <Route path="notifications/:id" element={<AdminNotificationDetails />} />
 
-              {/* Profile */}
-              <Route path="profile" element={<AdminProfilePage />} />
+                {/* Profile */}
+                <Route path="profile" element={<AdminProfilePage />} />
+              </Route>
             </Route>
-          </Route>
 
 
 
-          {/* Pharmacy Routes */}
-          <Route path="/pharmacy/*" element={
-            <NotificationProvider>
-              <Routes>
-                <Route index element={<PharmacyDashboard />} />
-                <Route path="inventory" element={<MedicineInventory />} />
-                <Route path="inventory/add" element={<PharmacyAddMedicine />} />
-                <Route path="medicines/:id" element={<PharmacyMedicineDetails />} />
-                <Route path="notifications" element={<PharmacyNotificationCenter />} />
-                <Route path="notifications/:id" element={<PharmacyNotificationDetails />} />
-                <Route path="admin-center" element={<AdminCenter />} />
-                <Route path="settings" element={<PharmacySystemSettings />} />
-                <Route path="current-reservations" element={<PharmacyCurrentReservations />} />
-                <Route path="reservation-history" element={<PharmacyReservationHistory />} />
-                <Route path="reports" element={<PharmacyReportPage />} />
-                <Route path="profile" element={<PharmacyProfile />} />
-              </Routes>
-            </NotificationProvider>
-          } />
+            {/* Pharmacy Routes */}
+            <Route path="/pharmacy/*" element={
+              <NotificationProvider>
+                <Routes>
+                  <Route index element={<PharmacyDashboard />} />
+                  <Route path="inventory" element={<MedicineInventory />} />
+                  <Route path="inventory/add" element={<PharmacyAddMedicine />} />
+                  <Route path="medicines/:id" element={<PharmacyMedicineDetails />} />
+                  <Route path="notifications" element={<PharmacyNotificationCenter />} />
+                  <Route path="notifications/:id" element={<PharmacyNotificationDetails />} />
+                  <Route path="admin-center" element={<AdminCenter />} />
+                  <Route path="settings" element={<PharmacySystemSettings />} />
+                  <Route path="current-reservations" element={<PharmacyCurrentReservations />} />
+                  <Route path="reservation-history" element={<PharmacyReservationHistory />} />
+                  <Route path="reports" element={<PharmacyReportPage />} />
+                  <Route path="profile" element={<PharmacyProfile />} />
+                </Routes>
+              </NotificationProvider>
+            } />
 
-          {/* Civilian Routes */}
-          <Route path="/civilian" element={<CivilianLayout />}>
-            <Route index element={<Navigate to="home" replace />} />
-            <Route path="home" element={<HomePage />} />
-            <Route path="dashboard" element={<ActivityPage />} />
-            <Route path="activity" element={<ActivityPage />} />
-            <Route path="activity/reservation/:id" element={<ReservationDetailsPage />} />
-            <Route path="find-pharmacy" element={<FindPharmacy />} />
-            <Route path="reservation" element={<CivilianReservation />} />
-            <Route path="notifications" element={<NotificationPage />} />
-            <Route path="notifications/:id" element={<CivilianNotificationDetails />} />
-          </Route>
+            {/* Civilian Routes */}
+            <Route path="/civilian" element={<CivilianLayout />}>
+              <Route index element={<Navigate to="home" replace />} />
+              <Route path="home" element={<HomePage />} />
+              <Route path="dashboard" element={<ActivityPage />} />
+              <Route path="activity" element={<ActivityPage />} />
+              <Route path="activity/reservation/:id" element={<ReservationDetailsPage />} />
+              <Route path="find-pharmacy" element={<FindPharmacy />} />
+              <Route path="reservation" element={<CivilianReservation />} />
+              <Route path="notifications" element={<NotificationPage />} />
+              <Route path="notifications/:id" element={<CivilianNotificationDetails />} />
+            </Route>
 
-          {/* Fallback */}
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+            {/* Fallback */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </AuthProvider>
       </ToastProvider>
     </BrowserRouter>
   );

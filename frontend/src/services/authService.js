@@ -13,6 +13,14 @@ export const authService = {
             if (response.data.token) {
                 localStorage.setItem('token', response.data.token);
                 localStorage.setItem('userType', 'CIVILIAN');
+                // Store full user object
+                const user = {
+                    id: response.data.id,
+                    name: response.data.name,
+                    email: response.data.email,
+                    role: response.data.role
+                };
+                localStorage.setItem('user', JSON.stringify(user));
             }
             return response.data;
         } catch (error) {
