@@ -24,8 +24,8 @@ const PharmacyLogin = () => {
         setError('');
 
         try {
-            console.log('Attempting login to:', 'http://localhost:8080/api/v1/pharmacy/auth/login');
-            const response = await fetch('http://localhost:8080/api/v1/pharmacy/auth/login', {
+            console.log('Attempting login to:', 'http://localhost:8080/api/pharmacy/auth/login');
+            const response = await fetch('http://localhost:8080/api/pharmacy/auth/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
