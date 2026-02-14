@@ -15,6 +15,10 @@ public class CivilianUserDetails implements UserDetails {
 
     private final Civilian civilian;
 
+    public Civilian getCivilian() {
+        return civilian;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_CIVILIAN"));

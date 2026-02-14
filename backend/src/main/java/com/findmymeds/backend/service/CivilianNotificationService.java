@@ -38,7 +38,7 @@ public class CivilianNotificationService {
     }
 
     // GET single notification
-    public CivilianNotification getOne(Integer id, Integer userId) {
+    public CivilianNotification getOne(@org.springframework.lang.NonNull Integer id, Integer userId) {
         return repository.findById(id)
                 .map(n -> {
                     if (!n.getUserId().equals(userId)) {
@@ -50,7 +50,8 @@ public class CivilianNotificationService {
     }
 
     // MARK AS READ
-    public void markAsRead(Integer id, Integer userId) {
+    public void markAsRead(@org.springframework.lang.NonNull Integer id,
+            @org.springframework.lang.NonNull Integer userId) {
         CivilianNotification notification = getOne(id, userId);
         notification.setIsRead(true);
         repository.save(notification);
