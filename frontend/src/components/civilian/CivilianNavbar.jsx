@@ -31,7 +31,7 @@ const CivilianNavbar = () => {
         { icon: LayoutDashboard, label: 'My Activity', path: '/civilian/dashboard' },
         { icon: Search, label: 'Reserve Medicine', path: '/civilian/reservation' },
         { icon: Bell, label: 'Notifications', path: '/civilian/notifications' },
-        { icon: MessageSquare, label: 'Feedback Center', path: '/civilian/inquiries' },
+        { icon: MessageSquare, label: 'Appeals & Feedbacks', path: '/civilian/appeals-reports' },
     ];
 
     const isActive = (path) => location.pathname === path;

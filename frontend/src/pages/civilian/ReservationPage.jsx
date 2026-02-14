@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react';
-import { Search, Plus, Pill, FileText } from 'lucide-react';
+import { Search, Plus, Pill, FileText, MapPin } from 'lucide-react';
 import PharmacyCard from '../../components/civilian/PharmacyCard';
 import ReservationForm from '../../components/civilian/ReservationForm';
 import '../../styles/civilian/ReservationPage.css';
+import { searchMedicines, recommendPharmacies, confirmReservation } from '../../API/civilianApi';
+import { useAuth } from '../../context/AuthContext';
 
 function ReservationPage() {
+    const { user } = useAuth();
     const [searchQuery, setSearchQuery] = useState('');
     const [quantity, setQuantity] = useState(1);
     const [selectedPharmacy, setSelectedPharmacy] = useState(null);
@@ -12,57 +15,91 @@ function ReservationPage() {
     const [pharmacies, setPharmacies] = useState([]);
     const [selectedMedicine, setSelectedMedicine] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [userLocation, setUserLocation] = useState(null);
+    const [locationStatus, setLocationStatus] = useState('prompt');
 
     useEffect(() => {
-        fetchPharmacies();
+        // Try to get location on mount
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    setUserLocation({
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    });
+                    setLocationStatus('granted');
+                },
+                (error) => {
+                    console.error("Location access denied or error:", error);
+                    setLocationStatus('denied');
+                }
+            );
+        }
     }, []);
 
     useEffect(() => {
         if (searchQuery.length > 2) {
-            fetchMedicines(searchQuery);
+            handleSearchMedicines(searchQuery);
         } else {
             setMedicines([]);
         }
     }, [searchQuery]);
 
-    const fetchMedicines = async (query) => {
+    const handleSearchMedicines = async (query) => {
         try {
-            const res = await fetch(`http://localhost:8081/api/medicines?search=${query}`);
-            if (res.ok) {
-                const data = await res.json();
-                setMedicines(data.content || data);
-            }
+            const data = await searchMedicines(query);
+            setMedicines(data);
         } catch (err) {
             console.error("Failed to fetch medicines", err);
         }
     };
 
-    const fetchPharmacies = async () => {
-        try {
-            // Using search endpoint without query to get all, or could use nearby if location available
-            const res = await fetch('http://localhost:8081/api/pharmacies');
-            if (res.ok) {
-                const data = await res.json();
-                setPharmacies(data.map(p => ({
-                    ...p,
-                    available: 'N/A', // Availability requires inventory check, mostly static for now
-                    distance: p.distance ? parseFloat(p.distance.toFixed(1)) : (Math.random() * 5).toFixed(1) // Mock distance if null
-                })));
-            }
-        } catch (err) {
-            console.error("Failed to fetch pharmacies", err);
-        }
-    };
-
-    const handleMedicineSelect = (med) => {
+    const handleMedicineSelect = async (med) => {
         setSelectedMedicine(med);
         setSearchQuery(med.medicineName);
         setMedicines([]); // Hide dropdown
+        setPharmacies([]); // Clear previous pharmacies
+        setSelectedPharmacy(null);
+
+        // Fetch recommended pharmacies
+        try {
+            setLoading(true);
+            const lat = userLocation?.lat;
+            const lng = userLocation?.lng;
+            const data = await recommendPharmacies(med.id, quantity, lat, lng);
+
+            // Transform data if needed for card
+            const formattedPharmacies = data.map(p => ({
+                id: p.pharmacyId,
+                name: p.pharmacyName,
+                address: p.location,
+                distance: p.distance,
+                price: p.price,
+                availableQuantity: p.availableQuantity,
+                status: 'ACTIVE' // Assuming active if returned
+            }));
+
+            setPharmacies(formattedPharmacies);
+        } catch (err) {
+            console.error("Failed to fetch pharmacies", err);
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handlePharmacySelect = (pharmacy) => {
         setSelectedPharmacy(pharmacy);
     };
+
+    // Refresh pharmacies when quantity changes if medicine is selected
+    useEffect(() => {
+        if (selectedMedicine) {
+            const timer = setTimeout(() => {
+                handleMedicineSelect(selectedMedicine);
+            }, 500);
+            return () => clearTimeout(timer);
+        }
+    }, [quantity]);
 
     const handleSubmit = async (reservationData) => {
         if (!selectedMedicine || !selectedPharmacy) {
@@ -71,40 +108,30 @@ function ReservationPage() {
         }
 
         const payload = {
-            pharmacy: { id: selectedPharmacy.id },
-            reservationDate: new Date().toISOString(),
-            timeframe: "10:00 AM - 12:00 PM", // Default or user selected
-            status: "PENDING",
-            totalAmount: (selectedMedicine.price || 0) * quantity,
-            items: [
-                {
-                    medicine: { id: selectedMedicine.id },
-                    quantity: quantity,
-                    price: selectedMedicine.price || 0
-                }
-            ]
+            civilianId: user.id,
+            medicineId: selectedMedicine.id,
+            pharmacyId: selectedPharmacy.id,
+            quantity: quantity,
+            pickupDate: reservationData.pickupDate,
+            notes: reservationData.note,
+            prescriptionFile: reservationData.prescription ? reservationData.prescription.name : null, // Handle file upload properly in real app
+            totalAmount: reservationData.total
         };
 
         try {
-            const res = await fetch('http://localhost:8081/api/reservations', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-
-            if (res.ok) {
+            const result = await confirmReservation(payload);
+            if (result) {
                 alert('Reservation confirmed! You can view it in your Activity Page.');
                 // Reset form
                 setSelectedMedicine(null);
                 setSelectedPharmacy(null);
                 setQuantity(1);
                 setSearchQuery('');
-            } else {
-                alert('Failed to submit reservation.');
+                setPharmacies([]);
             }
         } catch (err) {
             console.error("Error submitting reservation", err);
-            alert("An error occurred.");
+            alert("Failed to confirm reservation. Please try again.");
         }
     };
 
@@ -115,7 +142,16 @@ function ReservationPage() {
     return (
         <div className="reservation-page">
             <section className="search-section">
-                <h2 className="section-header">Find & Select Medicines</h2>
+                <header className="mb-6 flex justify-between items-center">
+                    <div>
+                        <h2 className="section-header mb-1">Find & Reserve Medicines</h2>
+                        <p className="text-gray-500 text-sm">Search for medication and find nearby pharmacies.</p>
+                    </div>
+                    <div className="text-xs text-gray-400 flex items-center gap-1">
+                        <MapPin size={14} />
+                        {locationStatus === 'granted' ? 'Location Active' : 'Location Not Active'}
+                    </div>
+                </header>
 
                 <div className="search-container">
                     <div className="search-bar">
@@ -131,7 +167,7 @@ function ReservationPage() {
                     </div>
 
                     {medicines.length > 0 && (
-                        <div className="medicine-dropdown bg-white border rounded mt-2 shadow-lg max-h-60 overflow-y-auto">
+                        <div className="medicine-dropdown bg-white border rounded mt-2 shadow-lg max-h-60 overflow-y-auto z-10 relative">
                             {medicines.map(med => (
                                 <div
                                     key={med.id}
@@ -145,7 +181,7 @@ function ReservationPage() {
                         </div>
                     )}
 
-                    <span className="section-label">Selected Medicine</span>
+                    <span className="section-label mt-6 block">Selected Medicine</span>
 
                     {selectedMedicine ? (
                         <div className="medicine-suggestion">
@@ -159,7 +195,6 @@ function ReservationPage() {
                             <p className="suggestion-desc">
                                 {selectedMedicine.description || 'No description available.'}
                             </p>
-                            <p className="mt-2 font-bold text-teal-600">Price: Rs. {selectedMedicine.price}</p>
                         </div>
                     ) : (
                         <p className="text-gray-400 italic mb-4">Search and select a medicine to proceed.</p>
@@ -175,28 +210,32 @@ function ReservationPage() {
                             className="btn btn-primary"
                             style={{ flex: 1 }}
                             disabled={!selectedMedicine}
-                            onClick={() => { }} // Just visual helper here, actual add is in Submit
+                            onClick={() => { }}
                         >
-                            <Plus size={18} style={{ marginRight: 8 }} /> {selectedMedicine ? 'Ready to Reserve' : 'Select Medicine'}
+                            {selectedMedicine ? `Est. Price around` : 'Result'}
                         </button>
                     </div>
                 </div>
 
-                <h2 className="section-header" style={{ marginTop: 10 }}>Select Pharmacy</h2>
+                <h2 className="section-header" style={{ marginTop: 20 }}>Select Pharmacy</h2>
                 <div className="pharmacy-list-card">
                     <div className="pharmacy-list">
-                        {pharmacies.length === 0 ? (
-                            <p className="p-4 text-gray-500">Loading pharmacies or none found...</p>
-                        ) : (
-                            pharmacies.map((pharmacy) => (
-                                <PharmacyCard
-                                    key={pharmacy.id}
-                                    pharmacy={pharmacy}
-                                    isSelected={selectedPharmacy?.id === pharmacy.id}
-                                    onSelect={handlePharmacySelect}
-                                />
-                            ))
+                        {loading && <p className="p-4 text-gray-500">Searching nearby pharmacies...</p>}
+                        {!loading && pharmacies.length === 0 && selectedMedicine && (
+                            <p className="p-4 text-gray-500">No pharmacies found with stock.</p>
                         )}
+                        {!loading && pharmacies.length === 0 && !selectedMedicine && (
+                            <p className="p-4 text-gray-500">Select a medicine to see pharmacies.</p>
+                        )}
+
+                        {pharmacies.map((pharmacy) => (
+                            <PharmacyCard
+                                key={pharmacy.id}
+                                pharmacy={pharmacy}
+                                isSelected={selectedPharmacy?.id === pharmacy.id}
+                                onSelect={handlePharmacySelect}
+                            />
+                        ))}
                     </div>
                 </div>
             </section>
@@ -208,7 +247,7 @@ function ReservationPage() {
                     orderItems={selectedMedicine ? [{
                         name: selectedMedicine.medicineName,
                         quantity: quantity,
-                        price: selectedMedicine.price,
+                        price: selectedPharmacy ? selectedPharmacy.price : 0, // Use price from pharmacy inventory
                         requiresPrescription: selectedMedicine.requiresPrescription
                     }] : []}
                     onSubmit={handleSubmit}

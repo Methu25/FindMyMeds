@@ -38,16 +38,30 @@ public class CivilianAuthService {
         civilian.setAccountStatus(com.findmymeds.backend.model.enums.AccountStatus.ACTIVE);
         civilian.setCreatedAt(java.time.LocalDateTime.now());
 
-        // Generate masked fields for VIVO/Privacy protocols if needed or leave null
-        // civilian.setMaskedEmail(...)
+        // Generate masked fields
+        civilian.setMaskedEmail(maskEmail(request.getEmail()));
+        civilian.setMaskedName(maskName(request.getFullName()));
 
         civilianRepository.save(civilian);
 
         CivilianUserDetails userDetails = new CivilianUserDetails(civilian);
         String token = jwtService.generateToken(userDetails);
 
+        var civilianDTO = new com.findmymeds.backend.dto.CivilianDTO();
+        civilianDTO.setId(civilian.getId());
+        civilianDTO.setName(civilian.getFullName());
+        civilianDTO.setEmail(civilian.getEmail());
+        civilianDTO.setPhone(civilian.getPhone());
+        civilianDTO.setAccountStatus(civilian.getAccountStatus());
+        civilianDTO.setBanReason(civilian.getBanReason());
+        civilianDTO.setBanDate(civilian.getBanDate());
+
         return AuthenticationResponse.builder()
                 .token(token)
+                .id(civilian.getId())
+                .name(civilian.getFullName())
+                .email(civilian.getEmail())
+                .role("CIVILIAN")
                 .build();
     }
 
@@ -62,8 +76,37 @@ public class CivilianAuthService {
         CivilianUserDetails userDetails = new CivilianUserDetails(civilian);
         String token = jwtService.generateToken(userDetails);
 
+        var civilianDTO = new com.findmymeds.backend.dto.CivilianDTO();
+        civilianDTO.setId(civilian.getId());
+        civilianDTO.setName(civilian.getFullName());
+        civilianDTO.setEmail(civilian.getEmail());
+        civilianDTO.setPhone(civilian.getPhone());
+        civilianDTO.setAccountStatus(civilian.getAccountStatus());
+        civilianDTO.setBanReason(civilian.getBanReason());
+        civilianDTO.setBanDate(civilian.getBanDate());
+
         return AuthenticationResponse.builder()
                 .token(token)
+                .id(civilian.getId())
+                .name(civilian.getFullName())
+                .email(civilian.getEmail())
+                .role("CIVILIAN")
                 .build();
+    }
+
+    private String maskEmail(String email) {
+        if (email == null || !email.contains("@"))
+            return email;
+        int atIndex = email.indexOf("@");
+        if (atIndex <= 2)
+            return email;
+        return email.substring(0, 2) + "***" + email.substring(atIndex);
+    }
+
+    private String maskName(String name) {
+        if (name == null || name.length() <= 2)
+            return name;
+        return name.substring(0, 2) + "*** " + name.substring(name.lastIndexOf(" ") + 1).substring(0,
+                Math.min(2, name.substring(name.lastIndexOf(" ") + 1).length())) + "***";
     }
 }

@@ -3,6 +3,7 @@ import { History, Settings, RefreshCw } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import ReservationCard from '../../components/civilian/ReservationCard';
 import '../../styles/civilian/ActivityPage.css';
+import { getActivity } from '../../API/civilianApi';
 
 function ActivityPage() {
     const navigate = useNavigate();
@@ -16,17 +17,9 @@ function ActivityPage() {
 
     const fetchReservations = async () => {
         try {
-            const token = localStorage.getItem('token');
-            const response = await fetch('http://localhost:8081/api/reservations/activity', {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-            if (response.ok) {
-                const data = await response.json();
-                setCurrentReservations(data.activeReservations || []);
-                setHistoryReservations(data.reservationHistory || []);
-            }
+            const data = await getActivity();
+            setCurrentReservations(data.activeReservations || []);
+            setHistoryReservations(data.reservationHistory || []);
         } catch (error) {
             console.error("Error fetching activity:", error);
         } finally {
@@ -122,7 +115,7 @@ function ActivityPage() {
                                     >
                                         <div className="flex items-center gap-4">
                                             <div className={`w-2 h-2 rounded-full ${reservation.status === 'COLLECTED' ? 'bg-green-500' :
-                                                    reservation.status === 'CANCELLED' ? 'bg-red-500' : 'bg-gray-400'
+                                                reservation.status === 'CANCELLED' ? 'bg-red-500' : 'bg-gray-400'
                                                 }`} />
                                             <div>
                                                 <h4 className="font-medium text-gray-800">{reservation.medicineName}</h4>
@@ -131,7 +124,7 @@ function ActivityPage() {
                                         </div>
                                         <div className="text-right">
                                             <span className={`text-xs px-2 py-1 rounded-full font-medium ${reservation.status === 'COLLECTED' ? 'bg-green-100 text-green-700' :
-                                                    reservation.status === 'CANCELLED' ? 'bg-red-100 text-red-700' : 'bg-gray-100 text-gray-600'
+                                                reservation.status === 'CANCELLED' ? 'bg-red-100 text-red-700' : 'bg-gray-100 text-gray-600'
                                                 }`}>
                                                 {reservation.status}
                                             </span>

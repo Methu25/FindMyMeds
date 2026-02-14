@@ -46,7 +46,8 @@ public class CivilianReservationService {
         }
 
         // Step 3: Recommend Pharmacies
-        public List<Map<String, Object>> recommendPharmacies(Long medicineId, Integer quantity) {
+        public List<Map<String, Object>> recommendPharmacies(Long medicineId, Integer quantity, Double userLat,
+                        Double userLng) {
                 List<PharmacyInventory> inventoryList = pharmacyInventoryRepository.findPharmaciesWithStock(medicineId,
                                 quantity);
 
@@ -60,8 +61,42 @@ public class CivilianReservationService {
                         map.put("latitude", p.getLatitude() != null ? p.getLatitude() : 0.0);
                         map.put("longitude", p.getLongitude() != null ? p.getLongitude() : 0.0);
                         map.put("price", inv.getPrice());
+
+                        // Calculate Distance if user location is provided
+                        if (userLat != null && userLng != null && p.getLatitude() != null && p.getLongitude() != null) {
+                                double distance = calculateDistance(userLat, userLng, p.getLatitude(),
+                                                p.getLongitude());
+                                map.put("distance", distance);
+                        } else {
+                                map.put("distance", null);
+                        }
+
                         return map;
-                }).collect(Collectors.toList());
+                })
+                                .sorted((m1, m2) -> {
+                                        Double d1 = (Double) m1.get("distance");
+                                        Double d2 = (Double) m2.get("distance");
+                                        if (d1 == null && d2 == null)
+                                                return 0;
+                                        if (d1 == null)
+                                                return 1;
+                                        if (d2 == null)
+                                                return -1;
+                                        return d1.compareTo(d2);
+                                })
+                                .collect(Collectors.toList());
+        }
+
+        private double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+                final int R = 6371; // Radius of the earth in km
+                double latDistance = Math.toRadians(lat2 - lat1);
+                double lonDistance = Math.toRadians(lon2 - lon1);
+                double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+                                + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
+                                                * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+                double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+                double distance = R * c;
+                return Math.round(distance * 10.0) / 10.0; // Round to 1 decimal place
         }
 
         public Map<String, Object> getDashboardStats(Long civilianId) {

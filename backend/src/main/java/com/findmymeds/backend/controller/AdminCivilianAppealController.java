@@ -16,6 +16,14 @@ public class AdminCivilianAppealController {
     private final CivilianAppealAdminService appealAdminService;
     private final CivilianAppealQueryService appealQueryService;
 
+    @GetMapping
+    public org.springframework.data.domain.Page<AdminAppealDetailsDTO> getAllAppeals(
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) String search,
+            @org.springframework.lang.NonNull org.springframework.data.domain.Pageable pageable) {
+        return appealQueryService.getAllAppeals(status, search, pageable);
+    }
+
     @GetMapping("/latest-by-civilian")
     public AdminAppealDetailsDTO getLatestAppeal(@RequestParam Long civilianId) {
         return appealQueryService.getLatestAppeal(civilianId);

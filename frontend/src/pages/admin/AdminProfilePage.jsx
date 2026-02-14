@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { adminService } from '../../services/adminService';
 import { User, Mail, Phone, Shield, CheckCircle, ChevronLeft } from 'lucide-react';
 
 const AdminProfilePage = () => {
@@ -13,12 +14,10 @@ const AdminProfilePage = () => {
 
     const fetchProfile = async () => {
         try {
-            const res = await fetch('http://localhost:8081/api/profile');
-            if (res.ok) {
-                setProfile(await res.json());
-            }
+            const data = await adminService.getMyProfile();
+            setProfile(data);
         } catch (e) {
-            console.error(e);
+            console.error("Failed to load profile", e);
         } finally {
             setLoading(false);
         }

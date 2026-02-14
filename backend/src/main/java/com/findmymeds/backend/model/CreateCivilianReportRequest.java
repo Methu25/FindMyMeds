@@ -1,7 +1,7 @@
 package com.findmymeds.backend.model;
 
+import com.findmymeds.backend.model.enums.IssueCategory;
 import com.findmymeds.backend.model.enums.Priority;
-import com.findmymeds.backend.model.enums.ReportCategory;
 import com.findmymeds.backend.model.enums.ReportType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -10,7 +10,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class CreateReportRequest {
+public class CreateCivilianReportRequest {
 
     @NotNull(message = "Report type is required")
     private ReportType type;
@@ -19,7 +19,7 @@ public class CreateReportRequest {
     private String title;
 
     @NotNull(message = "Category is required")
-    private ReportCategory category;
+    private IssueCategory category;
 
     @NotNull(message = "Priority is required")
     private Priority priority;

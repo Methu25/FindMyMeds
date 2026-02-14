@@ -54,5 +54,11 @@ export const adminService = {
     getRejectedPharmacyById: async (id) => {
         const response = await axios.get(`${API_URL}/admin/pharmacies/rejected/${id}`, getAuthHeader());
         return response.data;
+    },
+
+    // 9. Get My Profile
+    getMyProfile: async () => {
+        const response = await axios.get(`${API_URL}/admins/me`, getAuthHeader());
+        return response.data;
     }
 };

@@ -48,9 +48,11 @@ public class CivilianReservationController {
     public List<java.util.Map<String, Object>> recommendPharmacies(@RequestBody java.util.Map<String, Object> request) {
         Long medicineId = Long.valueOf(request.get("medicineId").toString());
         Integer quantity = Integer.valueOf(request.get("requiredQuantity").toString());
-        // String userLocation = (String) request.get("userLocation"); // Not used yet
-        // in simple logic
-        return reservationService.recommendPharmacies(medicineId, quantity);
+
+        Double userLat = request.containsKey("lat") ? Double.valueOf(request.get("lat").toString()) : null;
+        Double userLng = request.containsKey("lng") ? Double.valueOf(request.get("lng").toString()) : null;
+
+        return reservationService.recommendPharmacies(medicineId, quantity, userLat, userLng);
     }
 
     @PostMapping("/confirm")
