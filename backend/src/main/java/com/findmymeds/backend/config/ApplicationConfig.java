@@ -20,6 +20,7 @@ public class ApplicationConfig {
 
     private final AdminRepository adminRepository;
     private final PharmacyRepository pharmacyRepository;
+    private final com.findmymeds.backend.repository.CivilianRepository civilianRepository;
 
     @Bean
     public UserDetailsService userDetailsService() {
@@ -32,6 +33,11 @@ public class ApplicationConfig {
             var pharmacy = pharmacyRepository.findByEmail(username);
             if (pharmacy.isPresent()) {
                 return new PharmacyUserDetails(pharmacy.get());
+            }
+
+            var civilian = civilianRepository.findByEmail(username);
+            if (civilian.isPresent()) {
+                return new CivilianUserDetails(civilian.get());
             }
 
             throw new UsernameNotFoundException("User not found");

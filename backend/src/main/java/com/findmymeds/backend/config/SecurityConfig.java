@@ -57,7 +57,9 @@ public class SecurityConfig {
 
                         // 1. Public Endpoints (Authentication & Public Pharmacy Search)
                         .requestMatchers("/api/auth/**", "/api/v1/admin/auth/**").permitAll()
-                        .requestMatchers("/api/v1/civilian/auth/**", "/api/v1/pharmacy/auth/**").permitAll()
+                        .requestMatchers("/api/v1/civilian/auth/**").permitAll()
+                        .requestMatchers("/api/v1/pharmacy/auth/login", "/api/v1/pharmacy/auth/signup").permitAll()
+                        .requestMatchers("/api/v1/pharmacy/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/pharmacies/**").permitAll()
                         .requestMatchers("/api/pharmacy/**", "/api/notifications/**").permitAll()
                         .requestMatchers("/api/v1/pharmacy/**").permitAll()

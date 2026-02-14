@@ -27,8 +27,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     protected void doFilterInternal(
             @NonNull HttpServletRequest request,
             @NonNull HttpServletResponse response,
-            @NonNull FilterChain filterChain
-    ) throws ServletException, IOException {
+            @NonNull FilterChain filterChain) throws ServletException, IOException {
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
         final String userEmail;
@@ -41,21 +40,32 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         // Extract JWT token
         jwt = authHeader.substring(7);
-        userEmail = jwtService.extractUsername(jwt);
+        try {
+            userEmail = jwtService.extractUsername(jwt);
+            System.out.println("JwtAuthFilter: Extracted email: " + userEmail);
+        } catch (Exception e) {
+            System.out.println("JwtAuthFilter: Error extracting username: " + e.getMessage());
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         // If user email is valid and not already authenticated
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
+            System.out.println("JwtAuthFilter: Loaded userDetails for: " + userDetails.getUsername() + ", Authorities: "
+                    + userDetails.getAuthorities());
 
             // Validate token
             if (jwtService.isTokenValid(jwt, userDetails)) {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails,
                         null,
-                        userDetails.getAuthorities()
-                );
+                        userDetails.getAuthorities());
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
+                System.out.println("JwtAuthFilter: Authentication successful");
+            } else {
+                System.out.println("JwtAuthFilter: Token invalid");
             }
         }
         filterChain.doFilter(request, response);

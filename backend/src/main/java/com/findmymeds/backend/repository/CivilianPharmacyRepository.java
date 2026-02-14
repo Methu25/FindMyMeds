@@ -14,6 +14,6 @@ public interface CivilianPharmacyRepository extends JpaRepository<Pharmacy, Long
 
     // Haversine formula to find pharmacies within radius (in km)
     // Results are sorted by distance
-    @Query(value = "SELECT *, ( 6371 * acos( cos( radians(:lat) ) * cos( radians( latitude ) ) * cos( radians( longitude ) - radians(:lng) ) + sin( radians(:lat) ) * sin( radians( latitude ) ) ) ) AS distance FROM Pharmacy HAVING distance < :radius ORDER BY distance ASC", nativeQuery = true)
+    @Query(value = "SELECT *, ( 6371 * acos( cos( radians(:lat) ) * cos( radians( latitude ) ) * cos( radians( longitude ) - radians(:lng) ) + sin( radians(:lat) ) * sin( radians( latitude ) ) ) ) AS distance FROM pharmacy HAVING distance < :radius ORDER BY distance ASC", nativeQuery = true)
     List<Pharmacy> findNearby(@Param("lat") double lat, @Param("lng") double lng, @Param("radius") double radius);
 }

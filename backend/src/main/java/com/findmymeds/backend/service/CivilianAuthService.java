@@ -5,6 +5,10 @@ import com.findmymeds.backend.config.JwtService;
 import com.findmymeds.backend.dto.LoginRequest; // Assuming generic LoginRequest or create new one
 import com.findmymeds.backend.dto.AuthenticationResponse; // Reuse or create new
 import com.findmymeds.backend.model.Civilian;
+import com.findmymeds.backend.model.DuplicateEmailException;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 import com.findmymeds.backend.repository.CivilianRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -22,11 +26,11 @@ public class CivilianAuthService {
 
     public AuthenticationResponse register(com.findmymeds.backend.dto.CivilianSignupRequest request) { // Use DTO
         if (civilianRepository.findByEmail(request.getEmail()).isPresent()) {
-            throw new RuntimeException("Email already taken");
+            throw new DuplicateEmailException("Email already taken");
         }
         // Check NIC?
         if (civilianRepository.findByNicNumber(request.getNicNumber()).isPresent()) {
-            throw new RuntimeException("NIC already registered");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "NIC already registered");
         }
 
         var civilian = new Civilian();
@@ -42,7 +46,11 @@ public class CivilianAuthService {
         civilian.setMaskedEmail(maskEmail(request.getEmail()));
         civilian.setMaskedName(maskName(request.getFullName()));
 
-        civilianRepository.save(civilian);
+        try {
+            civilianRepository.save(civilian);
+        } catch (DataIntegrityViolationException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Account already exists (Email or NIC collision)");
+        }
 
         CivilianUserDetails userDetails = new CivilianUserDetails(civilian);
         String token = jwtService.generateToken(userDetails);

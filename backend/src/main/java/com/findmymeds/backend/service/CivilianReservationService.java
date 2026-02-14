@@ -136,6 +136,7 @@ public class CivilianReservationService {
                         Integer quantity,
                         LocalDate pickupDate, String notes, String prescriptionFile) {
                 // 1. Validate Civilian
+                System.out.println("confirmReservation for CivilianID: " + civilianId);
                 Civilian civilian = civilianRepository.findById(civilianId)
                                 .orElseThrow(() -> new RuntimeException("Civilian not found"));
 
@@ -166,6 +167,7 @@ public class CivilianReservationService {
                 reservation.setPrescriptionImageUrl(prescriptionFile); // Assuming URL/Path for now
                 reservation.setStatus(ReservationStatus.PENDING);
                 reservation.setCreatedAt(LocalDateTime.now());
+                reservation.setReservationDate(LocalDateTime.now()); // Ensure this is set
                 reservation.setExpiryDate(pickupDate.plusDays(2)); // Default 2 days expiry
                 reservation.setReservationCode("RES-" + System.currentTimeMillis());
 
@@ -194,38 +196,37 @@ public class CivilianReservationService {
         // New methods for Activity Page
 
         public ActivityResponse getActivity(Long civilianId) {
-                List<ReservationStatus> activeStatuses = Arrays.asList(
-                                ReservationStatus.PENDING,
-                                ReservationStatus.CONFIRMED,
-                                ReservationStatus.ONGOING,
-                                ReservationStatus.READY);
-                List<Reservation> active = reservationRepository.findByCivilianIdAndStatusIn(civilianId,
-                                activeStatuses);
+                try {
+                        List<ReservationStatus> activeStatuses = Arrays.asList(
+                                        ReservationStatus.PENDING,
+                                        ReservationStatus.CONFIRMED,
+                                        ReservationStatus.ONGOING,
+                                        ReservationStatus.READY);
+                        List<Reservation> active = reservationRepository.findByCivilianIdAndStatusIn(civilianId,
+                                        activeStatuses);
+                        System.out.println("getActivity for CivilianID: " + civilianId);
+                        System.out.println("Active Reservations Found: " + active.size());
 
-                // Note: REJECTED is not in the Enum I saw earlier (PENDING, CONFIRMED, ONGOING,
-                // READY, COLLECTED, CANCELLED, EXPIRED, UNCOLLECTED).
-                // I will stick to the Enum values I saw.
-                // Wait, looking at ReservationStatus.java (Step 26), it has: PENDING,
-                // CONFIRMED, ONGOING, READY, COLLECTED, CANCELLED, EXPIRED, UNCOLLECTED
-                // BEWARE: The user requirements mentioned "REJECTED", but the Enum doesn't have
-                // it. I should probably add it or map it.
-                // For now I will use what is available.
+                        List<ReservationStatus> historyStatusesFiltered = Arrays.asList(
+                                        ReservationStatus.COLLECTED,
+                                        ReservationStatus.CANCELLED,
+                                        ReservationStatus.EXPIRED,
+                                        ReservationStatus.UNCOLLECTED);
 
-                List<ReservationStatus> historyStatusesFiltered = Arrays.asList(
-                                ReservationStatus.COLLECTED,
-                                ReservationStatus.CANCELLED,
-                                ReservationStatus.EXPIRED,
-                                ReservationStatus.UNCOLLECTED);
+                        List<Reservation> history = reservationRepository.findHistoryByCivilianIdAndStatusIn(civilianId,
+                                        historyStatusesFiltered);
+                        System.out.println("History Reservations Found: " + history.size());
 
-                List<Reservation> history = reservationRepository.findHistoryByCivilianIdAndStatusIn(civilianId,
-                                historyStatusesFiltered);
-
-                return ActivityResponse.builder()
-                                .activeReservations(active.stream().map(this::mapToActivityDTO)
-                                                .collect(Collectors.toList()))
-                                .reservationHistory(history.stream().map(this::mapToActivityDTO)
-                                                .collect(Collectors.toList()))
-                                .build();
+                        return ActivityResponse.builder()
+                                        .activeReservations(active.stream().map(this::mapToActivityDTO)
+                                                        .collect(Collectors.toList()))
+                                        .reservationHistory(history.stream().map(this::mapToActivityDTO)
+                                                        .collect(Collectors.toList()))
+                                        .build();
+                } catch (Exception e) {
+                        e.printStackTrace(); // Log error to console
+                        throw e; // Rethrow to maintain 500 behavior but now we have logs
+                }
         }
 
         private ActivityReservationDTO mapToActivityDTO(Reservation r) {

@@ -13,7 +13,6 @@ export const authService = {
             if (response.data.token) {
                 localStorage.setItem('token', response.data.token);
                 localStorage.setItem('userType', 'CIVILIAN');
-<<<<<<< HEAD
                 // Store full user object
                 const user = {
                     id: response.data.id,
@@ -22,11 +21,6 @@ export const authService = {
                     role: response.data.role
                 };
                 localStorage.setItem('user', JSON.stringify(user));
-=======
-                if (response.data.userDetails) {
-                    localStorage.setItem('civilian_user', JSON.stringify(response.data.userDetails));
-                }
->>>>>>> 7a607ad250beb6b88357c55488f99588a90ff33d
             }
             return response.data;
         } catch (error) {
