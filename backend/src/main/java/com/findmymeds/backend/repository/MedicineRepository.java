@@ -7,26 +7,28 @@ import java.util.List;
 import java.util.Optional;
 
 public interface MedicineRepository extends JpaRepository<Medicine, Long>,
-        org.springframework.data.jpa.repository.JpaSpecificationExecutor<Medicine> {
+                org.springframework.data.jpa.repository.JpaSpecificationExecutor<Medicine> {
 
-    // Metrics
-    long countByRemovedFalse();
+        // Metrics
+        long countByRemovedFalse();
 
-    long countByStatusAndRemovedFalse(Medicine.MedicineStatus status);
+        long countByStatusAndRemovedFalse(Medicine.MedicineStatus status);
 
-    long countByTypeAndRemovedFalse(Medicine.MedicineType type);
+        long countByTypeAndRemovedFalse(Medicine.MedicineType type);
 
-    // Notifications (Recent Activity)
-    List<Medicine> findTop5ByRemovedFalseOrderByCreatedAtDesc();
+        // Notifications (Recent Activity)
+        List<Medicine> findTop5ByRemovedFalseOrderByCreatedAtDesc();
 
-    List<Medicine> findTop5ByRemovedFalseOrderByLastUpdatedDesc();
+        List<Medicine> findTop5ByRemovedFalseOrderByLastUpdatedDesc();
 
-    // Existence check
-    boolean existsByMedicineNameIgnoreCaseAndRemovedFalse(String medicineName);
+        // Existence check
+        boolean existsByMedicineNameIgnoreCaseAndRemovedFalse(String medicineName);
 
-    // Basic fetches
-    Optional<Medicine> findByIdAndRemovedFalse(Long id);
+        Optional<Medicine> findByMedicineNameIgnoreCaseAndRemovedFalse(String medicineName);
 
-    List<Medicine> findByMedicineNameContainingIgnoreCaseAndStatusAndRemovedFalse(String name,
-            Medicine.MedicineStatus status);
+        // Basic fetches
+        Optional<Medicine> findByIdAndRemovedFalse(Long id);
+
+        List<Medicine> findByMedicineNameContainingIgnoreCaseAndStatusAndRemovedFalse(String name,
+                        Medicine.MedicineStatus status);
 }
