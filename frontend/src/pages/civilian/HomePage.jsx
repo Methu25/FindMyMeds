@@ -38,7 +38,7 @@ const HomePage = () => {
         <section className="relative overflow-hidden rounded-[2.5rem] p-6 shadow-2xl shadow-[#2FA4A9]/20 transition-all duration-500 hover:shadow-[#2FA4A9]/30">
           {/* Brand Gradient Background */}
           <div className="absolute inset-0 bg-gradient-to-br from-[#2FA4A9] via-[#2FA4A9] to-[#1e7a7e]"></div>
-          
+
           {/* Decorative Pattern */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-20 -mt-20 blur-lg"></div>
           <div className="absolute bottom-0 left-0 w-40 h-40 bg-black/5 rounded-full -ml-10 -mb-10 blur-sm"></div>
@@ -53,12 +53,12 @@ const HomePage = () => {
                 <span className="text-teal-100 italic">Simplified.</span>
               </h1>
               <p className="text-lg text-teal-50 max-w-xl font-medium leading-relaxed">
-                Connect seamlessly with your local pharmacies. Locate essential medications, 
-                secure your prescriptions with instant reservations, and track your health 
+                Connect seamlessly with your local pharmacies. Locate essential medications,
+                secure your prescriptions with instant reservations, and track your health
                 journey—all in one smart dashboard.
               </p>
             </div>
-            
+
             <button
               className="group flex items-center gap-3 bg-white text-[#2FA4A9] px-8 py-4 rounded-2xl font-black text-lg shadow-xl hover:bg-teal-50 transform hover:-translate-y-1 transition-all duration-300"
               onClick={() => navigate("/civilian/reservation")}
@@ -74,7 +74,7 @@ const HomePage = () => {
 
           {/* LEFT SECTION (6 Cols) */}
           <div className="lg:col-span-6 space-y-8">
-            
+
             {/* Main Pharmacy Card */}
             <div
               className="group relative bg-white p-8 rounded-[2rem] border border-[#2FA4A9]/10 shadow-sm hover:shadow-xl hover:shadow-[#2FA4A9]/10 transition-all duration-500 cursor-pointer overflow-hidden"
@@ -85,13 +85,13 @@ const HomePage = () => {
                   <MapPin size={32} strokeWidth={2.5} />
                 </div>
               </div>
-              
+
               <div className="space-y-6">
                 <div>
                   <h3 className="text-2xl font-black text-[#2FA4A9]">Pharmacies Nearby</h3>
                   <p className="text-slate-400 font-semibold mt-1 uppercase text-xs tracking-widest">Real-time Availability</p>
                 </div>
-                
+
                 <div className="flex items-baseline gap-2">
                   <span className="text-6xl font-black text-[#2FA4A9] tracking-tighter">
                     {stats.pharmaciesNearby}
@@ -107,7 +107,10 @@ const HomePage = () => {
 
             {/* Sub Cards Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="bg-white p-8 rounded-[2rem] border border-[#2FA4A9]/10 shadow-sm hover:border-[#2FA4A9]/30 transition-all cursor-pointer group">
+              <div
+                className="bg-white p-8 rounded-[2rem] border border-[#2FA4A9]/10 shadow-sm hover:border-[#2FA4A9]/30 transition-all cursor-pointer group"
+                onClick={() => navigate("/civilian/drug-dictionary")}
+              >
                 <div className="flex justify-between items-start mb-6">
                   <div className="p-3 bg-teal-50 text-[#2FA4A9] rounded-xl group-hover:rotate-12 transition-transform">
                     <BookOpen size={24} />
@@ -118,7 +121,7 @@ const HomePage = () => {
                 <div className="mt-6 text-sm font-black text-[#2FA4A9]/60 group-hover:text-[#2FA4A9]">Search Now →</div>
               </div>
 
-              <div 
+              <div
                 className="bg-white p-8 rounded-[2rem] border border-[#2FA4A9]/10 shadow-sm hover:border-[#2FA4A9]/30 transition-all cursor-pointer group"
                 onClick={() => navigate("/civilian/inquiries")}
               >
@@ -136,7 +139,7 @@ const HomePage = () => {
 
           {/* RIGHT SECTION (6 Cols) */}
           <div className="lg:col-span-6 space-y-8">
-            
+
             {/* Notifications Card */}
             <div className="bg-white p-8 rounded-[2rem] border border-[#2FA4A9]/10 shadow-sm hover:shadow-lg transition-all">
               <div className="flex items-center justify-between mb-8">
@@ -148,7 +151,7 @@ const HomePage = () => {
                   )}
                 </div>
               </div>
-              
+
               {notifications.length === 0 ? (
                 <div className="text-center py-4">
                   <div className="w-12 h-12 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-3">
@@ -159,8 +162,8 @@ const HomePage = () => {
               ) : (
                 <div className="space-y-3 max-h-64 overflow-y-auto">
                   {notifications.map((notif) => (
-                    <div 
-                      key={notif.id} 
+                    <div
+                      key={notif.id}
                       className="p-3 bg-slate-50 rounded-lg border border-[#2FA4A9]/5 hover:bg-teal-50 hover:border-[#2FA4A9]/20 transition-all cursor-pointer"
                       onClick={() => navigate(`/civilian/notifications/${notif.id}`)}
                     >
@@ -171,7 +174,7 @@ const HomePage = () => {
                     </div>
                   ))}
                   {notifications.length > 0 && (
-                    <p 
+                    <p
                       className="text-center text-xs text-[#2FA4A9] font-bold mt-4 cursor-pointer hover:underline"
                       onClick={() => navigate("/civilian/notifications")}
                     >

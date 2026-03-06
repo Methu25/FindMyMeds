@@ -36,6 +36,12 @@ public class Medicine {
     private String notes;
     private String description;
 
+    // New fields for Drug Dictionary
+    private String usageInstructions; // Replacing 'usage' to be more descriptive, but mapped to 'usage' in DTO if
+                                      // needed
+    private String precautions;
+    private String sideEffects;
+
     // Keeping existing field just in case, though logically price is common
     private Double price;
     private boolean requiresPrescription;

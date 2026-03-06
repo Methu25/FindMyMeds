@@ -55,7 +55,7 @@ const CivilianDrugDictionary = () => {
                         <div className="lg:col-span-1 space-y-6">
                             <div className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm sticky top-28">
                                 <span className="bg-teal-50 text-[#2FA4A9] px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest">
-                                    {searchResult.medicineDetails.category}
+                                    {searchResult.medicineDetails.type}
                                 </span>
                                 <h2 className="text-3xl font-black text-slate-800 mt-4">{searchResult.medicineDetails.medicineName}</h2>
                                 <p className="text-slate-400 font-bold mb-6 italic">{searchResult.medicineDetails.genericName}</p>
@@ -68,12 +68,12 @@ const CivilianDrugDictionary = () => {
                                     <div className="grid grid-cols-2 gap-4">
                                         <div>
                                             <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest mb-1">Dosage</p>
-                                            <p className="text-sm font-bold text-slate-600">{searchResult.medicineDetails.dosage}</p>
+                                            <p className="text-sm font-bold text-slate-600">{searchResult.medicineDetails.dosageForm} {searchResult.medicineDetails.strength}</p>
                                         </div>
                                         <div>
                                             <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest mb-1">Prescription</p>
-                                            <p className={`text-sm font-bold ${searchResult.medicineDetails.prescriptionRequired ? 'text-red-500' : 'text-green-500'}`}>
-                                                {searchResult.medicineDetails.prescriptionRequired ? 'Required' : 'Not Required'}
+                                            <p className={`text-sm font-bold ${searchResult.medicineDetails.requiresPrescription ? 'text-red-500' : 'text-green-500'}`}>
+                                                {searchResult.medicineDetails.requiresPrescription ? 'Required' : 'Not Required'}
                                             </p>
                                         </div>
                                     </div>

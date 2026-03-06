@@ -1,5 +1,6 @@
 package com.findmymeds.backend.service;
 
+import com.findmymeds.backend.dto.MedicineDetailDTO;
 import com.findmymeds.backend.dto.MedicineSearchResponse;
 import com.findmymeds.backend.dto.PharmacyInventoryDTO;
 import com.findmymeds.backend.model.Medicine;
@@ -29,7 +30,30 @@ public class MedicineService {
         if (medicineOpt.isPresent()) {
             Medicine medicine = medicineOpt.get();
             response.setMedicineFound(true);
-            response.setMedicineDetails(medicine);
+
+            // Map to MedicineDetailDTO
+            MedicineDetailDTO detailDTO = new MedicineDetailDTO();
+            detailDTO.setMedicineId(medicine.getId());
+            detailDTO.setMedicineName(medicine.getMedicineName());
+            detailDTO.setGenericName(medicine.getGenericName());
+            detailDTO.setActiveIngredients(medicine.getActiveIngredients());
+            detailDTO.setType(medicine.getType());
+            detailDTO.setManufacturer(medicine.getManufacturer());
+            detailDTO.setCountryOfManufacture(medicine.getCountryOfManufacture());
+            detailDTO.setRegistrationNumber(medicine.getRegistrationNumber());
+            detailDTO.setDosageForm(medicine.getDosageForm());
+            detailDTO.setStrength(medicine.getStrength());
+            detailDTO.setStorageInstructions(medicine.getStorageInstructions());
+            detailDTO.setDescription(medicine.getDescription());
+            detailDTO.setRequiresPrescription(medicine.isRequiresPrescription());
+            detailDTO.setImageUrl(medicine.getImageUrl());
+
+            // New fields
+            detailDTO.setUsage(medicine.getUsageInstructions());
+            detailDTO.setPrecautions(medicine.getPrecautions());
+            detailDTO.setSideEffects(medicine.getSideEffects());
+
+            response.setMedicineDetails(detailDTO);
 
             // Find pharmacies with stock > 0
             List<PharmacyInventory> inventories = pharmacyInventoryRepository.findPharmaciesWithStock(medicine.getId(),

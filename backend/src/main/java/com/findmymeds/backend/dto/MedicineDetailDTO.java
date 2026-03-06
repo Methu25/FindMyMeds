@@ -23,6 +23,11 @@ public class MedicineDetailDTO {
     private boolean requiresPrescription;
     private String imageUrl;
 
+    // New fields for Drug Dictionary
+    private String usage;
+    private String precautions;
+    private String sideEffects;
+
     // Inventory specific
     private Integer availableQuantity;
     private BigDecimal price;
