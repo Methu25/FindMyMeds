@@ -1,124 +1,123 @@
-# 💊 FindMyMeds
+# FindMyMeds
 
-**FindMyMeds** is a full-stack medicine discovery, inventory management, and prescription reservation platform built to streamline interactions between Civilians (patients), Pharmacies, and System Administrators.
-
----
-
-## 🌟 Leadership & Roles
-
-- **Project Supervisor & Guidance:** **EJ Yohan Methusael** (`Methu25` / `yohanjason25@gmail.com`) — Project guide, repository lead, and supervisor overseeing the entire development lifecycle and team direction.
-- **System Design & Core Developer:** **MTR Mathota** (`coder-chetto` / `thisarirashvini@gmail.com`) — Played the major role from initial system design to core backend/frontend development, civilian reservation services, and notification architecture.
+FindMyMeds is a web application designed to help patients locate required medications, check real-time availability across local pharmacies, and reserve prescriptions online. It also provides pharmacies with stock management tools and gives administrators system-wide oversight.
 
 ---
 
-## 👥 Project Contributors
+## Leadership and Project Roles
 
-Below is the complete list of team members and contributors who built FindMyMeds based on git commit history and key feature areas:
+- **Project Guidance and Supervision:** **EJ Yohan Methusael** (`Methu25` / `yohanjason25@gmail.com`)  
+  Guided the team throughout the project, managed the repository, and supervised the overall development workflow.
 
-- 👑 **EJ Yohan Methusael (`Methu25` / `METHU25`)** — Project Guidance, Repository Lead, Code Reviews, Routing & Integration Fixes.
-- ⚡ **MTR Mathota (`coder-chetto`)** — System Architecture, Core Developer, Civilian Layout, Reservation Module, Notification Center & Activity Pages.
-- 📝 **Yashara Gamage (`YasharaGamage` / `Yash2`)** — Reporting & Appeal System, Multi-Role Authentication, Civilian Auth Services & UI.
-- ⚙️ **K.U. K. Rakshan (`Rakshan200417`)** — UI Integration, Merge Conflict Resolutions, Build & Artifact Cleanup.
-- 📊 **P. Rejishanth (`P.Rejishanth`)** — Pharmacy Analytics, Inventory Management, Database Schema Dumps & Reporting Services.
-- 🛠️ **Dumidu (Dumee-25 / KADP Kumarapeli)** — Supporting Feature Development & Backend Integrations.
-- 📱 **Gaweesha (`Gaweesha` / `Kumarathunga`)** — Reservation Workflow & DTO Structure Design.
-- 💡 **Chamidudayan (`chathuranga`)** — Supporting Frontend Component Enhancements.
-- 🔒 **Sanith Sathnidu (`Sanith Sathnidu`)** — Support & Backend Security Module Enhancements.
-- 🎨 **Sandil Ranmeth (`rwsrrajasekara`)** — Early Frontend Prototype & Styling Contributions.
+- **System Design and Core Development:** **MTR Mathota** (`coder-chetto` / `thisarirashvini@gmail.com`)  
+  Played the main technical role in designing the architecture, building key backend services and frontend interfaces, and implementing the core reservation and notification systems.
 
 ---
 
-## 🚀 Key Features
+## Team Contributors
 
-### 👤 Civilian Portal
-- **Pharmacy & Medicine Search:** Search medicines by name and find nearby participating pharmacies on interactive maps (Leaflet).
-- **Medicine Reservation:** Reserve required medications online directly from local pharmacies.
-- **Notifications & History:** Real-time updates on reservation statuses and activity tracking.
+The project was developed collaboratively by the following team members:
 
-### 🏥 Pharmacy Portal
-- **Stock & Inventory Management:** Add, update, and manage medicine inventories seamlessly.
-- **Reservation Processing:** Manage incoming reservation requests and status updates (Pending, Approved, Rejected, Completed).
-- **Analytics & Reporting:** Generate detailed pharmacy reports and stock analytics.
-
-### 🛡️ Admin Portal
-- **System Dashboard & User Management:** Oversee pharmacy approvals, civilian user activity, and system settings.
-- **Medicine Registry:** Master registry of standardized medicines.
-- **Appeals & Reporting Center:** Manage user reports, system logs, and appeal workflows.
+- **EJ Yohan Methusael (`Methu25` / `METHU25`)** — Project guidance, repository management, code integration, and route fixes.
+- **MTR Mathota (`coder-chetto`)** — Core system architecture, civilian workflow layout, reservation module, notification center, and activity tracking.
+- **Yashara Gamage (`YasharaGamage` / `Yash2`)** — Reporting and appeal workflows, civilian authentication backend, multi-role login implementation, and related UI components.
+- **K.U. K. Rakshan (`Rakshan200417`)** — UI component integration, merge conflict resolution, and build artifact cleanup.
+- **P. Rejishanth (`P.Rejishanth`)** — Pharmacy analytics dashboard, inventory management features, reporting services, and database dumps.
+- **Dumidu (`Dumee-25` / `KADP Kumarapeli`)** — Backend integrations and supporting feature implementation.
+- **Gaweesha (`Gaweesha` / `Kumarathunga`)** — Reservation process workflow design and DTO definitions.
+- **Chamidudayan (`chathuranga`)** — Frontend UI component enhancements.
+- **Sanith Sathnidu (`Sanith Sathnidu`)** — Security updates and supporting backend modules.
+- **Sandil Ranmeth (`rwsrrajasekara`)** — Initial frontend prototypes and styling setup.
 
 ---
 
-## 🛠️ Tech Stack
+## Features
+
+### Civilian Portal
+- **Pharmacy and Medicine Search:** Search for required medicines by name and locate nearby participating pharmacies using integrated maps.
+- **Prescription Reservations:** Reserve medications directly at selected pharmacies.
+- **Activity and Notifications:** Track ongoing reservation statuses and receive updates in real time.
+
+### Pharmacy Portal
+- **Inventory Management:** Add, update, and monitor medicine stock levels.
+- **Reservation Workflow:** Review and process incoming reservation requests (Pending, Approved, Rejected, Completed).
+- **Reports and Analytics:** View pharmacy inventory metrics and generate summary reports.
+
+### Administrator Portal
+- **System Dashboard:** Manage pharmacy registration approvals, user activity, and global application settings.
+- **Medicine Registry:** Maintain the master list of approved medicine items.
+- **Appeals and Reports:** Manage civilian and pharmacy feedback, support requests, and system logs.
+
+---
+
+## Tech Stack
 
 ### Backend
 - **Framework:** Spring Boot 3.5.x (Java 21)
-- **Security:** Spring Security, JWT (JSON Web Tokens)
-- **Database:** MySQL with Spring Data JPA & Hibernate
+- **Security:** Spring Security with JWT (JSON Web Tokens)
+- **Database:** MySQL with Spring Data JPA and Hibernate
 - **Build Tool:** Maven
 
 ### Frontend
 - **Framework:** React 18 (Vite 7.x)
-- **Styling:** Tailwind CSS v4, Lucide React icons
+- **Styling:** Vanilla CSS & Tailwind CSS v4, Lucide React icons
 - **Maps:** Leaflet & React-Leaflet
-- **Charts & PDF:** Chart.js, React-Chartjs-2, jsPDF & jsPDF-AutoTable
-- **HTTP Client:** Axios with React Router DOM v7
+- **Charts & Reports:** Chart.js, React-Chartjs-2, jsPDF
+- **HTTP Client & Routing:** Axios, React Router DOM v7
 
 ---
 
-## 📁 Repository Structure
+## Project Structure
 
 ```
 FindMyMeds/
-├── backend/                  # Spring Boot 3 Java Backend
+├── backend/                  # Spring Boot Java application
 │   ├── src/main/java/        # Controllers, Services, Models, Security Configs
-│   ├── src/main/resources/   # Application properties & Data SQL
+│   ├── src/main/resources/   # Application properties & SQL scripts
 │   └── pom.xml               # Maven configuration
-├── frontend/                 # React + Vite Frontend
+├── frontend/                 # React application
 │   ├── src/
-│   │   ├── API/              # Axios HTTP client configuration
-│   │   ├── components/       # Reusable UI components
-│   │   ├── context/          # React Context (Notifications, Auth)
-│   │   ├── pages/            # Civilian, Pharmacy, and Admin pages
-│   │   └── services/         # API integration services
-│   ├── package.json          # NPM dependencies
-│   └── vite.config.js        # Vite config
-├── database/                 # SQL DDL & Database Dumps
-├── admin_postman_collection.json    # API Testing Collection (Admin)
-└── pharmacy_postman_collection.json # API Testing Collection (Pharmacy)
+│   │   ├── API/              # Axios client setup
+│   │   ├── components/       # UI components
+│   │   ├── context/          # State management (Auth, Notifications)
+│   │   ├── pages/            # Application pages (Civilian, Pharmacy, Admin)
+│   │   └── services/         # API service calls
+│   ├── package.json          # Node dependencies
+│   └── vite.config.js        # Vite bundler configuration
+├── database/                 # Database schema files and dumps
+├── admin_postman_collection.json    # Postman collection for Admin API endpoints
+└── pharmacy_postman_collection.json # Postman collection for Pharmacy API endpoints
 ```
 
 ---
 
-## ⚙️ Getting Started
+## Getting Started
 
 ### Prerequisites
-- **JDK 21** installed
-- **Node.js** (v18+ recommended) & npm
-- **MySQL Database** running locally or remotely
+- JDK 21 installed on your system
+- Node.js (v18 or higher recommended) and npm
+- MySQL server running locally or remotely
 
 ### 1. Database Setup
-1. Create a MySQL database named `findmymeds` (or as configured in `application.properties`).
-2. Run initial scripts located in the `database/` directory or let Spring Boot automatically create tables via JPA.
+1. Create a MySQL database named `findmymeds` (or update `backend/src/main/resources/application.properties` with your database name).
+2. Execute the initial SQL files found in the `database/` folder, or allow Spring JPA to generate the tables on startup.
 
-### 2. Backend Setup
+### 2. Running the Backend
 ```bash
 cd backend
-# Run Spring Boot application
 ./mvnw spring-boot:run
 ```
-*Backend will run on `http://localhost:8080` (or `8081` depending on `application.properties`).*
+By default, the backend API runs at `http://localhost:8080` (or `8081` depending on configuration).
 
-### 3. Frontend Setup
+### 3. Running the Frontend
 ```bash
 cd frontend
-# Install dependencies
 npm install
-
-# Start development server
 npm run dev
 ```
-*Frontend will run locally (typically at `http://localhost:5173`).*
+The frontend application will start on the local Vite dev server (typically `http://localhost:5173`).
 
 ---
 
-## 📜 License
-This project was developed for educational and community health management purposes.
+## License
+Developed as part of a collaborative coursework project for healthcare and medicine inventory management.
